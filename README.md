@@ -95,10 +95,9 @@ install\_github command.
 
     library("devtools")
     devtools::install_github(
-      "AlexMielke1988/NetFACS",
+      "NetFACS/NetFACS",
       force = T,
-      quiet = T,
-      upgrade = "never"
+      quiet = T
     )
 
     # read library
@@ -128,38 +127,35 @@ if they are present. So, for example, the word ‘word’ would have a 1 in
 the columns for d,o,r, and w, and 0 in all other letter columns. It’s
 usually good to have a second data frame of the same length that
 contains additional information about the condition, duration, etc. This
-will look like this for the words:
+will look like this for the facial expressions:
 
 <table>
-<caption>Letter data for words in the Communist Manifesto</caption>
+<caption>Letter data for faces in the Extended Cohn-Kanade database</caption>
 <thead>
 <tr class="header">
-<th style="text-align: right;">a</th>
-<th style="text-align: right;">b</th>
-<th style="text-align: right;">c</th>
-<th style="text-align: right;">d</th>
-<th style="text-align: right;">e</th>
-<th style="text-align: right;">f</th>
-<th style="text-align: right;">g</th>
-<th style="text-align: right;">h</th>
-<th style="text-align: right;">i</th>
-<th style="text-align: right;">j</th>
-<th style="text-align: right;">k</th>
-<th style="text-align: right;">l</th>
-<th style="text-align: right;">m</th>
-<th style="text-align: right;">n</th>
-<th style="text-align: right;">o</th>
-<th style="text-align: right;">p</th>
-<th style="text-align: right;">q</th>
-<th style="text-align: right;">r</th>
-<th style="text-align: right;">s</th>
-<th style="text-align: right;">t</th>
-<th style="text-align: right;">u</th>
-<th style="text-align: right;">v</th>
-<th style="text-align: right;">w</th>
-<th style="text-align: right;">x</th>
-<th style="text-align: right;">y</th>
-<th style="text-align: right;">z</th>
+<th style="text-align: right;">1</th>
+<th style="text-align: right;">2</th>
+<th style="text-align: right;">4</th>
+<th style="text-align: right;">5</th>
+<th style="text-align: right;">6</th>
+<th style="text-align: right;">7</th>
+<th style="text-align: right;">9</th>
+<th style="text-align: right;">10</th>
+<th style="text-align: right;">11</th>
+<th style="text-align: right;">12</th>
+<th style="text-align: right;">14</th>
+<th style="text-align: right;">15</th>
+<th style="text-align: right;">16</th>
+<th style="text-align: right;">17</th>
+<th style="text-align: right;">18</th>
+<th style="text-align: right;">20</th>
+<th style="text-align: right;">21</th>
+<th style="text-align: right;">22</th>
+<th style="text-align: right;">23</th>
+<th style="text-align: right;">24</th>
+<th style="text-align: right;">25</th>
+<th style="text-align: right;">26</th>
+<th style="text-align: right;">27</th>
 </tr>
 </thead>
 <tbody>
@@ -168,19 +164,16 @@ will look like this for the words:
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
@@ -192,10 +185,7 @@ will look like this for the words:
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
@@ -205,33 +195,27 @@ will look like this for the words:
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
@@ -243,6 +227,9 @@ will look like this for the words:
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
@@ -252,12 +239,12 @@ will look like this for the words:
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
@@ -269,26 +256,11 @@ will look like this for the words:
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
@@ -302,12 +274,19 @@ will look like this for the words:
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
@@ -317,14 +296,13 @@ will look like this for the words:
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
@@ -335,51 +313,65 @@ will look like this for the words:
 </table>
 
 <table>
-<caption>Additional information for Communist Manifesto</caption>
+<caption>Additional information for faces in the Extended Cohn-Kanade database</caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;">word</th>
-<th style="text-align: right;">comb.size</th>
-<th style="text-align: right;">sentence</th>
-<th style="text-align: left;">language</th>
+<th style="text-align: left;">subject</th>
+<th style="text-align: left;">video</th>
+<th style="text-align: right;">number.aus</th>
+<th style="text-align: left;">AU.combination</th>
+<th style="text-align: left;">emotion</th>
+<th style="text-align: left;">valence</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">ein</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">german</td>
+<td style="text-align: left;">S005</td>
+<td style="text-align: left;">S005_001</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">9_17</td>
+<td style="text-align: left;">disgust</td>
+<td style="text-align: left;">negative</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">gespenst</td>
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">german</td>
+<td style="text-align: left;">S010</td>
+<td style="text-align: left;">S010_002</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">1_2_5_25_27</td>
+<td style="text-align: left;">surprise</td>
+<td style="text-align: left;">NA</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">geht</td>
+<td style="text-align: left;">S010</td>
+<td style="text-align: left;">S010_004</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">4_7_17_23_24</td>
+<td style="text-align: left;">anger</td>
+<td style="text-align: left;">negative</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">S010</td>
+<td style="text-align: left;">S010_006</td>
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">german</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">um</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">german</td>
+<td style="text-align: left;">6_12_16_25</td>
+<td style="text-align: left;">happy</td>
+<td style="text-align: left;">positive</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">in</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">german</td>
+<td style="text-align: left;">S011</td>
+<td style="text-align: left;">S011_001</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">1_2_25_27</td>
+<td style="text-align: left;">surprise</td>
+<td style="text-align: left;">NA</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">europa</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: left;">german</td>
+<td style="text-align: left;">S011</td>
+<td style="text-align: left;">S011_002</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">1_4_15_17</td>
+<td style="text-align: left;">sadness</td>
+<td style="text-align: left;">negative</td>
 </tr>
 </tbody>
 </table>
@@ -817,7 +809,7 @@ etc, so we do not use any controls:
 <td style="text-align: center;">0.60</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.33</td>
-<td style="text-align: center;">3.04</td>
+<td style="text-align: center;">3.05</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">17</td>
@@ -828,18 +820,18 @@ etc, so we do not use any controls:
 <td style="text-align: center;">0.60</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.34</td>
-<td style="text-align: center;">3.26</td>
+<td style="text-align: center;">3.25</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">23</td>
 <td style="text-align: center;">1</td>
 <td style="text-align: center;">36</td>
 <td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.03</td>
+<td style="text-align: center;">0.02</td>
 <td style="text-align: center;">0.78</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.84</td>
-<td style="text-align: center;">32.57</td>
+<td style="text-align: center;">32.02</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">24</td>
@@ -850,7 +842,7 @@ etc, so we do not use any controls:
 <td style="text-align: center;">0.70</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.77</td>
-<td style="text-align: center;">20.75</td>
+<td style="text-align: center;">20.51</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">7</td>
@@ -861,7 +853,7 @@ etc, so we do not use any controls:
 <td style="text-align: center;">0.54</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.41</td>
-<td style="text-align: center;">4.26</td>
+<td style="text-align: center;">4.25</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">6</td>
@@ -872,7 +864,7 @@ etc, so we do not use any controls:
 <td style="text-align: center;">-0.13</td>
 <td style="text-align: center;">1.00</td>
 <td style="text-align: center;">0.08</td>
-<td style="text-align: center;">0.58</td>
+<td style="text-align: center;">0.57</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">14</td>
@@ -883,7 +875,7 @@ etc, so we do not use any controls:
 <td style="text-align: center;">0.07</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.22</td>
-<td style="text-align: center;">1.75</td>
+<td style="text-align: center;">1.77</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">5</td>
@@ -893,8 +885,8 @@ etc, so we do not use any controls:
 <td style="text-align: center;">0.31</td>
 <td style="text-align: center;">-0.17</td>
 <td style="text-align: center;">1.00</td>
-<td style="text-align: center;">0.06</td>
-<td style="text-align: center;">0.43</td>
+<td style="text-align: center;">0.07</td>
+<td style="text-align: center;">0.44</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">18</td>
@@ -905,7 +897,7 @@ etc, so we do not use any controls:
 <td style="text-align: center;">0.08</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.67</td>
-<td style="text-align: center;">12.80</td>
+<td style="text-align: center;">12.48</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">15</td>
@@ -914,7 +906,7 @@ etc, so we do not use any controls:
 <td style="text-align: center;">0.07</td>
 <td style="text-align: center;">0.11</td>
 <td style="text-align: center;">-0.04</td>
-<td style="text-align: center;">0.99</td>
+<td style="text-align: center;">1.00</td>
 <td style="text-align: center;">0.09</td>
 <td style="text-align: center;">0.63</td>
 </tr>
@@ -923,11 +915,11 @@ etc, so we do not use any controls:
 <td style="text-align: center;">1</td>
 <td style="text-align: center;">3</td>
 <td style="text-align: center;">0.07</td>
-<td style="text-align: center;">0.20</td>
+<td style="text-align: center;">0.21</td>
 <td style="text-align: center;">-0.14</td>
 <td style="text-align: center;">1.00</td>
 <td style="text-align: center;">0.05</td>
-<td style="text-align: center;">0.33</td>
+<td style="text-align: center;">0.32</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">10</td>
@@ -936,9 +928,9 @@ etc, so we do not use any controls:
 <td style="text-align: center;">0.04</td>
 <td style="text-align: center;">0.05</td>
 <td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.59</td>
+<td style="text-align: center;">0.58</td>
 <td style="text-align: center;">0.13</td>
-<td style="text-align: center;">0.96</td>
+<td style="text-align: center;">0.97</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">12</td>
@@ -979,10 +971,10 @@ etc, so we do not use any controls:
 <td style="text-align: center;">31</td>
 <td style="text-align: center;">0.69</td>
 <td style="text-align: center;">0.01</td>
-<td style="text-align: center;">0.68</td>
+<td style="text-align: center;">0.67</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.89</td>
-<td style="text-align: center;">49.23</td>
+<td style="text-align: center;">47.99</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">4_23</td>
@@ -990,10 +982,10 @@ etc, so we do not use any controls:
 <td style="text-align: center;">31</td>
 <td style="text-align: center;">0.69</td>
 <td style="text-align: center;">0.01</td>
-<td style="text-align: center;">0.68</td>
+<td style="text-align: center;">0.67</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.89</td>
-<td style="text-align: center;">49.23</td>
+<td style="text-align: center;">47.99</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">4_24</td>
@@ -1015,7 +1007,7 @@ etc, so we do not use any controls:
 <td style="text-align: center;">0.61</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.88</td>
-<td style="text-align: center;">44.51</td>
+<td style="text-align: center;">43.02</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">7_17</td>
@@ -1026,7 +1018,7 @@ etc, so we do not use any controls:
 <td style="text-align: center;">0.53</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.52</td>
-<td style="text-align: center;">6.75</td>
+<td style="text-align: center;">6.67</td>
 </tr>
 </tbody>
 </table>
@@ -1103,11 +1095,11 @@ more easily while already cleaning the table a bit using the
 <td style="text-align: center;">1</td>
 <td style="text-align: center;">36</td>
 <td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.03</td>
+<td style="text-align: center;">0.02</td>
 <td style="text-align: center;">0.78</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">0.84</td>
-<td style="text-align: center;">32.57</td>
+<td style="text-align: center;">32.02</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">24</td>
@@ -1118,7 +1110,7 @@ more easily while already cleaning the table a bit using the
 <td style="text-align: center;">0.70</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">0.77</td>
-<td style="text-align: center;">20.75</td>
+<td style="text-align: center;">20.51</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">4</td>
@@ -1129,7 +1121,7 @@ more easily while already cleaning the table a bit using the
 <td style="text-align: center;">0.60</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">0.33</td>
-<td style="text-align: center;">3.04</td>
+<td style="text-align: center;">3.05</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">17</td>
@@ -1140,7 +1132,7 @@ more easily while already cleaning the table a bit using the
 <td style="text-align: center;">0.60</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">0.34</td>
-<td style="text-align: center;">3.26</td>
+<td style="text-align: center;">3.25</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">7</td>
@@ -1151,7 +1143,7 @@ more easily while already cleaning the table a bit using the
 <td style="text-align: center;">0.54</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">0.41</td>
-<td style="text-align: center;">4.26</td>
+<td style="text-align: center;">4.25</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">18</td>
@@ -1162,7 +1154,7 @@ more easily while already cleaning the table a bit using the
 <td style="text-align: center;">0.08</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">0.67</td>
-<td style="text-align: center;">12.80</td>
+<td style="text-align: center;">12.48</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">14</td>
@@ -1173,7 +1165,7 @@ more easily while already cleaning the table a bit using the
 <td style="text-align: center;">0.07</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">0.22</td>
-<td style="text-align: center;">1.75</td>
+<td style="text-align: center;">1.77</td>
 </tr>
 </tbody>
 </table>
@@ -1272,7 +1264,7 @@ data set is quite large.
 <td style="text-align: center;">0.61</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">0.88</td>
-<td style="text-align: center;">44.5</td>
+<td style="text-align: center;">43.3</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">4_17_24</td>
@@ -1333,7 +1325,7 @@ data set is quite large.
 </table>
 
 Here, we see that for example combination AU4\_17\_23 appears 28 times
-(62% of all angry faces), which is 45 times more than we would have
+(62% of all angry faces), which is 44 times more than we would have
 expected. Many of the combinations only occur in the angry condition,
 and they get assigned an ‘increased probability’ value of NA. That many
 of these higher-order combinations contain very similar combinations
@@ -1864,7 +1856,7 @@ network based on all data.
         data = au.data,
         condition = NULL,
         ran.trials = 1000,
-        combination.size = 3,
+        combination.size = 2,
         use_parallel = T
       )
     all.net <-
@@ -1887,16 +1879,17 @@ community detection algorithm (groups of AUs that form clusters).
 
 <img src="README_files/figure-markdown_strict/all.plot-1.png" style="display: block; margin: auto;" />
 
-Modularity is high (0.49; above 0.3 is high). This means that there are
+Modularity is high (0.50; above 0.3 is high). This means that there are
 clear clusters (AUs that are connected with each other, but not others).
 First, some AUs just drop out because they do not connect with any of
-the others (AU22). Then we have a ‘happy’ network (AU6 and AU12), a
-‘surprise’ network (AU1,2,5,26,27). Fear is specifically associated with
-AU10,16,20. Anger, Sadness, Disgust, and Contempt all overlap in their
-use of AU4 and 17, which are also the most central AUs of the remaining
-cluster. Given the small size of this data set, even without previous
-knowledge of where the emotions fall, we could assume that there are at
-least 4 distinct clusters in the data.
+the others (AU10, 14, 16, 18, 26). Then we have a ‘happy’ network (AU6
+and AU12), a ‘surprise’ and ‘fear’ network (AU1, 2, 5, 20, 27). Anger,
+Sadness, and Disgust all overlap in their use of AU4 and 17, which are
+also the most central AUs of the remaining cluster. AU14, which is the
+most common AU in contempt, does not fall into either of these clusters.
+Given the small size of this data set, even without previous knowledge
+of where the emotions fall, we could assume that there are at least
+three distinct clusters in the data.
 
 Network parameters
 ------------------
@@ -2431,7 +2424,7 @@ tested against the null distribution.
 <td style="text-align: center;">8</td>
 <td style="text-align: center;">0.02</td>
 <td style="text-align: center;">0.01</td>
-<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.02</td>
 <td style="text-align: center;">0.00</td>
 </tr>
 </tbody>
@@ -2471,8 +2464,8 @@ If we do the same for happy faces, we see a very different pattern
 <td style="text-align: center;">1</td>
 <td style="text-align: center;">0.03</td>
 <td style="text-align: center;">0.04</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.25</td>
+<td style="text-align: center;">-0.01</td>
+<td style="text-align: center;">0.22</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">2</td>
@@ -2486,7 +2479,7 @@ If we do the same for happy faces, we see a very different pattern
 <td style="text-align: center;">0.18</td>
 <td style="text-align: center;">0.16</td>
 <td style="text-align: center;">0.02</td>
-<td style="text-align: center;">0.16</td>
+<td style="text-align: center;">0.17</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">4</td>
@@ -2514,14 +2507,14 @@ If we do the same for happy faces, we see a very different pattern
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.34</td>
+<td style="text-align: center;">0.38</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">8</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.01</td>
 <td style="text-align: center;">-0.01</td>
-<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.04</td>
 </tr>
 </tbody>
 </table>
@@ -2532,18 +2525,18 @@ while all other combination sizes occur less than expected.
 Entropy
 -------
 
-There is surpising little work on the information contained in facial
+There is surprisingly little work on the information contained in facial
 expressions, even though this would be a great way to measure
 complexity. One way to quantify the amount of information in a system is
 by looking at how informative each observed case is. The idea is that,
 if in a condition, all events are exactly the same, this condition is
 very easily predicted and adding cases will add little information. In
 contrast, if under the condition, all observed events are different,
-then each new case that is observed adds information about the condition.
-This is the underlying idea of entropy measures: Entropy is maximal in
-entirely random systems. Entropy is minimal in perfectly ordered
-systems. There is potentially an insane amount of information in FACS
-data: for example, 30 elements can be combined in around 8 billion
+then each new case that is observed adds information about the
+condition. This is the underlying idea of entropy measures: Entropy is
+maximal in entirely random systems. Entropy is minimal in perfectly
+ordered systems. There is potentially an insane amount of information in
+FACS data: for example, 30 elements can be combined in around 8 billion
 different ways. We know this is not the case, so there is clearly order
 and rules in the system.
 
@@ -2584,13 +2577,13 @@ overall entropy under random conditions.
 <tr class="even">
 <td style="text-align: center;">contempt</td>
 <td style="text-align: center;">2.46</td>
-<td style="text-align: center;">3.99</td>
-<td style="text-align: center;">0.62</td>
+<td style="text-align: center;">4.02</td>
+<td style="text-align: center;">0.61</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">disgust</td>
 <td style="text-align: center;">4.11</td>
-<td style="text-align: center;">5.86</td>
+<td style="text-align: center;">5.87</td>
 <td style="text-align: center;">0.70</td>
 </tr>
 <tr class="even">
@@ -2602,7 +2595,7 @@ overall entropy under random conditions.
 <tr class="odd">
 <td style="text-align: center;">happy</td>
 <td style="text-align: center;">1.45</td>
-<td style="text-align: center;">5.85</td>
+<td style="text-align: center;">5.86</td>
 <td style="text-align: center;">0.25</td>
 </tr>
 <tr class="even">
