@@ -1,0 +1,39 @@
+Package: NetFACS
+Title: Network Applications to Facial Communication Data
+Version: 0.0.0.9100
+Date: 2020-10-23
+Authors@R: c(
+    person(given = "Alex",
+           family = "Mielke",
+           role = c("aut", "cre"),
+           email = "mielke.alexand@gmail.com"),
+    person(given = "Alan",
+           family = "Rincon",
+           role = c("aut", "ctb"))
+           )
+Description: The 'NetFACS' package provides a tool set to analyse communication 
+    data, mainly for facial expressions coded with the Facial Action Coding 
+    System, based on network theory and resampling methods.
+License: Apache License (>= 2.0)
+Encoding: UTF-8
+LazyData: true
+Suggests: 
+    testthat (>= 2.1.0),
+    knitr,
+    rmarkdown
+Depends:
+    R (>= 3.5.0)
+Imports:
+    parallel,
+    doParallel,
+    igraph,
+    compiler,
+    ggplot2,
+    ggraph,
+    picante,
+    rlang,
+    Rfast,
+    arrangements
+RoxygenNote: 7.1.1
+NeedsCompilation: yes
+ByteCompile: true

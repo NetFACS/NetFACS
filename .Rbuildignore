@@ -1,0 +1,18 @@
+^NetFACS\.Rproj$
+NetFACS_Alex.Rproj
+^\.Rproj\.user$
+^doc$
+^Meta$
+testlab/*
+to do/*
+prototypes/*
+^LICENSE\.md$
+tests/
+vignettes/
+README_cache/
+README_files/
+^\.github$
+README.md
+removed c++ functions/*
+^packrat/
+^\.Rprofile$
