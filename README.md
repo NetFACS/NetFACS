@@ -1,5 +1,4 @@
-Introduction
-============
+# Introduction
 
 The NetFACS package is a tool that allows users to analyse and plot
 their facial signal data, generated using the Facial Action Coding
@@ -103,8 +102,7 @@ install\_github command.
     # read library
     library(NetFACS)
 
-Data sets
----------
+## Data sets
 
 Currently, there are two practice data sets in the package: one is the
 Extended Cohn-Kanade Database for posed FACS data (all basic AUs, 7
@@ -312,6 +310,8 @@ will look like this for the facial expressions:
 </tbody>
 </table>
 
+Letter data for faces in the Extended Cohn-Kanade database
+
 <table>
 <caption>Additional information for faces in the Extended Cohn-Kanade database</caption>
 <thead>
@@ -376,6 +376,8 @@ will look like this for the facial expressions:
 </tbody>
 </table>
 
+Additional information for faces in the Extended Cohn-Kanade database
+
 ### Prepare the data
 
 Users who code FACS data will often have them stored in a different
@@ -435,6 +437,8 @@ So, for photos, data will sometimes look like this:
 </tr>
 </tbody>
 </table>
+
+Photo Data
 
 Videos, on the other hand, will sometimes look this:
 
@@ -514,6 +518,8 @@ Videos, on the other hand, will sometimes look this:
 </tbody>
 </table>
 
+Video Data
+
 The prepare.netfacs() function can take either of these inputs and turn
 them into the right format. This will look something like this:
 
@@ -586,6 +592,8 @@ them into the right format. This will look something like this:
 </tbody>
 </table>
 
+Element Matrix of prepare.netfacs
+
     kable(head(au.prepared$video.info),
           row.names = F,
           caption = "Video Info of prepare.netfacs")
@@ -640,8 +648,9 @@ them into the right format. This will look something like this:
 </tbody>
 </table>
 
-The ‘netfacs’ function
-======================
+Video Info of prepare.netfacs
+
+# The ‘netfacs’ function
 
 The basis for the whole package so far is the ‘netfacs’ function. The
 function creates a list for all possible combination of elements that
@@ -1023,6 +1032,8 @@ etc, so we do not use any controls:
 </tbody>
 </table>
 
+Top rows of the netfacs function results
+
 Now we have the angry.face object that contains all the information we
 need to make networks and claims about which Action Units make up a
 facial expression.
@@ -1170,6 +1181,8 @@ more easily while already cleaning the table a bit using the
 </tbody>
 </table>
 
+Result of netfacs.extract for single elements
+
 The results show that in angry faces, the Action Units 4, 7, 14, 17, 18,
 23, and 24 are significantly more common than would be expected given
 the information we have from the other emotions. AU23, for example,
@@ -1264,7 +1277,7 @@ data set is quite large.
 <td style="text-align: center;">0.61</td>
 <td style="text-align: center;">0</td>
 <td style="text-align: center;">0.88</td>
-<td style="text-align: center;">43.3</td>
+<td style="text-align: center;">43.34</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">4_17_24</td>
@@ -1321,8 +1334,54 @@ data set is quite large.
 <td style="text-align: center;">1.00</td>
 <td style="text-align: center;">NA</td>
 </tr>
+<tr class="odd">
+<td style="text-align: center;">4_7_17</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">25</td>
+<td style="text-align: center;">0.56</td>
+<td style="text-align: center;">0.09</td>
+<td style="text-align: center;">0.47</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.51</td>
+<td style="text-align: center;">6.46</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">17_23_24</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">21</td>
+<td style="text-align: center;">0.47</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.47</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1.00</td>
+<td style="text-align: center;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">4_7_23</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">21</td>
+<td style="text-align: center;">0.47</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.47</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1.00</td>
+<td style="text-align: center;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">7_23_24</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">0.44</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.44</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">1.00</td>
+<td style="text-align: center;">NA</td>
+</tr>
 </tbody>
 </table>
+
+Results of netfacs.extract function for combinations of three elements
 
 Here, we see that for example combination AU4\_17\_23 appears 28 times
 (62% of all angry faces), which is 44 times more than we would have
@@ -1335,6 +1394,223 @@ combined randomly; or they are all part of one standard higher-order
 combination (e.g. AU4\_17\_23\_24) that occurs over and over again. By
 looking at the different levels (3rd order, 4th order etc), we can
 resolve this question.
+
+### Mutual Information
+
+Another way to quantify the connection between the condition and a
+combination is to use the normalised pointwise mutual information
+(hence, mutual information) between the two. The mutual information is a
+measure of association strength from information theory that takes
+values between -1 (indicating that the two elements exclude each other)
+and 1 (indicating that they perfectly overlap: all instances of A have
+B, and all instances of B have A). It is calculated here as follows:
+$MI = log(P(Condition \\cap Combination) \\frac{P(Condition)}{P(Combination)} / -1 \* log(P(Condition \\cap Combination)$).
+The function calculates the mutual information between all conditions
+and all combinations in the *netfacs* object. Here, we show only the
+first level (one element).
+
+    mutual.info.condition = mutual.information.condition(netfacs.data = angry.face)
+
+    # we select only the ones containing 'anger' and one element combinations, to show the same information as above
+    mutual.info.condition = subset(mutual.info.condition, condition == 'anger' & combination.size == 1)
+
+    kable(
+      mutual.info.condition,
+      align = "c",
+      row.names = F,
+      digits = 3,
+      booktabs = T,
+      caption = "Mutual information between anger and different combinations, sorted by mutual information values"
+    )
+
+<table>
+<caption>Mutual information between anger and different combinations, sorted by mutual information values</caption>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 13%" />
+<col style="width: 19%" />
+<col style="width: 7%" />
+<col style="width: 26%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">condition</th>
+<th style="text-align: center;">combination</th>
+<th style="text-align: center;">combination.size</th>
+<th style="text-align: center;">count</th>
+<th style="text-align: center;">conditional.probability</th>
+<th style="text-align: center;">mutual.information</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">36</td>
+<td style="text-align: center;">0.800</td>
+<td style="text-align: center;">0.818</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">24</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">33</td>
+<td style="text-align: center;">0.733</td>
+<td style="text-align: center;">0.749</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">32</td>
+<td style="text-align: center;">0.711</td>
+<td style="text-align: center;">0.464</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">39</td>
+<td style="text-align: center;">0.867</td>
+<td style="text-align: center;">0.427</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">40</td>
+<td style="text-align: center;">0.889</td>
+<td style="text-align: center;">0.412</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">18</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0.089</td>
+<td style="text-align: center;">0.358</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">0.156</td>
+<td style="text-align: center;">0.120</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0.044</td>
+<td style="text-align: center;">-0.007</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">16</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0.022</td>
+<td style="text-align: center;">-0.087</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0.067</td>
+<td style="text-align: center;">-0.089</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">0.178</td>
+<td style="text-align: center;">-0.133</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0.133</td>
+<td style="text-align: center;">-0.188</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0.067</td>
+<td style="text-align: center;">-0.220</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0.022</td>
+<td style="text-align: center;">-0.415</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">-1.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">-1.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">-1.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">26</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">-1.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">anger</td>
+<td style="text-align: center;">27</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">-1.000</td>
+</tr>
+</tbody>
+</table>
+
+Mutual information between anger and different combinations, sorted by
+mutual information values
+
+The mutual information gives us different information than the
+probabilities themselves: it standardises the observed probabilities by
+the probabilities to be angry or see an element at all. So, while AU4 is
+the most common element in angry faces, it is not necessarily the best
+indicator for anger, as it also occurs in other contexts. Thus, the
+mutual information of ‘anger’ and AU23 is higher: AU23 does not occur in
+all angry faces, but if AU23 occurs it is indicative of the condition.
+Below, we introduce another measure of this relationship that also
+captures higher-order information of combinations.
 
 ### Element specificity
 
@@ -1483,8 +1759,7 @@ common in the context (i.e., high probability), but they should also be
 limited to that context (i.e., high specificity). We will come back to
 that idea when talking about the overlap networks below.
 
-Conditional probability between elements
-----------------------------------------
+## Conditional probability between elements
 
 The previous sections all dealt with the unconditional probability of
 two elements occurring together; for example, we wanted to know whether
@@ -1608,6 +1883,26 @@ conditional probabilities themselves, we use the following function:
 <td style="text-align: center;">0.78</td>
 </tr>
 <tr class="odd">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">6_7</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">0.18</td>
+<td style="text-align: center;">0.71</td>
+<td style="text-align: center;">0.18</td>
+<td style="text-align: center;">0.25</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">6_7</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">0.71</td>
+<td style="text-align: center;">0.18</td>
+<td style="text-align: center;">0.18</td>
+<td style="text-align: center;">1.00</td>
+</tr>
+<tr class="odd">
 <td style="text-align: center;">5</td>
 <td style="text-align: center;">23</td>
 <td style="text-align: center;">5_23</td>
@@ -1670,6 +1965,8 @@ conditional probabilities themselves, we use the following function:
 </tbody>
 </table>
 
+Conditional probabilities for a subset of dyadic combinations
+
 The above table shows us the two elements (e.g., 5 an 23), how often
 they occur together (‘count’), the probability of each of them to occur
 across events P(A) and P(B); their unconditional probability to occur
@@ -1685,8 +1982,363 @@ are around 80% each way, indicating that they both occur together most
 of the time. Below, we will also show what the network visualisation of
 this function looks like.
 
-Networks
-========
+We can also apply the normalised pointwise mutual information that we
+applied above to the context/combination association, but using
+different elements in combinations: how much information does one
+element or combination provide about another element? Again, values are
+1 if both elements only ever occur in this combination. Mutual
+information is used regularly in linguistic and information theoretical
+studies to quantify how much information one element provides for the
+occurrence of the other.
+
+<table>
+<caption>Mutual information for dyadic combinations in angry faces</caption>
+<thead>
+<tr class="header">
+<th style="text-align: center;">combination1</th>
+<th style="text-align: center;">element2</th>
+<th style="text-align: center;">combination.size</th>
+<th style="text-align: center;">count</th>
+<th style="text-align: center;">observed.prob</th>
+<th style="text-align: center;">mutual.information</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">0.18</td>
+<td style="text-align: center;">0.200</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">0.18</td>
+<td style="text-align: center;">0.200</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">24</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">0.16</td>
+<td style="text-align: center;">0.172</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">24</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">0.16</td>
+<td style="text-align: center;">0.172</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">24</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">31</td>
+<td style="text-align: center;">0.69</td>
+<td style="text-align: center;">0.162</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">24</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">31</td>
+<td style="text-align: center;">0.69</td>
+<td style="text-align: center;">0.162</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">36</td>
+<td style="text-align: center;">0.80</td>
+<td style="text-align: center;">0.146</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">36</td>
+<td style="text-align: center;">0.80</td>
+<td style="text-align: center;">0.146</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">24</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">25</td>
+<td style="text-align: center;">0.56</td>
+<td style="text-align: center;">0.133</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">24</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">25</td>
+<td style="text-align: center;">0.56</td>
+<td style="text-align: center;">0.133</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0.13</td>
+<td style="text-align: center;">0.109</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0.13</td>
+<td style="text-align: center;">0.109</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0.13</td>
+<td style="text-align: center;">0.068</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0.13</td>
+<td style="text-align: center;">0.068</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">0.16</td>
+<td style="text-align: center;">0.064</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">0.16</td>
+<td style="text-align: center;">0.064</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">0.16</td>
+<td style="text-align: center;">0.057</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">0.16</td>
+<td style="text-align: center;">0.057</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">26</td>
+<td style="text-align: center;">0.58</td>
+<td style="text-align: center;">0.038</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">26</td>
+<td style="text-align: center;">0.58</td>
+<td style="text-align: center;">0.038</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">28</td>
+<td style="text-align: center;">0.62</td>
+<td style="text-align: center;">0.008</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">28</td>
+<td style="text-align: center;">0.62</td>
+<td style="text-align: center;">0.008</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0.11</td>
+<td style="text-align: center;">-0.015</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0.11</td>
+<td style="text-align: center;">-0.015</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">31</td>
+<td style="text-align: center;">0.69</td>
+<td style="text-align: center;">-0.023</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">31</td>
+<td style="text-align: center;">0.69</td>
+<td style="text-align: center;">-0.023</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0.11</td>
+<td style="text-align: center;">-0.023</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0.11</td>
+<td style="text-align: center;">-0.023</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">24</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">28</td>
+<td style="text-align: center;">0.62</td>
+<td style="text-align: center;">-0.050</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">24</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">28</td>
+<td style="text-align: center;">0.62</td>
+<td style="text-align: center;">-0.050</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">24</td>
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">25</td>
+<td style="text-align: center;">0.56</td>
+<td style="text-align: center;">-0.072</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">24</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">25</td>
+<td style="text-align: center;">0.56</td>
+<td style="text-align: center;">-0.072</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">31</td>
+<td style="text-align: center;">0.69</td>
+<td style="text-align: center;">-0.085</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">23</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">31</td>
+<td style="text-align: center;">0.69</td>
+<td style="text-align: center;">-0.085</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0.13</td>
+<td style="text-align: center;">-0.091</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0.13</td>
+<td style="text-align: center;">-0.091</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">27</td>
+<td style="text-align: center;">0.60</td>
+<td style="text-align: center;">-0.101</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">27</td>
+<td style="text-align: center;">0.60</td>
+<td style="text-align: center;">-0.101</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0.11</td>
+<td style="text-align: center;">-0.107</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0.11</td>
+<td style="text-align: center;">-0.107</td>
+</tr>
+</tbody>
+</table>
+
+Mutual information for dyadic combinations in angry faces
+
+Again, the information of the mutual information differs from that
+achieved purely by looking at the probability distributions. The AU4+17
+combination is the most common by far in this context; however, because
+both elements independently occur at very high rates in this context,
+they do not contain a lot of information about each other - seeing one
+of them does not allow us to state whether the second one is also
+present. Information is higher between AU6 and AU7, neither of which is
+very common in anger, but AU7 only occurred when AU6 was also present.
+
+# Networks
 
 Now that we have our information about the probabilities of different
 elements and conditions extracted, we can start looking at different
@@ -1701,8 +2353,7 @@ Action Units. Third, we can use network metrics to identify central
 Action Units in a condition, and understand the network as a whole
 better.
 
-Overlap networks
-----------------
+## Overlap networks
 
 Let’s start with the bipartite overlap network: we can visualise which
 conditions (in our case, emotions), share Action Units. To make the
@@ -1756,8 +2407,7 @@ full and hard to understand. With the ‘clusters’ parameter, we could
 explore whether these results create clearly separated clusters using
 the igraph ‘fast and greedy’ clustering algorithm.
 
-Conditional probability networks
---------------------------------
+## Conditional probability networks
 
 Earlier, we explored conditional probability, but we did not yet look at
 the output graph, which can help us illuminate our data even more. We
@@ -1786,8 +2436,7 @@ other hand (e.g., AU4 and 23) have reciprocal conditional probability:
 in the majority of cases when one is active, the other one is also
 active.
 
-Network visualisation
----------------------
+## Network visualisation
 
 To do all the following calculations, we extract the netfacs object and
 turn it into a network with specific properties. Here goes:
@@ -1891,8 +2540,7 @@ Given the small size of this data set, even without previous knowledge
 of where the emotions fall, we could assume that there are at least
 three distinct clusters in the data.
 
-Network parameters
-------------------
+## Network parameters
 
 While making graphs is nice, having our FACS data as networks also
 allows us to calculate the centrality and importance of specific
@@ -2163,6 +2811,8 @@ centrality measures, and one can extract them all at once.
 </tbody>
 </table>
 
+Network centrality measures for angry faces
+
 The different network measures capture different aspects of centrality.
 - strength: how many connections does the AU have - eigenvector: high if
 AU is connected with a lot of AUs that also have a lot of connections -
@@ -2215,6 +2865,8 @@ we can also calculate information flow etc within across a network.
 </tr>
 </tbody>
 </table>
+
+Network graph measures for anry faces
 
 Here, we see that there are 19 elements, 28 connections between them,
 which means that 16.4% of all possible connections are filled. The graph
@@ -2331,6 +2983,8 @@ Let’s see what happens if we do this across the different emotions.
 </tbody>
 </table>
 
+Network graph measures for all faces
+
 We see that the density of the different emotion networks differs
 considerably, but they all have pretty low density (mainly because they
 all rely on a small set of AUs). Fear and Anger seem to involve more AUs
@@ -2338,8 +2992,7 @@ than the others. Some (Anger, Surprise, Disgust) are pretty transitive
 (AUs all usually appear together), while some (Fear, Happy) are less
 transitive (indicating that they have different configurations).
 
-Combination sizes
------------------
+## Combination sizes
 
 One question that might be of interest when we talk about complexity
 could be whether the number of elements is larger than expected in a
@@ -2430,6 +3083,8 @@ tested against the null distribution.
 </tbody>
 </table>
 
+Combination sizes of facial expressions in the angry condition
+
 <img src="README_files/figure-markdown_strict/size.plot-1.png" style="display: block; margin: auto;" />
 
 What the table and plot show us is that angry faces are actually quite
@@ -2463,9 +3118,9 @@ If we do the same for happy faces, we see a very different pattern
 <tr class="even">
 <td style="text-align: center;">1</td>
 <td style="text-align: center;">0.03</td>
-<td style="text-align: center;">0.04</td>
+<td style="text-align: center;">0.03</td>
 <td style="text-align: center;">-0.01</td>
-<td style="text-align: center;">0.22</td>
+<td style="text-align: center;">0.24</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">2</td>
@@ -2479,7 +3134,7 @@ If we do the same for happy faces, we see a very different pattern
 <td style="text-align: center;">0.18</td>
 <td style="text-align: center;">0.16</td>
 <td style="text-align: center;">0.02</td>
-<td style="text-align: center;">0.17</td>
+<td style="text-align: center;">0.16</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">4</td>
@@ -2507,23 +3162,24 @@ If we do the same for happy faces, we see a very different pattern
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.38</td>
+<td style="text-align: center;">0.34</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">8</td>
 <td style="text-align: center;">0.00</td>
 <td style="text-align: center;">0.01</td>
 <td style="text-align: center;">-0.01</td>
-<td style="text-align: center;">0.04</td>
+<td style="text-align: center;">0.05</td>
 </tr>
 </tbody>
 </table>
 
+Combination sizes of happy expressions in the angry condition
+
 In happy faces, combinations of 3 elements are by far the most likely,
 while all other combination sizes occur less than expected.
 
-Entropy
--------
+## Entropy
 
 There is surprisingly little work on the information contained in facial
 expressions, even though this would be a great way to measure
@@ -2612,6 +3268,8 @@ overall entropy under random conditions.
 </tr>
 </tbody>
 </table>
+
+Ratios between expected and observed entropies in different emotions
 
 Here, we see that the different emotions differ in terms of their
 entropy ratio (ratios close to 0 mean order, ratios close to 1 mean
