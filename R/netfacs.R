@@ -106,7 +106,7 @@ netfacs <- function(data,
                     n_cores = 2) {
   # set the function for the rules generation
   calculate_prob_of_comb <- cmpfun(calculate_prob_of_comb)
-
+  
   # fix column names of dataset to not include special characters or spaces
   colnames(data) <- gsub(
     colnames(data),
@@ -147,14 +147,14 @@ netfacs <- function(data,
   if (ran.trials <= 100) {
     use_parallel <- FALSE
   }
-
+  
   # if combination.size is not determined, the maximum combination size that is considered is set to the maximum observed combination size
   if (is.null(combination.size)) {
     combination.size <- max(rowsums(data))
   }
-
-
-# null condition is specified ---------------------------------------------
+  
+  
+  # null condition is specified ---------------------------------------------
   
   # data preparation happens for two different cases: either 'condition' is set, in which case the 'test.condition' is tested against all other cases or against one specific 'null.condition'; alternatively, if no condition is set, the probabilities are compared with random probabilities
   if (!is.null(condition)) {
@@ -165,19 +165,19 @@ netfacs <- function(data,
     if (!test.condition %in% condition) {
       return(print("Test condition not part of the condition vector"))
     }
-
+    
     # if random.level is not defined, each event/row is its own case, and all events are compared against each other. If random.level is defined, the randomization will select cases based on which level they belong to
     if (is.null(random.level)) {
       random.level <- 1:nrow(data)
     }
-
+    
     # if the null condition is not determined, all cases that are not part of the test dataset are classed as null condition
     condition.x <- as.character(condition)
     if (is.null(null.condition)) {
       null.condition <- "all"
       condition.x[condition.x != test.condition] <- "all"
     }
-
+    
     # the control argument, which is entered as a list (to allow for multiple control variables) is turned into a combination of those variables. E.g., if you control for sex and social group, then each individual or is classed as sex_group
     if (length(control) > 1) {
       control.obj <- apply(do.call(cbind, control), 1, function(k) {
@@ -190,7 +190,7 @@ netfacs <- function(data,
     if (is.null(control)) {
       control.obj <- rep(1, nrow(data))
     }
-
+    
     # if duration is set, all variable vectors have to be multiplied accordingly
     if (is.null(duration)) {
       min.duration <- 1
@@ -199,7 +199,7 @@ netfacs <- function(data,
       min.duration <- min(duration)
       duration <- round(duration / min.duration, 0) # duration is determined by the minimum value. So, if the shortest event is 0.05s, then an even of 1sec will be represented 20 times
       data <- data[rep(1:nrow(data), times = duration), ]
-
+      
       condition.x <-
         condition.x[rep(1:length(condition.x), times = duration)]
       control.obj <-
@@ -217,31 +217,31 @@ netfacs <- function(data,
     duration <- duration[comb.size > 0 ]
     random.level <- random.level[comb.size > 0 ]
     control.obj <- control.obj[comb.size > 0 ]
-
+    
     ### turn data into test data and null data
     data.test <- data[condition.x == test.condition, ]
     data.null <- data[condition.x == null.condition, ]
-
+    
     # turn control variable into test and null control variable
     test.control <- control.obj[condition.x == test.condition]
     null.control <- control.obj[condition.x == null.condition]
-
+    
     # turn random level variable into test and null control variable
     random.level.null <- random.level[condition.x == null.condition]
     random.level.test <- random.level[condition.x == test.condition]
-
+    
     # create ratio for randomisation of null dataset: if the test dataset contains 12 males and 15 females (ratio of 1.25), then the selection of the null dataset should reflect this
     rl.test.ratio <- Table(test.control[!duplicated(random.level.test)])
     rl.test.ratio <- rl.test.ratio / sum(rl.test.ratio) # ratio for test data
-
+    
     rl.null.ratio <- data.frame(
       subj = random.level.null[!duplicated(random.level.null)],
       control = null.control[!duplicated(random.level.null)]
     )
     rl.null.ratio$llh <- as.numeric(rl.test.ratio[match(rl.null.ratio$control,
                                                         names(rl.test.ratio))])
-
-
+    
+    
     # create probabilities for null and test datasets
     # create a list for each event/row of the dataset, containing the names of the elements that were active
     elements.null <- lapply(1:nrow(data.null), function(x) {
@@ -251,43 +251,31 @@ netfacs <- function(data,
       xx <- colnames(data.test)[data.test[x, ] == 1]
     })
     
-    
     # extract the probabilities for each combination of elements
-    rs.null <- calculate_prob_of_comb(elements = elements.null, 
-                                      maxlen = combination.size) 
-    rs.test <- calculate_prob_of_comb(elements = elements.test, 
-                                      maxlen = combination.size) 
+    rs.null <- calculate_prob_of_comb(elements = elements.null, maxlen = 2) 
+    rs.test <- calculate_prob_of_comb(elements = elements.test, maxlen = 2) 
     
     rs.null$combination.size <- calculate_combination_size(rs.null$combination)
     rs.test$combination.size <- calculate_combination_size(rs.test$combination)
     
-
     # for single units that are not active during this specific condition, add them anyways with the information that they did not show up
-    innactive.su.null <- 
-      colnames(data)[!colnames(data) %in% rs.null$combination]
-    innactive.su.test <- 
-      colnames(data)[!colnames(data) %in% rs.test$combination]
+    rs.null <- add_inactive_single_units(rs.null, 
+                                         single.units = colnames(data.null))
+    rs.test <- add_inactive_single_units(rs.test, 
+                                         single.units = colnames(data.test))
     
-    if (length(innactive.su.null) > 0) {
-      rs.null <- add_innactive_single_units(rs.null, innactive.su.null)
-    }
-    if (length(innactive.su.test) > 0) {
-      rs.test <- add_innactive_single_units(rs.test, innactive.su.test)
-    }
-    
-    rownames(rs.test) <- rs.test$combination
-
     # create an object with the observed event sizes
     event.sizes <- Table(sapply(elements.test, FUN = length))
     max.event.size <- max(rowsums(data))
-
+    
     # function for the bootstrap, to be used in parallel lapply, or
     # in standard lapply loop
     # creates the probabilities of each element combination for random
     # selections of the null data set
     boot_foo <- function(x) {
-      # (x arg is necessary for fun to work with mclapply())
-      # sample elements from the null condition 
+      # fun must have only one argument that is NOT used to run in loop
+      # make sure that necessary objects (i.e. rl.null.ratio, random.level.null, elements.null, combination.size, max.event.size) are present in the environment
+      # sample elements from the null condition
       # keep relative number of observations per subject constant
       subj.boot <- sample(
         x = rl.null.ratio$subj,
@@ -299,22 +287,17 @@ netfacs <- function(data,
       
       # calculate probabilities for random dataset
       rs.boot <-
-        calculate_prob_of_comb(elements = elements.boot, 
-                               maxlen = combination.size) 
+        calculate_prob_of_comb(elements = elements.boot,
+                               maxlen = combination.size)
       
       # order to match real data
       boot.prob <-
-        rs.boot$observed.prob[match(rs.test$combination, rs.boot$combination)] 
+        rs.boot$observed.prob[match(rs.test$combination, rs.boot$combination)]
       boot.prob[is.na(boot.prob)] <- 0
-      
-      # boot.count <-
-      #   rs.boot$count[match(rs.test$combination, rs.boot$combination)]
-      # boot.count[is.na(boot.count)] <- 0
-      
       
       # create information for event sizes (how many AUs active at once) as well
       event.sizes.boot <-
-        Table(sapply(elements.boot, FUN = length))
+        Table(sapply(elements.null, FUN = length))
       
       # calculate probability for an event of that size (N AU active) to occur
       xx <- data.frame(
@@ -326,23 +309,20 @@ netfacs <- function(data,
       return(
         list(
           boot.prob = boot.prob,
-          # prob of event size to occur
           boot.event.sizes.prob = xx$observed.prob
-          # boot.count = boot.count
         )
       )
     }
-
-
+    
     if (use_parallel) {
       # run parallel loop
       # which type of parallel depends on parallel_safe
       # if on Mac or Linux, mclapply should work
       if (!(Sys.info()[["sysname"]] == "Windows") &
-        .Platform$OS.type == "unix") {
+          .Platform$OS.type == "unix") {
         boot.values <- mclapply(1:ran.trials,
-          FUN = boot_foo,
-          mc.cores = n_cores
+                                FUN = boot_foo,
+                                mc.cores = n_cores
         )
       } else {
         # create cluster for parallelization
@@ -351,19 +331,14 @@ netfacs <- function(data,
         clusterExport(
           cl = mycluster,
           c(
-            "ran.trials",
             "elements.null",
             "max.event.size",
             "rs.test",
-            "condition.x",
             "rl.null.ratio",
             "combination.size",
-            "combinations",
             "random.level.null",
             "calculate_prob_of_comb",
-            "compute_possible_combs",
-            "calculate_combination_size",
-            "comb_n",
+            "compute_combinations",
             "Table"
           ),
           envir = environment()
@@ -383,118 +358,29 @@ netfacs <- function(data,
       # run plain loop
       boot.values <- lapply(1:ran.trials, FUN = boot_foo)
     }
-
-
+    
     ##### take the calculated probabilities for the randomisations and use them to return p values, z values, specificity, and increase
+    
     boot.prob <- do.call(cbind, lapply(boot.values, function(x) {
       x$boot.prob
     }))
     
-    # boot.count is not used later in the function - delete?
-    # boot.count <- do.call(cbind, lapply(boot.values, function(x) {
-    #   x$boot.count
-    # }))
-
-    # average probability under null condition
-    rs.test$expected.prob <-
-      rowmeans(boot.prob) 
-
-    # rs.test$expected.lower.bound <- sapply(1:nrow(boot.prob), function(x) {
-    #   return(as.numeric(quantile(boot.prob[x, ], probs = 0.025)))
-    # })
-    # rs.test$expected.upper.bound <- sapply(1:nrow(boot.prob), function(x) {
-    #   return(as.numeric(quantile(boot.prob[x, ], probs = 0.975)))
-    # })
-
-    # effect size here is the difference between the observed and expected values
-    rs.test$effect.size <- rs.test$observed.prob - rs.test$expected.prob
-
-    # p-values
-    if (tail == "upper.tail") {
-      rs.test$pvalue <- rowmeans(boot.prob >= rs.test$observed.prob)
-    }
-    if (tail == "lower.tail") {
-      rs.test$pvalue <- rowmeans(boot.prob <= rs.test$observed.prob)
-    }
-
-    if (!is.null(duration)) {
-      rs.test$count <- rs.test$count * min.duration
-    }
-
-
-    ### for specificity, divide how often the combination occurs in the test condition by the total count (test + null condition)
-    null.count <- rs.null$count[match(rs.test$combination, rs.null$combination)]
-    null.count[is.na(null.count)] <- 0
-    rs.test$specificity <- rs.test$count / (rs.test$count + null.count)
+    rs.test <- calc_effect_pval_pincrease(rs.test = rs.test, 
+                                          boot.prob = boot.prob, 
+                                          tail = tail, 
+                                          duration = duration)
     
-
-    # create probability increase by comparing the observed probability with the
-    # mean probability of the randomisation process
-    rs.test$prob.increase <- rs.test$observed.prob / rowmeans(boot.prob)
-    rs.test$prob.increase[is.infinite(rs.test$prob.increase)] <- NA
-
-    rs.test <- rs.test[, c(
-      "combination",
-      "combination.size",
-      "count",
-      "observed.prob",
-      "expected.prob",
-      "effect.size",
-      "pvalue",
-      "specificity",
-      "prob.increase"
-    )]
-    boot.prob <-
-      boot.prob[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
-    rs.test <-
-      rs.test[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
-
     ##### combination size information per event
     event.prob <- do.call(cbind, lapply(boot.values, function(x) {
       x$boot.event.sizes.prob
     }))
-
-    t.event.size <- data.frame(
-      combination.size = 0:(nrow(event.prob) - 1),
-      observed.prob = 0,
-      expected.prob = 0
-    )
-    t.event.size$observed.prob[match(names(event.sizes), 
-                                     t.event.size$combination.size)] <- 
-      event.sizes / sum(event.sizes)
-    t.event.size$expected.prob <- rowmeans(event.prob)
-
-    # t.event.size$expected.lower.bound <- sapply(1:nrow(event.prob), function(x) {
-    #   return(as.numeric(quantile(event.prob[x, ], probs = 0.025)))
-    # })
-    # t.event.size$expected.upper.bound <- sapply(1:nrow(event.prob), function(x) {
-    #   return(as.numeric(quantile(event.prob[x, ], probs = 0.975)))
-    # })
-
-    # effect size here is the difference between the observed and expected values
-    t.event.size$effect.size <- 
-      t.event.size$observed.prob - t.event.size$expected.prob
-
-
-    t.event.size$pvalue <- as.numeric(lapply(1:nrow(event.prob), function(z) {
-      # p-value: two-sided, testing how many of the permutation results for that element are more extreme than the observed value
-      xx <- min(
-        mean(
-          event.prob[z, ] >= t.event.size$observed.prob[z],
-          na.rm = TRUE
-        ),
-        mean(
-          event.prob[z, ] <= t.event.size$observed.prob[z],
-          na.rm = TRUE
-        )
-      ) # take the smaller of the two p-values (number of permutations with larger and smaller values)
-      return(xx)
-    }))
+    
+    t.event.size <- calculate_event_size_prob(event.prob, event.sizes)
   }
-
-
-# null condition is not specified -----------------------------------------
-
+  
+  
+  # null condition is not specified -----------------------------------------
+  
   ###### the following calculations are done when there is no condition specified, meaning the observed probability across all cases is compared to a null model based on permutations maintaining the event size and element probability
   if (is.null(condition)) {
     # same as above, account for added duration data
@@ -506,7 +392,7 @@ netfacs <- function(data,
       duration <- round(duration / min.duration, 0)
       data <- data[rep(1:nrow(data), times = duration), ]
     }
-
+    
     condition.x <- rep("all", nrow(data))
     data <- apply(data, 2, as.numeric)
     
@@ -520,55 +406,51 @@ netfacs <- function(data,
       xx <- colnames(data)[data[x, ] == 1]
     })
     
-    rs.test <-
-      calculate_prob_of_comb(elements = elements.test, 
-                             maxlen = combination.size)
+    rs.test <- calculate_prob_of_comb(elements = elements.test, 
+                                      maxlen = combination.size)
     
     rs.test$combination.size <- calculate_combination_size(rs.test$combination)
-
-    # add single elements that are not represented in the test data
-    innactive.su.test <- 
-      colnames(data)[!colnames(data) %in% rs.test$combination]
     
-    if (length(innactive.su.test) > 0) {
-      rs.test <- add_innactive_single_units(rs.test, innactive.su.test)
-    }
+    # add single elements that are not represented in the test data
+    rs.test <- add_inactive_single_units(rs.test, single.units = colnames(data))
     
     data <- as.matrix(data)
     # add event size information
     event.sizes <- Table(sapply(elements.test, FUN = length))
     max.event.size <- max(rowsums(data))
-
+    
     # randomization function to be used either in parallel or plain loop
     randomize_foo <- function(x) {
-      # (x arg is necessary for fun to work with mclapply())
+      # fun must have only one argument that is NOT used to run in loop
+      # make sure that necessary objects (i.e. d, rs.test, combination.size) are present in the environment
       # To establish the expected probabilities for the elements, the data is compared to permutations that keep the number of elements per row constant but allow for the element probability to vary
       xx <-
         randomizeMatrix(
           samp = data,
           null.model = "richness",
-          iterations = 100
+          iterations = 1
         )
-
+      
       elements.boot <- lapply(1:nrow(xx), function(x) {
         xx <- colnames(data)[xx[x, ] == 1]
       })
-
+      
       # create probabilities for only the single element combinations
-      rs.boot.1 <- calculate_prob_of_comb(elements = elements.boot, maxlen = 1)
-
+      rs.boot.1 <- calculate_prob_of_comb(elements = elements.boot, 
+                                          maxlen = 1)
+      
       # for all other combinations, do permutations that keep the number of cases per row and per column the same
       xx <-
         randomizeMatrix(
           samp = data,
-          null.model = "independentswap",
-          iterations = 100
+          null.model = "trialswap",
+          iterations = 1
         )
-
+      
       elements.boot <- lapply(1:nrow(xx), function(x) {
         xx <- colnames(data)[xx[x, ] == 1]
       })
-
+      
       # create overall random dataset
       rs.boot.all <- calculate_prob_of_comb(elements = elements.boot, 
                                             maxlen = combination.size)
@@ -576,27 +458,26 @@ netfacs <- function(data,
       comb.size <- calculate_combination_size(rs.boot.all$combination)
       
       rs.boot.all <- rs.boot.all[comb.size > 1, ]
-
+      
       # combine the datasets
       rs.boot <- rbind(rs.boot.1, rs.boot.all)
-
+      
       boot.prob <- 
         rs.boot$observed.prob[match(rs.test$combination, rs.boot$combination)]
       boot.prob[is.na(boot.prob)] <- 0
-
+      
       list(boot.prob = boot.prob)
     }
-
-
+    
     if (use_parallel) {
       # run parallel loop
       # which type of parallel depends on parallel_safe
       # if on Mac or Linux, mclapply should work
       if (!Sys.info()[["sysname"]] == "Windows" &
-        .Platform$OS.type == "unix") {
+          .Platform$OS.type == "unix") {
         boot.values <- mclapply(1:ran.trials,
-          FUN = randomize_foo,
-          mc.cores = n_cores
+                                FUN = randomize_foo,
+                                mc.cores = n_cores
         )
       } else {
         # create cluster for parallelization
@@ -605,21 +486,13 @@ netfacs <- function(data,
         clusterExport(
           cl = mycluster,
           c(
-            "ran.trials",
-            "elements.test",
-            "max.event.size",
+            "data",
             "rs.test",
-            "condition.x",
             "combination.size",
             "calculate_prob_of_comb",
-            "compute_possible_combs",
+            "compute_combinations",
             "calculate_combination_size",
-            "combinations",
-            "comb_n",
-            "data",
-            "randomizeMatrix",
-            "comb_n",
-            "Table"
+            "randomizeMatrix"
           ),
           envir = environment()
         )
@@ -638,63 +511,17 @@ netfacs <- function(data,
       # run plain loop
       boot.values <- lapply(1:ran.trials, FUN = randomize_foo)
     }
-
-    ##### calculate difference between expected and observed probability as z value, p value, and probability increase
-    boot.prob <-
-      do.call(cbind, lapply(boot.values, function(x) {
-        x$boot.prob
-      }))
-    rs.test$expected.prob <- rowmeans(boot.prob)
-    # rs.test$expected.lower.bound <- sapply(1:nrow(boot.prob), function(x) {
-    #   return(as.numeric(quantile(boot.prob[x, ], probs = 0.025)))
-    # })
-    # rs.test$expected.upper.bound <- sapply(1:nrow(boot.prob), function(x) {
-    #   return(as.numeric(quantile(boot.prob[x, ], probs = 0.975)))
-    # })
-
-    # effect size here is the difference between the observed and expected values
-    rs.test$effect.size <- rs.test$observed.prob - rs.test$expected.prob
-
-    # # p-values
-    if (tail == "upper.tail") {
-      rs.test$pvalue <- rowmeans(boot.prob >= rs.test$observed.prob)
-    }
-    if (tail == "lower.tail") {
-      rs.test$pvalue <- rowmeans(boot.prob <= rs.test$observed.prob)
-    }
-
-    if (!is.null(duration)) {
-      rs.test$count <- rs.test$count * min.duration
-    }
-
-
-    # create probability increase by comparing the observed probability with the
-    # mean probability of the randomisation process
-    rs.test$prob.increase <- rs.test$observed.prob / rowmeans(boot.prob)
-    rs.test$prob.increase[is.infinite(rs.test$prob.increase)] <- NA
-
-    rs.test <- rs.test[, c(
-      "combination",
-      "combination.size",
-      "count",
-      "observed.prob",
-      "expected.prob",
-      "effect.size",
-      "pvalue",
-      "prob.increase"
-    )]
-    boot.prob <-
-      boot.prob[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
-    rs.test <-
-      rs.test[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
-
-    boot.prob <-
-      boot.prob[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
-    rs.test <-
-      rs.test[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
     
-    rs.test <- rs.test[rs.test$combination!='NA' & !is.na(rs.test$combination),]
-
+    ##### calculate difference between expected and observed probability as z value, p value, and probability increase
+    boot.prob <- do.call(cbind, lapply(boot.values, function(x) {
+      x$boot.prob
+    }))
+    
+    rs.test <- calc_effect_pval_pincrease(rs.test = rs.test, 
+                                          boot.prob = boot.prob, 
+                                          tail = tail, 
+                                          duration = duration)
+    
     ##### combination size information per event; shuffle so that the number of time each element appears is kept constant, but number of elements per row differs
     event.prob <- do.call(cbind, lapply(1:ran.trials, function(x) {
       xx <- randomizeMatrix(
@@ -714,47 +541,11 @@ netfacs <- function(data,
         event.sizes.boot
       return(cs$observed.prob)
     }))
-
-    t.event.size <- data.frame(
-      combination.size = 0:(nrow(event.prob) - 1),
-      observed.prob = 0,
-      expected.prob = 0
-    )
-    t.event.size$observed.prob[match(names(event.sizes), 
-                                     t.event.size$combination.size)] <- 
-      event.sizes / sum(event.sizes)
-    t.event.size$expected.prob <- rowmeans(event.prob)
-
-    # t.event.size$expected.lower.bound <- sapply(1:nrow(event.prob), function(x) {
-    #   return(as.numeric(quantile(event.prob[x, ], probs = 0.025)))
-    # })
-    # t.event.size$expected.upper.bound <- sapply(1:nrow(event.prob), function(x) {
-    #   return(as.numeric(quantile(event.prob[x, ], probs = 0.975)))
-    # })
-
-    # effect size here is the difference between the observed and expected values
-    t.event.size$effect.size <- 
-      t.event.size$observed.prob - t.event.size$expected.prob
-
-
-    t.event.size$pvalue <- as.numeric(lapply(1:nrow(event.prob), function(z) {
-      # p-value: two-sided, testing how many of the permutation results for that element are more extreme than the observed value
-      xx <- min(
-        mean(
-          event.prob[z, ] >= t.event.size$observed.prob[z],
-          na.rm = TRUE
-        ),
-        mean(
-          event.prob[z, ] <= t.event.size$observed.prob[z],
-          na.rm = TRUE
-        )
-      ) # take the smaller of the two p-values (number of permutations with larger and smaller values)
-      return(xx)
-    }))
+    
+    t.event.size <- calculate_event_size_prob(event.prob, event.sizes)
   }
-
-
-# summarize results -------------------------------------------------------
+  
+  # summarize results -------------------------------------------------------
   
   # summaries for the object
   rs.test <-
@@ -781,7 +572,7 @@ netfacs <- function(data,
     control = control,
     random.prob = boot.prob
   )
-
+  
   list(
     result = rs.test,
     used.parameters = used.parameters,
@@ -806,16 +597,98 @@ calculate_combination_size <- function(x) {
     FALSE, FALSE)
 }
 
-add_innactive_single_units <- function(d, su) {
+add_inactive_single_units <- function(d, single.units) {
   # d: data
-  # su: single inactive AUs
-  xx <- data.frame(
-    combination = su,
-    observed.prob = 0,
-    count = 0,
-    combination.size = 1
-  )
+  # single.units: single inactive AUs
   
-  rbind(xx, d)
+  innactive.single.units <- 
+    single.units[!single.units %in% d$combination]
+  
+  if (length(innactive.single.units) > 0) {
+    res <- data.frame(
+      combination = innactive.single.units,
+      observed.prob = 0,
+      count = 0,
+      combination.size = 1
+    )
+    return(rbind(res, d))
+  }
+  d
 }
 
+calculate_event_size_prob <- function(event.prob, event.sizes) {
+  # event prob: a matrix
+  # event.sizes: a named vector
+  t.event.size <- data.frame(
+    combination.size = 0:(nrow(event.prob) - 1),
+    observed.prob = 0,
+    expected.prob = 0
+  )
+  t.event.size$observed.prob[match(names(event.sizes), 
+                                   t.event.size$combination.size)] <- 
+    event.sizes / sum(event.sizes)
+  t.event.size$expected.prob <- rowmeans(event.prob)
+  
+  # effect size here is the difference between the observed and expected values
+  t.event.size$effect.size <- 
+    t.event.size$observed.prob - t.event.size$expected.prob
+  
+  
+  t.event.size$pvalue <- as.numeric(lapply(1:nrow(event.prob), function(z) {
+    # p-value: two-sided, testing how many of the permutation results for that element are more extreme than the observed value
+    xx <- min(
+      mean(
+        event.prob[z, ] >= t.event.size$observed.prob[z],
+        na.rm = TRUE
+      ),
+      mean(
+        event.prob[z, ] <= t.event.size$observed.prob[z],
+        na.rm = TRUE
+      )
+    ) # take the smaller of the two p-values (number of permutations with larger and smaller values)
+    return(xx)
+  }))
+  t.event.size
+}
+
+calc_effect_pval_pincrease <- function(rs.test, boot.prob, tail, duration) {
+  rs.test$expected.prob <- rowmeans(boot.prob)
+  
+  # effect size here is the difference between the observed and expected values
+  rs.test$effect.size <- rs.test$observed.prob - rs.test$expected.prob
+  
+  # # p-values
+  if (tail == "upper.tail") {
+    rs.test$pvalue <- rowmeans(boot.prob >= rs.test$observed.prob)
+  }
+  if (tail == "lower.tail") {
+    rs.test$pvalue <- rowmeans(boot.prob <= rs.test$observed.prob)
+  }
+  
+  if (!is.null(duration)) {
+    rs.test$count <- rs.test$count * min.duration
+  }
+  
+  # create probability increase by comparing the observed probability with the
+  # mean probability of the randomisation process
+  rs.test$prob.increase <- rs.test$observed.prob / rowmeans(boot.prob)
+  rs.test$prob.increase[is.infinite(rs.test$prob.increase)] <- NA
+  
+  rs.test <- rs.test[, c(
+    "combination",
+    "combination.size",
+    "count",
+    "observed.prob",
+    "expected.prob",
+    "effect.size",
+    "pvalue",
+    "prob.increase"
+  )]
+  boot.prob <-
+    boot.prob[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
+  rs.test <-
+    rs.test[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
+  rs.test <- rs.test[rs.test$combination!='NA' & !is.na(rs.test$combination),]
+  
+  rs.test
+}
