@@ -252,8 +252,10 @@ netfacs <- function(data,
     })
     
     # extract the probabilities for each combination of elements
-    rs.null <- calculate_prob_of_comb(elements = elements.null, maxlen = 2) 
-    rs.test <- calculate_prob_of_comb(elements = elements.test, maxlen = 2) 
+    rs.null <- calculate_prob_of_comb(elements = elements.null, 
+                                      maxlen = combination.size) 
+    rs.test <- calculate_prob_of_comb(elements = elements.test, 
+                                      maxlen = combination.size) 
     
     rs.null$combination.size <- calculate_combination_size(rs.null$combination)
     rs.test$combination.size <- calculate_combination_size(rs.test$combination)
@@ -297,7 +299,7 @@ netfacs <- function(data,
       
       # create information for event sizes (how many AUs active at once) as well
       event.sizes.boot <-
-        Table(sapply(elements.null, FUN = length))
+        Table(sapply(elements.boot, FUN = length))
       
       # calculate probability for an event of that size (N AU active) to occur
       xx <- data.frame(
@@ -368,7 +370,25 @@ netfacs <- function(data,
     rs.test <- calc_effect_pval_pincrease(rs.test = rs.test, 
                                           boot.prob = boot.prob, 
                                           tail = tail, 
-                                          duration = duration)
+                                          duration = duration,
+                                          min.duration = min.duration)
+    
+    ### for specificity, divide how often the combination occurs in the test condition by the total count (test + null condition)
+    null.count <- rs.null$count[match(rs.test$combination, rs.null$combination)]
+    null.count[is.na(null.count)] <- 0
+    rs.test$specificity <- rs.test$count / (rs.test$count + null.count)
+    
+    rs.test <- rs.test[, c(
+      "combination",
+      "combination.size",
+      "count",
+      "observed.prob",
+      "expected.prob",
+      "effect.size",
+      "pvalue",
+      "specificity",
+      "prob.increase"
+    )]
     
     ##### combination size information per event
     event.prob <- do.call(cbind, lapply(boot.values, function(x) {
@@ -651,7 +671,8 @@ calculate_event_size_prob <- function(event.prob, event.sizes) {
   t.event.size
 }
 
-calc_effect_pval_pincrease <- function(rs.test, boot.prob, tail, duration) {
+calc_effect_pval_pincrease <- function(rs.test, boot.prob, tail, duration, 
+                                       min.duration) {
   rs.test$expected.prob <- rowmeans(boot.prob)
   
   # effect size here is the difference between the observed and expected values
