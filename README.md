@@ -1,3 +1,6 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
 # Introduction
 
 The NetFACS package is a tool that allows users to analyse and plot
@@ -90,17 +93,19 @@ several attempts. If one of them gets stuck, it is worth installing it
 straight from CRAN after restarting the R session rather than within the
 install\_github command.
 
-    ## install NetFACS from GitHub
+``` r
+## install NetFACS from GitHub
 
-    library("devtools")
-    devtools::install_github(
-      "NetFACS/NetFACS",
-      force = T,
-      quiet = T
-    )
+library("devtools")
+devtools::install_github(
+  "NetFACS/NetFACS",
+  force = T,
+  quiet = T
+)
 
-    # read library
-    library(NetFACS)
+# read library
+library(NetFACS)
+```
 
 ## Data sets
 
@@ -112,8 +117,10 @@ Manifesto in French, German, and English, where co-occurrence is defined
 as letters happening in the same word. These can be accessed the
 following way:
 
-    data("letternet") # this is the Manifesto #
-    data("emotions_set") # this is the CK Database #
+``` r
+data("letternet") # this is the Manifesto #
+data("emotions_set") # this is the CK Database #
+```
 
 Important for the NetFACS package at the moment is that the basic data
 used to calculate probabilities are stored in a data frame with each
@@ -125,258 +132,29 @@ if they are present. So, for example, the word ‘word’ would have a 1 in
 the columns for d,o,r, and w, and 0 in all other letter columns. It’s
 usually good to have a second data frame of the same length that
 contains additional information about the condition, duration, etc. This
-will look like this for the facial expressions:
+will look like this for the words:
 
-<table>
-<caption>Letter data for faces in the Extended Cohn-Kanade database</caption>
-<thead>
-<tr class="header">
-<th style="text-align: right;">1</th>
-<th style="text-align: right;">2</th>
-<th style="text-align: right;">4</th>
-<th style="text-align: right;">5</th>
-<th style="text-align: right;">6</th>
-<th style="text-align: right;">7</th>
-<th style="text-align: right;">9</th>
-<th style="text-align: right;">10</th>
-<th style="text-align: right;">11</th>
-<th style="text-align: right;">12</th>
-<th style="text-align: right;">14</th>
-<th style="text-align: right;">15</th>
-<th style="text-align: right;">16</th>
-<th style="text-align: right;">17</th>
-<th style="text-align: right;">18</th>
-<th style="text-align: right;">20</th>
-<th style="text-align: right;">21</th>
-<th style="text-align: right;">22</th>
-<th style="text-align: right;">23</th>
-<th style="text-align: right;">24</th>
-<th style="text-align: right;">25</th>
-<th style="text-align: right;">26</th>
-<th style="text-align: right;">27</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-</tr>
-</tbody>
-</table>
+|   a |   b |   c |   d |   e |   f |   g |   h |   i |   j |   k |   l |   m |   n |   o |   p |   q |   r |   s |   t |   u |   v |   w |   x |   y |   z |
+|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|
+|   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |
+|   0 |   0 |   0 |   0 |   1 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   0 |   1 |   0 |   0 |   1 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |
+|   0 |   0 |   0 |   0 |   1 |   0 |   1 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |
+|   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |
+|   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |
+|   1 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   1 |   0 |   1 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |
 
-Letter data for faces in the Extended Cohn-Kanade database
+Letter data for words in the Communist Manifesto
 
-<table>
-<caption>Additional information for faces in the Extended Cohn-Kanade database</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">subject</th>
-<th style="text-align: left;">video</th>
-<th style="text-align: right;">number.aus</th>
-<th style="text-align: left;">AU.combination</th>
-<th style="text-align: left;">emotion</th>
-<th style="text-align: left;">valence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">S005</td>
-<td style="text-align: left;">S005_001</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: left;">9_17</td>
-<td style="text-align: left;">disgust</td>
-<td style="text-align: left;">negative</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S010</td>
-<td style="text-align: left;">S010_002</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: left;">1_2_5_25_27</td>
-<td style="text-align: left;">surprise</td>
-<td style="text-align: left;">NA</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S010</td>
-<td style="text-align: left;">S010_004</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: left;">4_7_17_23_24</td>
-<td style="text-align: left;">anger</td>
-<td style="text-align: left;">negative</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S010</td>
-<td style="text-align: left;">S010_006</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: left;">6_12_16_25</td>
-<td style="text-align: left;">happy</td>
-<td style="text-align: left;">positive</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">S011</td>
-<td style="text-align: left;">S011_001</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: left;">1_2_25_27</td>
-<td style="text-align: left;">surprise</td>
-<td style="text-align: left;">NA</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">S011</td>
-<td style="text-align: left;">S011_002</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: left;">1_4_15_17</td>
-<td style="text-align: left;">sadness</td>
-<td style="text-align: left;">negative</td>
-</tr>
-</tbody>
-</table>
+| word     | comb.size | sentence | language |
+|:---------|----------:|---------:|:---------|
+| ein      |         3 |        1 | german   |
+| gespenst |         8 |        1 | german   |
+| geht     |         4 |        1 | german   |
+| um       |         2 |        1 | german   |
+| in       |         2 |        1 | german   |
+| europa   |         6 |        1 | german   |
 
-Additional information for faces in the Extended Cohn-Kanade database
+Additional information for Communist Manifesto
 
 ### Prepare the data
 
@@ -389,264 +167,105 @@ taken.
 
 So, for photos, data will sometimes look like this:
 
-    odd.photo <- data.frame(
-      photo = c("photo1", "photo2", "photo3", "photo4", "photo5", "photo6"),
-      AUs = c(
-        "AU1/AU5/AU9",
-        "AU1/AU2",
-        "AU1/AU2/AU10",
-        "AU1/AU2",
-        "AU5/AU17/AU18",
-        "AU6/AU12"
-      )
-    )
-    kable(odd.photo, row.names = F, caption = "Photo Data")
+``` r
+odd.photo <- data.frame(
+  photo = c("photo1", "photo2", "photo3", "photo4", "photo5", "photo6"),
+  AUs = c(
+    "AU1/AU5/AU9",
+    "AU1/AU2",
+    "AU1/AU2/AU10",
+    "AU1/AU2",
+    "AU5/AU17/AU18",
+    "AU6/AU12"
+  )
+)
+kable(odd.photo, row.names = F, caption = "Photo Data")
+```
 
-<table>
-<caption>Photo Data</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">photo</th>
-<th style="text-align: left;">AUs</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">photo1</td>
-<td style="text-align: left;">AU1/AU5/AU9</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">photo2</td>
-<td style="text-align: left;">AU1/AU2</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">photo3</td>
-<td style="text-align: left;">AU1/AU2/AU10</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">photo4</td>
-<td style="text-align: left;">AU1/AU2</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">photo5</td>
-<td style="text-align: left;">AU5/AU17/AU18</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">photo6</td>
-<td style="text-align: left;">AU6/AU12</td>
-</tr>
-</tbody>
-</table>
+| photo  | AUs           |
+|:-------|:--------------|
+| photo1 | AU1/AU5/AU9   |
+| photo2 | AU1/AU2       |
+| photo3 | AU1/AU2/AU10  |
+| photo4 | AU1/AU2       |
+| photo5 | AU5/AU17/AU18 |
+| photo6 | AU6/AU12      |
 
 Photo Data
 
 Videos, on the other hand, will sometimes look this:
 
-    odd.video <- data.frame(
-      video = c(rep("video 1", 3),
-                rep("video 2", 2),
-                rep("video 3", 3)),
-      AUs = c("AU1", "AU5", "AU9",
-              "AU1", "AU2",
-              "AU1", "AU2", "AU10"),
-      start.times = c(0.1, 0.2, 0.3,
-                      0.1, 0.3,
-                      0.1, 0.4, 0.4),
-      durations = rep(0.3, times = 8)
-    )
-    kable(odd.video, row.names = F, caption = "Video Data")
+``` r
+odd.video <- data.frame(
+  video = c(rep("video 1", 3),
+            rep("video 2", 2),
+            rep("video 3", 3)),
+  AUs = c("AU1", "AU5", "AU9",
+          "AU1", "AU2",
+          "AU1", "AU2", "AU10"),
+  start.times = c(0.1, 0.2, 0.3,
+                  0.1, 0.3,
+                  0.1, 0.4, 0.4),
+  durations = rep(0.3, times = 8)
+)
+kable(odd.video, row.names = F, caption = "Video Data")
+```
 
-<table>
-<caption>Video Data</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">video</th>
-<th style="text-align: left;">AUs</th>
-<th style="text-align: right;">start.times</th>
-<th style="text-align: right;">durations</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">video 1</td>
-<td style="text-align: left;">AU1</td>
-<td style="text-align: right;">0.1</td>
-<td style="text-align: right;">0.3</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">video 1</td>
-<td style="text-align: left;">AU5</td>
-<td style="text-align: right;">0.2</td>
-<td style="text-align: right;">0.3</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">video 1</td>
-<td style="text-align: left;">AU9</td>
-<td style="text-align: right;">0.3</td>
-<td style="text-align: right;">0.3</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">video 2</td>
-<td style="text-align: left;">AU1</td>
-<td style="text-align: right;">0.1</td>
-<td style="text-align: right;">0.3</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">video 2</td>
-<td style="text-align: left;">AU2</td>
-<td style="text-align: right;">0.3</td>
-<td style="text-align: right;">0.3</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">video 3</td>
-<td style="text-align: left;">AU1</td>
-<td style="text-align: right;">0.1</td>
-<td style="text-align: right;">0.3</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">video 3</td>
-<td style="text-align: left;">AU2</td>
-<td style="text-align: right;">0.4</td>
-<td style="text-align: right;">0.3</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">video 3</td>
-<td style="text-align: left;">AU10</td>
-<td style="text-align: right;">0.4</td>
-<td style="text-align: right;">0.3</td>
-</tr>
-</tbody>
-</table>
+| video   | AUs  | start.times | durations |
+|:--------|:-----|------------:|----------:|
+| video 1 | AU1  |         0.1 |       0.3 |
+| video 1 | AU5  |         0.2 |       0.3 |
+| video 1 | AU9  |         0.3 |       0.3 |
+| video 2 | AU1  |         0.1 |       0.3 |
+| video 2 | AU2  |         0.3 |       0.3 |
+| video 3 | AU1  |         0.1 |       0.3 |
+| video 3 | AU2  |         0.4 |       0.3 |
+| video 3 | AU10 |         0.4 |       0.3 |
 
 Video Data
 
 The prepare.netfacs() function can take either of these inputs and turn
 them into the right format. This will look something like this:
 
-    au.prepared <- prepare.netfacs(
-      elements = odd.video$AUs,
-      type = "video",
-      video.id = odd.video$video,
-      start.time = odd.video$start.times,
-      duration = odd.video$durations,
-      frame.duration = 0.05
-    )
-    kable(head(au.prepared$element.matrix),
-          row.names = F,
-          caption = "Element Matrix of prepare.netfacs")
+``` r
+au.prepared <- prepare.netfacs(
+  elements = odd.video$AUs,
+  type = "video",
+  video.id = odd.video$video,
+  start.time = odd.video$start.times,
+  duration = odd.video$durations,
+  frame.duration = 0.05
+)
+kable(head(au.prepared$element.matrix),
+      row.names = F,
+      caption = "Element Matrix of prepare.netfacs")
+```
 
-<table>
-<caption>Element Matrix of prepare.netfacs</caption>
-<thead>
-<tr class="header">
-<th style="text-align: right;">AU1</th>
-<th style="text-align: right;">AU10</th>
-<th style="text-align: right;">AU2</th>
-<th style="text-align: right;">AU5</th>
-<th style="text-align: right;">AU9</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-</tr>
-</tbody>
-</table>
+| AU1 | AU10 | AU2 | AU5 | AU9 |
+|----:|-----:|----:|----:|----:|
+|   1 |    0 |   0 |   0 |   0 |
+|   1 |    0 |   0 |   0 |   0 |
+|   1 |    0 |   0 |   1 |   0 |
+|   1 |    0 |   0 |   1 |   0 |
+|   1 |    0 |   0 |   1 |   1 |
+|   1 |    0 |   0 |   1 |   1 |
 
 Element Matrix of prepare.netfacs
 
-    kable(head(au.prepared$video.info),
-          row.names = F,
-          caption = "Video Info of prepare.netfacs")
+``` r
+kable(head(au.prepared$video.info),
+      row.names = F,
+      caption = "Video Info of prepare.netfacs")
+```
 
-<table>
-<caption>Video Info of prepare.netfacs</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">video.id</th>
-<th style="text-align: right;">start.sec</th>
-<th style="text-align: right;">end.sec</th>
-<th style="text-align: right;">duration</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">video 1</td>
-<td style="text-align: right;">0.10</td>
-<td style="text-align: right;">0.15</td>
-<td style="text-align: right;">0.05</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">video 1</td>
-<td style="text-align: right;">0.15</td>
-<td style="text-align: right;">0.20</td>
-<td style="text-align: right;">0.05</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">video 1</td>
-<td style="text-align: right;">0.20</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.05</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">video 1</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.30</td>
-<td style="text-align: right;">0.05</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">video 1</td>
-<td style="text-align: right;">0.30</td>
-<td style="text-align: right;">0.35</td>
-<td style="text-align: right;">0.05</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">video 1</td>
-<td style="text-align: right;">0.35</td>
-<td style="text-align: right;">0.40</td>
-<td style="text-align: right;">0.05</td>
-</tr>
-</tbody>
-</table>
+| video.id | start.sec | end.sec | duration |
+|:---------|----------:|--------:|---------:|
+| video 1  |      0.10 |    0.15 |     0.05 |
+| video 1  |      0.15 |    0.20 |     0.05 |
+| video 1  |      0.20 |    0.25 |     0.05 |
+| video 1  |      0.25 |    0.30 |     0.05 |
+| video 1  |      0.30 |    0.35 |     0.05 |
+| video 1  |      0.35 |    0.40 |     0.05 |
 
 Video Info of prepare.netfacs
 
@@ -754,283 +373,58 @@ etc, so we do not use any controls:
 
 ### Comparison of conditions
 
-    # here, we test whether any Action Units and combinations appear more frequently than expected under one condition than under another.
-    # load data
-    au.data <- emotions_set[[1]]
-    # this is the basic data frame, with each video represented by a row, and each Action Unit represented by a column
+``` r
+# here, we test whether any Action Units and combinations appear more frequently than expected under one condition than under another.
+# load data
+au.data <- emotions_set[[1]]
+# this is the basic data frame, with each video represented by a row, and each Action Unit represented by a column
 
-    au.info <- emotions_set[[2]]
-    # this is the additional information about the emotions etc
+au.info <- emotions_set[[2]]
+# this is the additional information about the emotions etc
 
-    # We remove AU 25 here, because it is not informative, and all AUs that have 2 or fewer occurrences, because not meaningful interpretation is available for them
-    au.data <- au.data[, setdiff(colnames(au.data), "25")]
-    au.data <- au.data[, colSums(au.data) > 2]
+# We remove AU 25 here, because it is not informative, and all AUs that have 2 or fewer occurrences, because not meaningful interpretation is available for them
+au.data <- au.data[, setdiff(colnames(au.data), "25")]
+au.data <- au.data[, colSums(au.data) > 2]
 
-    # create netfacs object for angry faces
-    angry.face <- netfacs(
-      data = au.data, # this is the data matrix
-      condition = au.info$emotion, # info about condition of each case
-      test.condition = "anger", # condition we are interested in
-      null.condition = NULL, # null condition (test against all other emotions)
-      duration = NULL, # we could add duration information for videos
-      ran.trials = 1000, # number of randomizations. The larger the better
-      control = NULL, # control variables, e.g. gender, ethnicity etc.
-      random.level = NULL, # Works like a random effect.
-      combination.size = 4, # limit the analysis to make things faster,
-      tail = "upper.tail", # should the p-value reflect two-tailed or right/left tailed testing?
-      use_parallel = T, # use parallel processing
-      n_cores = NULL # number of cores for parallel processing
-    )
+# create netfacs object for angry faces
+angry.face <- netfacs(
+  data = au.data, # this is the data matrix
+  condition = au.info$emotion, # info about condition of each case
+  test.condition = "anger", # condition we are interested in
+  null.condition = NULL, # null condition (test against all other emotions)
+  duration = NULL, # we could add duration information for videos
+  ran.trials = 1000, # number of randomizations. The larger the better
+  control = NULL, # control variables, e.g. gender, ethnicity etc.
+  random.level = NULL, # Works like a random effect.
+  combination.size = 4, # limit the analysis to make things faster,
+  tail = "upper.tail", # should the p-value reflect two-tailed or right/left tailed testing?
+  use_parallel = T, # use parallel processing
+  n_cores = NULL # number of cores for parallel processing
+)
+```
 
-<table>
-<caption>Top rows of the netfacs function results</caption>
-<colgroup>
-<col style="width: 11%" />
-<col style="width: 15%" />
-<col style="width: 5%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 11%" />
-<col style="width: 6%" />
-<col style="width: 11%" />
-<col style="width: 12%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;">combination</th>
-<th style="text-align: center;">combination.size</th>
-<th style="text-align: center;">count</th>
-<th style="text-align: center;">observed.prob</th>
-<th style="text-align: center;">expected.prob</th>
-<th style="text-align: center;">effect.size</th>
-<th style="text-align: center;">pvalue</th>
-<th style="text-align: center;">specificity</th>
-<th style="text-align: center;">prob.increase</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">40</td>
-<td style="text-align: center;">0.89</td>
-<td style="text-align: center;">0.29</td>
-<td style="text-align: center;">0.60</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.33</td>
-<td style="text-align: center;">3.05</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">39</td>
-<td style="text-align: center;">0.87</td>
-<td style="text-align: center;">0.27</td>
-<td style="text-align: center;">0.60</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.34</td>
-<td style="text-align: center;">3.25</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">36</td>
-<td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.02</td>
-<td style="text-align: center;">0.78</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.84</td>
-<td style="text-align: center;">32.02</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">33</td>
-<td style="text-align: center;">0.73</td>
-<td style="text-align: center;">0.04</td>
-<td style="text-align: center;">0.70</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.77</td>
-<td style="text-align: center;">20.51</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">32</td>
-<td style="text-align: center;">0.71</td>
-<td style="text-align: center;">0.17</td>
-<td style="text-align: center;">0.54</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.41</td>
-<td style="text-align: center;">4.25</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">0.18</td>
-<td style="text-align: center;">0.31</td>
-<td style="text-align: center;">-0.13</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">0.08</td>
-<td style="text-align: center;">0.57</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">0.16</td>
-<td style="text-align: center;">0.09</td>
-<td style="text-align: center;">0.07</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.22</td>
-<td style="text-align: center;">1.77</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">0.31</td>
-<td style="text-align: center;">-0.17</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">0.07</td>
-<td style="text-align: center;">0.44</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">18</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">0.09</td>
-<td style="text-align: center;">0.01</td>
-<td style="text-align: center;">0.08</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.67</td>
-<td style="text-align: center;">12.48</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">15</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">0.07</td>
-<td style="text-align: center;">0.11</td>
-<td style="text-align: center;">-0.04</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">0.09</td>
-<td style="text-align: center;">0.63</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">9</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">0.07</td>
-<td style="text-align: center;">0.21</td>
-<td style="text-align: center;">-0.14</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">0.05</td>
-<td style="text-align: center;">0.32</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">10</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.04</td>
-<td style="text-align: center;">0.05</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.58</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">0.97</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">12</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0.02</td>
-<td style="text-align: center;">0.28</td>
-<td style="text-align: center;">-0.26</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">0.01</td>
-<td style="text-align: center;">0.08</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">16</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0.02</td>
-<td style="text-align: center;">0.04</td>
-<td style="text-align: center;">-0.02</td>
-<td style="text-align: center;">0.97</td>
-<td style="text-align: center;">0.08</td>
-<td style="text-align: center;">0.57</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">4_17</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">36</td>
-<td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.20</td>
-<td style="text-align: center;">0.60</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.40</td>
-<td style="text-align: center;">4.09</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">17_23</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">31</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">0.01</td>
-<td style="text-align: center;">0.67</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.89</td>
-<td style="text-align: center;">47.99</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">4_23</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">31</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">0.01</td>
-<td style="text-align: center;">0.67</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.89</td>
-<td style="text-align: center;">47.99</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">4_24</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">31</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">NA</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">17_24</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">28</td>
-<td style="text-align: center;">0.62</td>
-<td style="text-align: center;">0.01</td>
-<td style="text-align: center;">0.61</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.88</td>
-<td style="text-align: center;">43.02</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">7_17</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">28</td>
-<td style="text-align: center;">0.62</td>
-<td style="text-align: center;">0.09</td>
-<td style="text-align: center;">0.53</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.52</td>
-<td style="text-align: center;">6.67</td>
-</tr>
-</tbody>
-</table>
+| combination | combination.size | count | observed.prob | expected.prob | effect.size | pvalue | specificity | prob.increase |
+|:-----------:|:----------------:|:-----:|:-------------:|:-------------:|:-----------:|:------:|:-----------:|:-------------:|
+|      4      |        1         |  40   |     0.89      |     0.29      |    0.60     |  0.00  |    0.33     |     3.04      |
+|     17      |        1         |  39   |     0.87      |     0.27      |    0.60     |  0.00  |    0.34     |     3.25      |
+|     23      |        1         |  36   |     0.80      |     0.02      |    0.78     |  0.00  |    0.84     |     32.23     |
+|     24      |        1         |  33   |     0.73      |     0.04      |    0.70     |  0.00  |    0.77     |     20.50     |
+|      7      |        1         |  32   |     0.71      |     0.17      |    0.54     |  0.00  |    0.41     |     4.25      |
+|      6      |        1         |   8   |     0.18      |     0.31      |    -0.13    |  1.00  |    0.08     |     0.57      |
+|     14      |        1         |   7   |     0.16      |     0.09      |    0.07     |  0.00  |    0.22     |     1.73      |
+|      5      |        1         |   6   |     0.13      |     0.31      |    -0.17    |  1.00  |    0.07     |     0.44      |
+|     18      |        1         |   4   |     0.09      |     0.01      |    0.08     |  0.00  |    0.67     |     12.71     |
+|     15      |        1         |   3   |     0.07      |     0.11      |    -0.04    |  1.00  |    0.09     |     0.63      |
+|      9      |        1         |   3   |     0.07      |     0.21      |    -0.14    |  1.00  |    0.05     |     0.32      |
+|     10      |        1         |   2   |     0.04      |     0.05      |    0.00     |  0.60  |    0.13     |     0.96      |
+|     12      |        1         |   1   |     0.02      |     0.28      |    -0.26    |  1.00  |    0.01     |     0.08      |
+|     16      |        1         |   1   |     0.02      |     0.04      |    -0.02    |  0.98  |    0.08     |     0.56      |
+|    4\_17    |        2         |  36   |     0.80      |     0.20      |    0.60     |  0.00  |    0.40     |     4.10      |
+|   17\_23    |        2         |  31   |     0.69      |     0.01      |    0.67     |  0.00  |    0.89     |     48.96     |
+|    4\_23    |        2         |  31   |     0.69      |     0.01      |    0.67     |  0.00  |    0.89     |     48.96     |
+|    4\_24    |        2         |  31   |     0.69      |     0.00      |    0.69     |  0.00  |    1.00     |      NA       |
+|   17\_24    |        2         |  28   |     0.62      |     0.01      |    0.61     |  0.00  |    0.88     |     42.63     |
+|    7\_17    |        2         |  28   |     0.62      |     0.09      |    0.53     |  0.00  |    0.52     |     6.71      |
 
 Top rows of the netfacs function results
 
@@ -1063,123 +457,28 @@ As this table is very large in many instances, we can extract results
 more easily while already cleaning the table a bit using the
 ‘extract.netfacs’ function:
 
-    # extract angry face information for the first level (single elements)
+``` r
+# extract angry face information for the first level (single elements)
 
-    anger.aus <- netfacs.extract(
-      netfacs.data = angry.face,
-      level = 1, # only looking at combinations with 1 element (here, Action Units)
-      min.count = 1, # minimum number of times that the combination should occur
-      min.prob = 0, # minimum observed probability of the combination
-      min.specificity = 0, # minimum specificity of the combination
-      significance = 0.01
-    ) # significance level we are interested in
+anger.aus <- netfacs.extract(
+  netfacs.data = angry.face,
+  level = 1, # only looking at combinations with 1 element (here, Action Units)
+  min.count = 1, # minimum number of times that the combination should occur
+  min.prob = 0, # minimum observed probability of the combination
+  min.specificity = 0, # minimum specificity of the combination
+  significance = 0.01
+) # significance level we are interested in
+```
 
-<table>
-<caption>Result of netfacs.extract for single elements</caption>
-<colgroup>
-<col style="width: 11%" />
-<col style="width: 15%" />
-<col style="width: 5%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 11%" />
-<col style="width: 6%" />
-<col style="width: 11%" />
-<col style="width: 12%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;">combination</th>
-<th style="text-align: center;">combination.size</th>
-<th style="text-align: center;">count</th>
-<th style="text-align: center;">observed.prob</th>
-<th style="text-align: center;">expected.prob</th>
-<th style="text-align: center;">effect.size</th>
-<th style="text-align: center;">pvalue</th>
-<th style="text-align: center;">specificity</th>
-<th style="text-align: center;">prob.increase</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">36</td>
-<td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.02</td>
-<td style="text-align: center;">0.78</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.84</td>
-<td style="text-align: center;">32.02</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">33</td>
-<td style="text-align: center;">0.73</td>
-<td style="text-align: center;">0.04</td>
-<td style="text-align: center;">0.70</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.77</td>
-<td style="text-align: center;">20.51</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">40</td>
-<td style="text-align: center;">0.89</td>
-<td style="text-align: center;">0.29</td>
-<td style="text-align: center;">0.60</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.33</td>
-<td style="text-align: center;">3.05</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">39</td>
-<td style="text-align: center;">0.87</td>
-<td style="text-align: center;">0.27</td>
-<td style="text-align: center;">0.60</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.34</td>
-<td style="text-align: center;">3.25</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">32</td>
-<td style="text-align: center;">0.71</td>
-<td style="text-align: center;">0.17</td>
-<td style="text-align: center;">0.54</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.41</td>
-<td style="text-align: center;">4.25</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">18</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">0.09</td>
-<td style="text-align: center;">0.01</td>
-<td style="text-align: center;">0.08</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.67</td>
-<td style="text-align: center;">12.48</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">0.16</td>
-<td style="text-align: center;">0.09</td>
-<td style="text-align: center;">0.07</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.22</td>
-<td style="text-align: center;">1.77</td>
-</tr>
-</tbody>
-</table>
+| combination | combination.size | count | observed.prob | expected.prob | effect.size | pvalue | specificity | prob.increase |
+|:-----------:|:----------------:|:-----:|:-------------:|:-------------:|:-----------:|:------:|:-----------:|:-------------:|
+|     23      |        1         |  36   |     0.80      |     0.02      |    0.78     |   0    |    0.84     |     32.23     |
+|     24      |        1         |  33   |     0.73      |     0.04      |    0.70     |   0    |    0.77     |     20.50     |
+|      4      |        1         |  40   |     0.89      |     0.29      |    0.60     |   0    |    0.33     |     3.04      |
+|     17      |        1         |  39   |     0.87      |     0.27      |    0.60     |   0    |    0.34     |     3.25      |
+|      7      |        1         |  32   |     0.71      |     0.17      |    0.54     |   0    |    0.41     |     4.25      |
+|     18      |        1         |   4   |     0.09      |     0.01      |    0.08     |   0    |    0.67     |     12.71     |
+|     14      |        1         |   7   |     0.16      |     0.09      |    0.07     |   0    |    0.22     |     1.73      |
 
 Result of netfacs.extract for single elements
 
@@ -1197,26 +496,32 @@ all plots that are included in the package at this point are ggplot
 based, so the user can subsequently change most parameters to their own
 liking.
 
-    # create plot showing the importance of each AU for the angry faces
+``` r
+# create plot showing the importance of each AU for the angry faces
 
-    element.plot(netfacs.data = angry.face)
+element.plot(netfacs.data = angry.face)
+```
 
-<img src="README_files/figure-markdown_strict/element.plot-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-element.plot-1.png" width="100%" style="display: block; margin: auto;" />
 
 In the distribution.plot function, we see the distribution of the null
 probabilities and where the observed values fall in comparison. It does
 this independently for each element. Here, we look at AU4 (which occurs
 more than expected) and AU9 (which occurs less than expected).
 
-    # create plot showing the distribution of the null probabilities and how the observed probability compares
+``` r
+# create plot showing the distribution of the null probabilities and how the observed probability compares
 
-    distribution.plot(netfacs.data = angry.face)$"4"
+distribution.plot(netfacs.data = angry.face)$"4"
+```
 
-<img src="README_files/figure-markdown_strict/distribution.plot-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-distribution.plot-1.png" width="100%" style="display: block; margin: auto;" />
 
-    distribution.plot(netfacs.data = angry.face)$"9"
+``` r
+distribution.plot(netfacs.data = angry.face)$"9"
+```
 
-<img src="README_files/figure-markdown_strict/distribution.plot-2.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-distribution.plot-2.png" width="100%" style="display: block; margin: auto;" />
 
 This already gives us an important insight into the structure of facial
 expressions, by clarifying how strongly certain facial muscles are
@@ -1230,156 +535,27 @@ elements create over 1100 combinations of 3, almost 5000 combinations of
 4 etc), most of these will not have meaningful information unless the
 data set is quite large.
 
-    # extract information for three-element-combinations in angry faces
+``` r
+# extract information for three-element-combinations in angry faces
 
-    anger.aus3 <- netfacs.extract(
-      netfacs.data = angry.face,
-      level = 3, # only looking at combinations with 3 elements (here, Action Units)
-      min.count = 5, # minimum number of times that the combination should occur
-      min.prob = 0, # minimum observed probability of the combination
-      min.specificity = 0, # minimum specificity of the combination
-      significance = 0.01
-    ) # significance level we are interested in
+anger.aus3 <- netfacs.extract(
+  netfacs.data = angry.face,
+  level = 3, # only looking at combinations with 3 elements (here, Action Units)
+  min.count = 5, # minimum number of times that the combination should occur
+  min.prob = 0, # minimum observed probability of the combination
+  min.specificity = 0, # minimum specificity of the combination
+  significance = 0.01
+) # significance level we are interested in
+```
 
-<table>
-<caption>Results of netfacs.extract function for combinations of three elements</caption>
-<colgroup>
-<col style="width: 11%" />
-<col style="width: 15%" />
-<col style="width: 5%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 11%" />
-<col style="width: 6%" />
-<col style="width: 11%" />
-<col style="width: 12%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;">combination</th>
-<th style="text-align: center;">combination.size</th>
-<th style="text-align: center;">count</th>
-<th style="text-align: center;">observed.prob</th>
-<th style="text-align: center;">expected.prob</th>
-<th style="text-align: center;">effect.size</th>
-<th style="text-align: center;">pvalue</th>
-<th style="text-align: center;">specificity</th>
-<th style="text-align: center;">prob.increase</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">4_17_23</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">28</td>
-<td style="text-align: center;">0.62</td>
-<td style="text-align: center;">0.01</td>
-<td style="text-align: center;">0.61</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.88</td>
-<td style="text-align: center;">43.34</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">4_17_24</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">27</td>
-<td style="text-align: center;">0.60</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.60</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">NA</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">4_23_24</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">0.51</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.51</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">NA</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">4_7_24</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">0.51</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.51</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">NA</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">7_17_23</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">22</td>
-<td style="text-align: center;">0.49</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.49</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">NA</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">7_17_24</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">22</td>
-<td style="text-align: center;">0.49</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.49</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">NA</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">4_7_17</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">25</td>
-<td style="text-align: center;">0.56</td>
-<td style="text-align: center;">0.09</td>
-<td style="text-align: center;">0.47</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.51</td>
-<td style="text-align: center;">6.46</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">17_23_24</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">21</td>
-<td style="text-align: center;">0.47</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.47</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">NA</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">4_7_23</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">21</td>
-<td style="text-align: center;">0.47</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.47</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">NA</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">7_23_24</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">20</td>
-<td style="text-align: center;">0.44</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.44</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1.00</td>
-<td style="text-align: center;">NA</td>
-</tr>
-</tbody>
-</table>
+| combination | combination.size | count | observed.prob | expected.prob | effect.size | pvalue | specificity | prob.increase |
+|:-----------:|:----------------:|:-----:|:-------------:|:-------------:|:-----------:|:------:|:-----------:|:-------------:|
+|  4\_17\_23  |        3         |  28   |     0.62      |     0.01      |    0.61     |   0    |    0.88     |     44.2      |
+|  4\_17\_24  |        3         |  27   |     0.60      |     0.00      |    0.60     |   0    |    1.00     |      NA       |
+|  4\_23\_24  |        3         |  23   |     0.51      |     0.00      |    0.51     |   0    |    1.00     |      NA       |
+|  4\_7\_24   |        3         |  23   |     0.51      |     0.00      |    0.51     |   0    |    1.00     |      NA       |
+|  7\_17\_23  |        3         |  22   |     0.49      |     0.00      |    0.49     |   0    |    1.00     |      NA       |
+|  7\_17\_24  |        3         |  22   |     0.49      |     0.00      |    0.49     |   0    |    1.00     |      NA       |
 
 Results of netfacs.extract function for combinations of three elements
 
@@ -1394,223 +570,6 @@ combined randomly; or they are all part of one standard higher-order
 combination (e.g. AU4\_17\_23\_24) that occurs over and over again. By
 looking at the different levels (3rd order, 4th order etc), we can
 resolve this question.
-
-### Mutual Information
-
-Another way to quantify the connection between the condition and a
-combination is to use the normalised pointwise mutual information
-(hence, mutual information) between the two. The mutual information is a
-measure of association strength from information theory that takes
-values between -1 (indicating that the two elements exclude each other)
-and 1 (indicating that they perfectly overlap: all instances of A have
-B, and all instances of B have A). It is calculated here as follows:
-$MI = log(P(Condition \\cap Combination) \\frac{P(Condition)}{P(Combination)} / -1 \* log(P(Condition \\cap Combination)$).
-The function calculates the mutual information between all conditions
-and all combinations in the *netfacs* object. Here, we show only the
-first level (one element).
-
-    mutual.info.condition = mutual.information.condition(netfacs.data = angry.face)
-
-    # we select only the ones containing 'anger' and one element combinations, to show the same information as above
-    mutual.info.condition = subset(mutual.info.condition, condition == 'anger' & combination.size == 1)
-
-    kable(
-      mutual.info.condition,
-      align = "c",
-      row.names = F,
-      digits = 3,
-      booktabs = T,
-      caption = "Mutual information between anger and different combinations, sorted by mutual information values"
-    )
-
-<table>
-<caption>Mutual information between anger and different combinations, sorted by mutual information values</caption>
-<colgroup>
-<col style="width: 11%" />
-<col style="width: 13%" />
-<col style="width: 19%" />
-<col style="width: 7%" />
-<col style="width: 26%" />
-<col style="width: 21%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;">condition</th>
-<th style="text-align: center;">combination</th>
-<th style="text-align: center;">combination.size</th>
-<th style="text-align: center;">count</th>
-<th style="text-align: center;">conditional.probability</th>
-<th style="text-align: center;">mutual.information</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">36</td>
-<td style="text-align: center;">0.800</td>
-<td style="text-align: center;">0.818</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">33</td>
-<td style="text-align: center;">0.733</td>
-<td style="text-align: center;">0.749</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">32</td>
-<td style="text-align: center;">0.711</td>
-<td style="text-align: center;">0.464</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">39</td>
-<td style="text-align: center;">0.867</td>
-<td style="text-align: center;">0.427</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">40</td>
-<td style="text-align: center;">0.889</td>
-<td style="text-align: center;">0.412</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">18</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">0.089</td>
-<td style="text-align: center;">0.358</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">0.156</td>
-<td style="text-align: center;">0.120</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">10</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.044</td>
-<td style="text-align: center;">-0.007</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">16</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0.022</td>
-<td style="text-align: center;">-0.087</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">15</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">0.067</td>
-<td style="text-align: center;">-0.089</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">0.178</td>
-<td style="text-align: center;">-0.133</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.133</td>
-<td style="text-align: center;">-0.188</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">9</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">0.067</td>
-<td style="text-align: center;">-0.220</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">12</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0.022</td>
-<td style="text-align: center;">-0.415</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">-1.000</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">-1.000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">20</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">-1.000</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">26</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">-1.000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">27</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">-1.000</td>
-</tr>
-</tbody>
-</table>
-
-Mutual information between anger and different combinations, sorted by
-mutual information values
-
-The mutual information gives us different information than the
-probabilities themselves: it standardises the observed probabilities by
-the probabilities to be angry or see an element at all. So, while AU4 is
-the most common element in angry faces, it is not necessarily the best
-indicator for anger, as it also occurs in other contexts. Thus, the
-mutual information of ‘anger’ and AU23 is higher: AU23 does not occur in
-all angry faces, but if AU23 occurs it is indicative of the condition.
-Below, we introduce another measure of this relationship that also
-captures higher-order information of combinations.
 
 ### Element specificity
 
@@ -1628,7 +587,9 @@ element. The result tells us which Action Units actually add the
 information ‘angry!’ and which ones potentially just appear as part of
 combinations:
 
-    specificity <- element.specificity(netfacs.data = angry.face)
+``` r
+specificity <- element.specificity(netfacs.data = angry.face)
+```
 
 Here, we see that even though AU5 is pretty rare, as it only occurred 6
 times, and is in itself not very specific to the context of anger (only
@@ -1651,102 +612,22 @@ of each element
 <tr>
 <td>
 
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: center;">element</th>
-<th style="text-align: center;">number.combinations</th>
-<th style="text-align: center;">specificity.increase</th>
-<th style="text-align: center;">count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">37</td>
-<td style="text-align: center;">0.35</td>
-<td style="text-align: center;">6</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">120</td>
-<td style="text-align: center;">0.30</td>
-<td style="text-align: center;">36</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">105</td>
-<td style="text-align: center;">0.28</td>
-<td style="text-align: center;">33</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">18</td>
-<td style="text-align: center;">64</td>
-<td style="text-align: center;">0.22</td>
-<td style="text-align: center;">4</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">10</td>
-<td style="text-align: center;">64</td>
-<td style="text-align: center;">0.11</td>
-<td style="text-align: center;">2</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">104</td>
-<td style="text-align: center;">0.11</td>
-<td style="text-align: center;">32</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">41</td>
-<td style="text-align: center;">0.08</td>
-<td style="text-align: center;">7</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">71</td>
-<td style="text-align: center;">0.08</td>
-<td style="text-align: center;">8</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">121</td>
-<td style="text-align: center;">0.08</td>
-<td style="text-align: center;">40</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">111</td>
-<td style="text-align: center;">0.06</td>
-<td style="text-align: center;">39</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">9</td>
-<td style="text-align: center;">44</td>
-<td style="text-align: center;">0.06</td>
-<td style="text-align: center;">3</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">16</td>
-<td style="text-align: center;">26</td>
-<td style="text-align: center;">0.05</td>
-<td style="text-align: center;">1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">15</td>
-<td style="text-align: center;">30</td>
-<td style="text-align: center;">0.02</td>
-<td style="text-align: center;">3</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">12</td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">-0.09</td>
-<td style="text-align: center;">1</td>
-</tr>
-</tbody>
-</table>
+| element | number.combinations | specificity.increase | count |
+|:-------:|:-------------------:|:--------------------:|:-----:|
+|    5    |         37          |         0.35         |   6   |
+|   23    |         120         |         0.30         |  36   |
+|   24    |         105         |         0.28         |  33   |
+|   18    |         64          |         0.22         |   4   |
+|   10    |         64          |         0.11         |   2   |
+|    7    |         104         |         0.11         |  32   |
+|   14    |         41          |         0.08         |   7   |
+|    6    |         71          |         0.08         |   8   |
+|    4    |         121         |         0.08         |  40   |
+|   17    |         111         |         0.06         |  39   |
+|    9    |         44          |         0.06         |   3   |
+|   16    |         26          |         0.05         |   1   |
+|   15    |         30          |         0.02         |   3   |
+|   12    |          8          |        -0.09         |   1   |
 
 </td>
 </tr>
@@ -1790,180 +671,29 @@ using the ‘network.conditional’ function, which also gives us a network
 representation (discussed below). If we are simply interested in the
 conditional probabilities themselves, we use the following function:
 
-    conditional.probs <- network.conditional(
-      netfacs.data = angry.face,
-      min.prob = 0,
-      min.count = 5,
-      ignore.element = NULL
-    )
+``` r
+conditional.probs <- network.conditional(
+  netfacs.data = angry.face,
+  min.prob = 0,
+  min.count = 5,
+  ignore.element = NULL
+)
+```
 
-<table>
-<caption>Conditional probabilities for a subset of dyadic combinations</caption>
-<colgroup>
-<col style="width: 9%" />
-<col style="width: 9%" />
-<col style="width: 11%" />
-<col style="width: 6%" />
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 17%" />
-<col style="width: 19%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;">elementA</th>
-<th style="text-align: center;">elementB</th>
-<th style="text-align: center;">combination</th>
-<th style="text-align: center;">count</th>
-<th style="text-align: center;">Probability_A</th>
-<th style="text-align: center;">Probability_B</th>
-<th style="text-align: center;">Probability_AandB</th>
-<th style="text-align: center;">Probability_AgivenB</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">4_17</td>
-<td style="text-align: center;">36</td>
-<td style="text-align: center;">0.89</td>
-<td style="text-align: center;">0.87</td>
-<td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.92</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">4_17</td>
-<td style="text-align: center;">36</td>
-<td style="text-align: center;">0.87</td>
-<td style="text-align: center;">0.89</td>
-<td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.90</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">17_23</td>
-<td style="text-align: center;">31</td>
-<td style="text-align: center;">0.87</td>
-<td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">0.86</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">17_23</td>
-<td style="text-align: center;">31</td>
-<td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.87</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">0.79</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">4_23</td>
-<td style="text-align: center;">31</td>
-<td style="text-align: center;">0.89</td>
-<td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">0.86</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">4_23</td>
-<td style="text-align: center;">31</td>
-<td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.89</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">0.78</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">6_7</td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">0.18</td>
-<td style="text-align: center;">0.71</td>
-<td style="text-align: center;">0.18</td>
-<td style="text-align: center;">0.25</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">6_7</td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">0.71</td>
-<td style="text-align: center;">0.18</td>
-<td style="text-align: center;">0.18</td>
-<td style="text-align: center;">1.00</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">5_23</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">0.17</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">5_23</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">1.00</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">6_17</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.18</td>
-<td style="text-align: center;">0.87</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">0.15</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">6_17</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.87</td>
-<td style="text-align: center;">0.18</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">0.75</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">14_17</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">0.16</td>
-<td style="text-align: center;">0.87</td>
-<td style="text-align: center;">0.11</td>
-<td style="text-align: center;">0.13</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">14_17</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">0.87</td>
-<td style="text-align: center;">0.16</td>
-<td style="text-align: center;">0.11</td>
-<td style="text-align: center;">0.71</td>
-</tr>
-</tbody>
-</table>
+| elementA | elementB | combination | count | Probability\_A | Probability\_B | Probability\_AandB | Probability\_AgivenB |
+|:--------:|:--------:|:-----------:|:-----:|:--------------:|:--------------:|:------------------:|:--------------------:|
+|    4     |    17    |    4\_17    |  36   |      0.89      |      0.87      |        0.80        |         0.92         |
+|    17    |    4     |    4\_17    |  36   |      0.87      |      0.89      |        0.80        |         0.90         |
+|    17    |    23    |   17\_23    |  31   |      0.87      |      0.80      |        0.69        |         0.86         |
+|    23    |    17    |   17\_23    |  31   |      0.80      |      0.87      |        0.69        |         0.79         |
+|    4     |    23    |    4\_23    |  31   |      0.89      |      0.80      |        0.69        |         0.86         |
+|    23    |    4     |    4\_23    |  31   |      0.80      |      0.89      |        0.69        |         0.78         |
+|    5     |    23    |    5\_23    |   6   |      0.13      |      0.80      |        0.13        |         0.17         |
+|    23    |    5     |    5\_23    |   6   |      0.80      |      0.13      |        0.13        |         1.00         |
+|    6     |    17    |    6\_17    |   6   |      0.18      |      0.87      |        0.13        |         0.15         |
+|    17    |    6     |    6\_17    |   6   |      0.87      |      0.18      |        0.13        |         0.75         |
+|    14    |    17    |   14\_17    |   5   |      0.16      |      0.87      |        0.11        |         0.13         |
+|    17    |    14    |   14\_17    |   5   |      0.87      |      0.16      |        0.11        |         0.71         |
 
 Conditional probabilities for a subset of dyadic combinations
 
@@ -1981,362 +711,6 @@ appear to be part of a fixed expression: their conditional probabilities
 are around 80% each way, indicating that they both occur together most
 of the time. Below, we will also show what the network visualisation of
 this function looks like.
-
-We can also apply the normalised pointwise mutual information that we
-applied above to the context/combination association, but using
-different elements in combinations: how much information does one
-element or combination provide about another element? Again, values are
-1 if both elements only ever occur in this combination. Mutual
-information is used regularly in linguistic and information theoretical
-studies to quantify how much information one element provides for the
-occurrence of the other.
-
-<table>
-<caption>Mutual information for dyadic combinations in angry faces</caption>
-<thead>
-<tr class="header">
-<th style="text-align: center;">combination1</th>
-<th style="text-align: center;">element2</th>
-<th style="text-align: center;">combination.size</th>
-<th style="text-align: center;">count</th>
-<th style="text-align: center;">observed.prob</th>
-<th style="text-align: center;">mutual.information</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">0.18</td>
-<td style="text-align: center;">0.200</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">0.18</td>
-<td style="text-align: center;">0.200</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">0.16</td>
-<td style="text-align: center;">0.172</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">0.16</td>
-<td style="text-align: center;">0.172</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">31</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">0.162</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">31</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">0.162</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">36</td>
-<td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.146</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">36</td>
-<td style="text-align: center;">0.80</td>
-<td style="text-align: center;">0.146</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">25</td>
-<td style="text-align: center;">0.56</td>
-<td style="text-align: center;">0.133</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">25</td>
-<td style="text-align: center;">0.56</td>
-<td style="text-align: center;">0.133</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">0.109</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">0.109</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">0.068</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">0.068</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">0.16</td>
-<td style="text-align: center;">0.064</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">0.16</td>
-<td style="text-align: center;">0.064</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">0.16</td>
-<td style="text-align: center;">0.057</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">0.16</td>
-<td style="text-align: center;">0.057</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">26</td>
-<td style="text-align: center;">0.58</td>
-<td style="text-align: center;">0.038</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">26</td>
-<td style="text-align: center;">0.58</td>
-<td style="text-align: center;">0.038</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">28</td>
-<td style="text-align: center;">0.62</td>
-<td style="text-align: center;">0.008</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">28</td>
-<td style="text-align: center;">0.62</td>
-<td style="text-align: center;">0.008</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">0.11</td>
-<td style="text-align: center;">-0.015</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">0.11</td>
-<td style="text-align: center;">-0.015</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">31</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">-0.023</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">31</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">-0.023</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">0.11</td>
-<td style="text-align: center;">-0.023</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">0.11</td>
-<td style="text-align: center;">-0.023</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">28</td>
-<td style="text-align: center;">0.62</td>
-<td style="text-align: center;">-0.050</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">28</td>
-<td style="text-align: center;">0.62</td>
-<td style="text-align: center;">-0.050</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">25</td>
-<td style="text-align: center;">0.56</td>
-<td style="text-align: center;">-0.072</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">25</td>
-<td style="text-align: center;">0.56</td>
-<td style="text-align: center;">-0.072</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">31</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">-0.085</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">31</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">-0.085</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">-0.091</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.13</td>
-<td style="text-align: center;">-0.091</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">27</td>
-<td style="text-align: center;">0.60</td>
-<td style="text-align: center;">-0.101</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">27</td>
-<td style="text-align: center;">0.60</td>
-<td style="text-align: center;">-0.101</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">0.11</td>
-<td style="text-align: center;">-0.107</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">0.11</td>
-<td style="text-align: center;">-0.107</td>
-</tr>
-</tbody>
-</table>
-
-Mutual information for dyadic combinations in angry faces
-
-Again, the information of the mutual information differs from that
-achieved purely by looking at the probability distributions. The AU4+17
-combination is the most common by far in this context; however, because
-both elements independently occur at very high rates in this context,
-they do not contain a lot of information about each other - seeing one
-of them does not allow us to state whether the second one is also
-present. Information is higher between AU6 and AU7, neither of which is
-very common in anger, but AU7 only occurred when AU6 was also present.
 
 # Networks
 
@@ -2360,13 +734,15 @@ conditions (in our case, emotions), share Action Units. To make the
 process easier, there is a ‘multiple.netfacs’ function that runs the
 netfacs function for all levels of a condition against all others.
 
-    multi.facs <- multiple.netfacs(
-      data = au.data,
-      condition = au.info$emotion,
-      ran.trials = 1000,
-      combination.size = 2,
-      use_parallel = TRUE
-    )
+``` r
+multi.facs <- multiple.netfacs(
+  data = au.data,
+  condition = au.info$emotion,
+  ran.trials = 1000,
+  combination.size = 2,
+  use_parallel = TRUE
+)
+```
 
 Now we can make a network where each condition is a node, and they are
 connected through the Action Units. We only consider Action Units that
@@ -2378,22 +754,26 @@ probability that we are in a condition given that we observe the
 element; the ‘occurrence’ graph shows the conditional probability to
 observe an element in a given context:
 
-    overlap.net <- overlap.network(
-      netfacs.list = multi.facs,
-      min.prob = 0, # minimum probability of a connection to be included
-      min.count = 3, # minimum count of co-occurrences for a connection to be included
-      significance = 0.01, # significance level for combinations to be considered
-      clusters = F, # should the bipartite network be clustered
-      plot.bubbles = TRUE,
-    )
+``` r
+overlap.net <- overlap.network(
+  netfacs.list = multi.facs,
+  min.prob = 0, # minimum probability of a connection to be included
+  min.count = 3, # minimum count of co-occurrences for a connection to be included
+  significance = 0.01, # significance level for combinations to be considered
+  clusters = F, # should the bipartite network be clustered
+  plot.bubbles = TRUE,
+)
 
-    plot(overlap.net$specificity)
+plot(overlap.net$specificity)
+```
 
-<img src="README_files/figure-markdown_strict/overlap-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-overlap-1.png" width="100%" style="display: block; margin: auto;" />
 
-    plot(overlap.net$occurrence)
+``` r
+plot(overlap.net$occurrence)
+```
 
-<img src="README_files/figure-markdown_strict/overlap-2.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-overlap-2.png" width="100%" style="display: block; margin: auto;" />
 
 Now, we have an easy way to understand our FACS data: Above we see how
 specific an AU is to a condition. 84% of all AU12 happen in happy faces;
@@ -2414,18 +794,20 @@ the output graph, which can help us illuminate our data even more. We
 restrict connections to those that are at least 0.5 to make things
 easier to understand.
 
-    conditional.probs <- network.conditional(
-      netfacs.data = angry.face,
-      min.prob = 0.5,
-      min.count = 5,
-      ignore.element = NULL,
-      plot.bubbles = T
-    )
+``` r
+conditional.probs <- network.conditional(
+  netfacs.data = angry.face,
+  min.prob = 0.5,
+  min.count = 5,
+  ignore.element = NULL,
+  plot.bubbles = T
+)
 
-    # plot conditional probabilities
-    conditional.probs$plot
+# plot conditional probabilities
+conditional.probs$plot
+```
 
-<img src="README_files/figure-markdown_strict/conditional.plot-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-conditional.plot-1.png" width="100%" style="display: block; margin: auto;" />
 
 Here, we see a visual representation of the angry face and how the AUs
 are linked: for example, AU4, 17, 23, and 24 are bigger than the others,
@@ -2441,13 +823,15 @@ active.
 To do all the following calculations, we extract the netfacs object and
 turn it into a network with specific properties. Here goes:
 
-    angry.net <- netfacs.network(
-      netfacs.data = angry.face,
-      link = "unweighted", # edges are linked for significant results only
-      significance = 0.01,
-      min.count = 3, # remove rare elements as they might be random variation
-      min.prob = 0
-    )
+``` r
+angry.net <- netfacs.network(
+  netfacs.data = angry.face,
+  link = "unweighted", # edges are linked for significant results only
+  significance = 0.01,
+  min.count = 3, # remove rare elements as they might be random variation
+  min.prob = 0
+)
+```
 
 Now we have our angry.net, which is an ‘igraph’ object. ‘igraph’ is the
 most commonly used package for network analysis in R, so now we can use
@@ -2456,15 +840,17 @@ networks.
 
 Let’s plot our network for angry faces.
 
-    network.plot(
-      netfacs.graph = angry.net,
-      title = "angry network",
-      clusters = F,
-      plot.bubbles = T,
-      hide_unconnected = T
-    )
+``` r
+network.plot(
+  netfacs.graph = angry.net,
+  title = "angry network",
+  clusters = F,
+  plot.bubbles = T,
+  hide_unconnected = T
+)
+```
 
-<img src="README_files/figure-markdown_strict/angry.plot-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-angry.plot-1.png" width="100%" style="display: block; margin: auto;" />
 
 This looks like a pretty tight cluster of some Action Units that tend to
 occur together. AU5 and AU6 are not significantly more common in this
@@ -2474,17 +860,21 @@ different from the other networks: we can apply the netfacs.network
 function across our conditions to get a visual representation of how
 networks differ:
 
-    multi.net <- multiple.netfacs.network(
-      netfacs.list = multi.facs,
-      link = "weighted", # network contains edges where significantly connected
-      significance = 0.01,
-      min.count = 3, # again remove rare connections
-      min.prob = 0
-    )
+``` r
+multi.net <- multiple.netfacs.network(
+  netfacs.list = multi.facs,
+  link = "weighted", # network contains edges where significantly connected
+  significance = 0.01,
+  min.count = 3, # again remove rare connections
+  min.prob = 0
+)
+```
 
-    multiple.network.plot(netfacs.graphs = multi.net)
+``` r
+multiple.network.plot(netfacs.graphs = multi.net)
+```
 
-<img src="README_files/figure-markdown_strict/multi.plot-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-multi.plot-1.png" width="100%" style="display: block; margin: auto;" />
 
 Here, we can see that the network for anger actually looks pretty
 complex compared to the other networks: in Contempt, only the
@@ -2500,18 +890,20 @@ posed, would we be able to analytically detect the basic emotions
 because specific Action Units cluster with each other? Let’s create a
 network based on all data.
 
-    all.face <-
-      netfacs(
-        data = au.data,
-        condition = NULL,
-        ran.trials = 1000,
-        combination.size = 2,
-        use_parallel = T
-      )
-    all.net <-
-      netfacs.network(netfacs.data = all.face,
-                      min.count = 3,
-                      link = "unweighted")
+``` r
+all.face <-
+  netfacs(
+    data = au.data,
+    condition = NULL,
+    ran.trials = 1000,
+    combination.size = 2,
+    use_parallel = T
+  )
+all.net <-
+  netfacs.network(netfacs.data = all.face,
+                  min.count = 3,
+                  link = "unweighted")
+```
 
 In this network, dyadic connections between Action Units mean that they
 occur more often together than would be expected given their own
@@ -2519,14 +911,16 @@ likelihood and the number of elements per event. When plotting this
 network, we can say ‘clusters = T’. In that case, ‘igraph’ has a
 community detection algorithm (groups of AUs that form clusters).
 
-    network.plot(
-      netfacs.graph = all.net,
-      title = "all network with clusters",
-      clusters = T,
-      plot.bubbles = T
-    )
+``` r
+network.plot(
+  netfacs.graph = all.net,
+  title = "all network with clusters",
+  clusters = T,
+  plot.bubbles = T
+)
+```
 
-<img src="README_files/figure-markdown_strict/all.plot-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-all.plot-1.png" width="100%" style="display: block; margin: auto;" />
 
 Modularity is high (0.50; above 0.3 is high). This means that there are
 clear clusters (AUs that are connected with each other, but not others).
@@ -2549,322 +943,63 @@ describes a specific emotion should be highly central in that network,
 but not at all central in any other. There are a number of different
 centrality measures, and one can extract them all at once.
 
-    net.sum <- network.summary(angry.net)
+``` r
+net.sum <- network.summary(angry.net)
+```
 
-<table>
-<caption>Network centrality measures for angry faces</caption>
-<colgroup>
-<col style="width: 7%" />
-<col style="width: 8%" />
-<col style="width: 10%" />
-<col style="width: 10%" />
-<col style="width: 11%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
-<col style="width: 13%" />
-<col style="width: 9%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;">element</th>
-<th style="text-align: center;">strength</th>
-<th style="text-align: center;">eigenvector</th>
-<th style="text-align: center;">betweenness</th>
-<th style="text-align: center;">transitivity</th>
-<th style="text-align: center;">hub_score</th>
-<th style="text-align: center;">page_rank</th>
-<th style="text-align: center;">modularity</th>
-<th style="text-align: center;">comm.membership</th>
-<th style="text-align: center;">comm.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">0.222</td>
-<td style="text-align: center;">1.000</td>
-<td style="text-align: center;">0.084</td>
-<td style="text-align: center;">0.679</td>
-<td style="text-align: center;">1.000</td>
-<td style="text-align: center;">0.120</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">23</td>
-<td style="text-align: center;">0.222</td>
-<td style="text-align: center;">0.938</td>
-<td style="text-align: center;">0.265</td>
-<td style="text-align: center;">0.571</td>
-<td style="text-align: center;">0.938</td>
-<td style="text-align: center;">0.129</td>
-<td style="text-align: center;">-0.112</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">24</td>
-<td style="text-align: center;">0.194</td>
-<td style="text-align: center;">0.937</td>
-<td style="text-align: center;">0.033</td>
-<td style="text-align: center;">0.810</td>
-<td style="text-align: center;">0.938</td>
-<td style="text-align: center;">0.106</td>
-<td style="text-align: center;">-0.117</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">0.222</td>
-<td style="text-align: center;">1.000</td>
-<td style="text-align: center;">0.084</td>
-<td style="text-align: center;">0.679</td>
-<td style="text-align: center;">1.000</td>
-<td style="text-align: center;">0.120</td>
-<td style="text-align: center;">-0.097</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.139</td>
-<td style="text-align: center;">0.753</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">1.000</td>
-<td style="text-align: center;">0.754</td>
-<td style="text-align: center;">0.078</td>
-<td style="text-align: center;">-0.092</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">0.111</td>
-<td style="text-align: center;">0.606</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">1.000</td>
-<td style="text-align: center;">0.607</td>
-<td style="text-align: center;">0.064</td>
-<td style="text-align: center;">-0.039</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">18</td>
-<td style="text-align: center;">0.139</td>
-<td style="text-align: center;">0.753</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">1.000</td>
-<td style="text-align: center;">0.754</td>
-<td style="text-align: center;">0.078</td>
-<td style="text-align: center;">0.002</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">0.194</td>
-<td style="text-align: center;">0.937</td>
-<td style="text-align: center;">0.033</td>
-<td style="text-align: center;">0.810</td>
-<td style="text-align: center;">0.938</td>
-<td style="text-align: center;">0.106</td>
-<td style="text-align: center;">0.022</td>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">0.083</td>
-<td style="text-align: center;">0.459</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">1.000</td>
-<td style="text-align: center;">0.460</td>
-<td style="text-align: center;">0.053</td>
-<td style="text-align: center;">-0.001</td>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">9</td>
-<td style="text-align: center;">0.028</td>
-<td style="text-align: center;">0.147</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">NaN</td>
-<td style="text-align: center;">0.147</td>
-<td style="text-align: center;">0.027</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">15</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.156</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">NaN</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.013</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">10</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.156</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">NaN</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.013</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">12</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.156</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">NaN</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.013</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">16</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.156</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">NaN</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.013</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.156</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">NaN</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.013</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.156</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">NaN</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.013</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">9</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">20</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.156</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">NaN</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.013</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">10</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">26</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.156</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">NaN</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.013</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">11</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">27</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.156</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">NaN</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">0.013</td>
-<td style="text-align: center;">0.000</td>
-<td style="text-align: center;">12</td>
-<td style="text-align: center;">0.022</td>
-</tr>
-</tbody>
-</table>
+| element | strength | eigenvector | betweenness | transitivity | hub\_score | page\_rank | modularity | comm.membership | comm.value |
+|:-------:|:--------:|:-----------:|:-----------:|:------------:|:----------:|:----------:|:----------:|:---------------:|:----------:|
+|   17    |  0.222   |    1.000    |    0.084    |    0.679     |   1.000    |   0.120    |   0.000    |        2        |   0.022    |
+|   23    |  0.222   |    0.938    |    0.265    |    0.571     |   0.938    |   0.129    |   -0.112   |        1        |   0.022    |
+|   24    |  0.194   |    0.937    |    0.033    |    0.810     |   0.938    |   0.106    |   -0.117   |        2        |   0.022    |
+|    4    |  0.222   |    1.000    |    0.084    |    0.679     |   1.000    |   0.120    |   -0.097   |        2        |   0.022    |
+|    6    |  0.139   |    0.753    |    0.000    |    1.000     |   0.754    |   0.078    |   -0.092   |        2        |   0.022    |
+|   14    |  0.111   |    0.606    |    0.000    |    1.000     |   0.607    |   0.064    |   -0.039   |        2        |   0.022    |
+|   18    |  0.139   |    0.753    |    0.000    |    1.000     |   0.754    |   0.078    |   0.002    |        2        |   0.022    |
+|    7    |  0.194   |    0.937    |    0.033    |    0.810     |   0.938    |   0.106    |   0.022    |        2        |   0.022    |
+|    5    |  0.083   |    0.459    |    0.000    |    1.000     |   0.460    |   0.053    |   -0.001   |        1        |   0.022    |
+|    9    |  0.028   |    0.147    |    0.000    |     NaN      |   0.147    |   0.027    |   0.000    |        3        |   0.022    |
+|   15    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |        4        |   0.022    |
+|   10    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |        5        |   0.022    |
+|   12    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |        6        |   0.022    |
+|   16    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |        7        |   0.022    |
+|    1    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |        8        |   0.022    |
+|    2    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |        9        |   0.022    |
+|   20    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |       10        |   0.022    |
+|   26    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |       11        |   0.022    |
+|   27    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |       12        |   0.022    |
 
 Network centrality measures for angry faces
 
 The different network measures capture different aspects of centrality.
-- strength: how many connections does the AU have - eigenvector: high if
-AU is connected with a lot of AUs that also have a lot of connections -
-betweenness: number of shortest connections that go through the AU; does
-it connect otherwise unconnected elements? - transitivity: how many
-triads is the element in (triad == all three elements are connected) -
-hub\_score: similar to eigenvector - page\_rank: calculates the
-influence an element has over all it’s neighbours - modularity: if
-modularity is high, the element clearly clusters with other elements -
-community membership: elements that have the same membership cluster
-with each other - community.value: if this is above 0.3, then there are
-clearly distinct clusters in this data set
+
+-   strength: how many connections does the AU have
+-   eigenvector: high if AU is connected with a lot of AUs that also
+    have a lot of connections
+-   betweenness: number of shortest connections that go through the AU;
+    does it connect otherwise unconnected elements?
+-   transitivity: how many triads is the element in (triad == all three
+    elements are connected)
+-   hub\_score: similar to eigenvector
+-   page\_rank: calculates the influence an element has over all it’s
+    neighbours
+-   modularity: if modularity is high, the element clearly clusters with
+    other elements
+-   community membership: elements that have the same membership cluster
+    with each other
+-   community.value: if this is above 0.3, then there are clearly
+    distinct clusters in this data set
 
 While these centrality measures concern the elements within a network,
 we can also calculate information flow etc within across a network.
 
-    net.sum.graph <- network.summary.graph(angry.net)
+``` r
+net.sum.graph <- network.summary.graph(angry.net)
+```
 
-<table>
-<caption>Network graph measures for anry faces</caption>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 10%" />
-<col style="width: 9%" />
-<col style="width: 14%" />
-<col style="width: 10%" />
-<col style="width: 24%" />
-<col style="width: 15%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;">nr.elements</th>
-<th style="text-align: center;">nr.edges</th>
-<th style="text-align: center;">density</th>
-<th style="text-align: center;">transitivity</th>
-<th style="text-align: center;">diameter</th>
-<th style="text-align: center;">degree_centralization</th>
-<th style="text-align: center;">mean_distance</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">19</td>
-<td style="text-align: center;">28</td>
-<td style="text-align: center;">0.164</td>
-<td style="text-align: center;">0.755</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">0.281</td>
-<td style="text-align: center;">1.4</td>
-</tr>
-</tbody>
-</table>
+| nr.elements | nr.edges | density | transitivity | diameter | degree\_centralization | mean\_distance |
+|:-----------:|:--------:|:-------:|:------------:|:--------:|:----------------------:|:--------------:|
+|     19      |    28    |  0.164  |    0.755     |    3     |         0.281          |      1.4       |
 
 Network graph measures for anry faces
 
@@ -2879,109 +1014,23 @@ degree/strength of all elements. Mean distance is the mean number of
 
 Let’s see what happens if we do this across the different emotions.
 
-    xx <- lapply(multi.net, function(x) {
-      network.summary.graph(x)
-    })
-    xx <- do.call(rbind, xx)
-    xx <- cbind(emotion = names(multi.net), xx)
+``` r
+xx <- lapply(multi.net, function(x) {
+  network.summary.graph(x)
+})
+xx <- do.call(rbind, xx)
+xx <- cbind(emotion = names(multi.net), xx)
+```
 
-<table>
-<caption>Network graph measures for all faces</caption>
-<colgroup>
-<col style="width: 9%" />
-<col style="width: 12%" />
-<col style="width: 9%" />
-<col style="width: 8%" />
-<col style="width: 13%" />
-<col style="width: 9%" />
-<col style="width: 22%" />
-<col style="width: 14%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;">emotion</th>
-<th style="text-align: center;">nr.elements</th>
-<th style="text-align: center;">nr.edges</th>
-<th style="text-align: center;">density</th>
-<th style="text-align: center;">transitivity</th>
-<th style="text-align: center;">diameter</th>
-<th style="text-align: center;">degree_centralization</th>
-<th style="text-align: center;">mean_distance</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">19</td>
-<td style="text-align: center;">28</td>
-<td style="text-align: center;">0.164</td>
-<td style="text-align: center;">0.755</td>
-<td style="text-align: center;">0.29</td>
-<td style="text-align: center;">0.281</td>
-<td style="text-align: center;">1.40</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">contempt</td>
-<td style="text-align: center;">19</td>
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">0.023</td>
-<td style="text-align: center;">0.600</td>
-<td style="text-align: center;">0.47</td>
-<td style="text-align: center;">0.143</td>
-<td style="text-align: center;">1.33</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">disgust</td>
-<td style="text-align: center;">19</td>
-<td style="text-align: center;">14</td>
-<td style="text-align: center;">0.082</td>
-<td style="text-align: center;">0.780</td>
-<td style="text-align: center;">0.56</td>
-<td style="text-align: center;">0.251</td>
-<td style="text-align: center;">1.33</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">fear</td>
-<td style="text-align: center;">19</td>
-<td style="text-align: center;">35</td>
-<td style="text-align: center;">0.205</td>
-<td style="text-align: center;">0.561</td>
-<td style="text-align: center;">0.31</td>
-<td style="text-align: center;">0.406</td>
-<td style="text-align: center;">1.47</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">happy</td>
-<td style="text-align: center;">19</td>
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.035</td>
-<td style="text-align: center;">0.545</td>
-<td style="text-align: center;">0.21</td>
-<td style="text-align: center;">0.187</td>
-<td style="text-align: center;">1.40</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">sadness</td>
-<td style="text-align: center;">19</td>
-<td style="text-align: center;">10</td>
-<td style="text-align: center;">0.058</td>
-<td style="text-align: center;">0.778</td>
-<td style="text-align: center;">0.98</td>
-<td style="text-align: center;">0.164</td>
-<td style="text-align: center;">1.40</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">surprise</td>
-<td style="text-align: center;">19</td>
-<td style="text-align: center;">17</td>
-<td style="text-align: center;">0.099</td>
-<td style="text-align: center;">0.814</td>
-<td style="text-align: center;">0.16</td>
-<td style="text-align: center;">0.234</td>
-<td style="text-align: center;">1.19</td>
-</tr>
-</tbody>
-</table>
+| emotion  | nr.elements | nr.edges | density | transitivity | diameter | degree\_centralization | mean\_distance |
+|:--------:|:-----------:|:--------:|:-------:|:------------:|:--------:|:----------------------:|:--------------:|
+|  anger   |     19      |    28    |  0.164  |    0.755     |   0.29   |         0.281          |      1.40      |
+| contempt |     19      |    4     |  0.023  |    0.600     |   0.47   |         0.143          |      1.33      |
+| disgust  |     19      |    14    |  0.082  |    0.780     |   0.56   |         0.251          |      1.33      |
+|   fear   |     19      |    35    |  0.205  |    0.561     |   0.31   |         0.406          |      1.47      |
+|  happy   |     19      |    6     |  0.035  |    0.545     |   0.21   |         0.187          |      1.40      |
+| sadness  |     19      |    10    |  0.058  |    0.778     |   0.98   |         0.164          |      1.40      |
+| surprise |     19      |    17    |  0.099  |    0.814     |   0.16   |         0.234          |      1.19      |
 
 Network graph measures for all faces
 
@@ -3002,90 +1051,26 @@ transmit the message. The ‘netfacs’ function also pops out the observed
 probabilities that events consist of 1, 2, 3 … elements, and this is
 tested against the null distribution.
 
-    event.size.angry <- angry.face$event.size.information
-    size.plot <- event.size.plot(netfacs.data = angry.face)
+``` r
+event.size.angry <- angry.face$event.size.information
+size.plot <- event.size.plot(netfacs.data = angry.face)
+```
 
-<table>
-<caption>Combination sizes of facial expressions in the angry condition</caption>
-<thead>
-<tr class="header">
-<th style="text-align: center;">combination.size</th>
-<th style="text-align: center;">observed.prob</th>
-<th style="text-align: center;">expected.prob</th>
-<th style="text-align: center;">effect.size</th>
-<th style="text-align: center;">pvalue</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">1.00</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.04</td>
-<td style="text-align: center;">-0.04</td>
-<td style="text-align: center;">0.00</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.26</td>
-<td style="text-align: center;">-0.26</td>
-<td style="text-align: center;">0.00</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">0.04</td>
-<td style="text-align: center;">0.18</td>
-<td style="text-align: center;">-0.14</td>
-<td style="text-align: center;">0.00</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">0.40</td>
-<td style="text-align: center;">0.36</td>
-<td style="text-align: center;">0.04</td>
-<td style="text-align: center;">0.05</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">0.33</td>
-<td style="text-align: center;">0.11</td>
-<td style="text-align: center;">0.22</td>
-<td style="text-align: center;">0.00</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.20</td>
-<td style="text-align: center;">0.04</td>
-<td style="text-align: center;">0.16</td>
-<td style="text-align: center;">0.00</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.37</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">0.02</td>
-<td style="text-align: center;">0.01</td>
-<td style="text-align: center;">0.02</td>
-<td style="text-align: center;">0.00</td>
-</tr>
-</tbody>
-</table>
+| combination.size | observed.prob | expected.prob | effect.size | pvalue |
+|:----------------:|:-------------:|:-------------:|:-----------:|:------:|
+|        0         |     0.00      |     0.00      |    0.00     |  1.00  |
+|        1         |     0.00      |     0.04      |    -0.04    |  0.00  |
+|        2         |     0.00      |     0.26      |    -0.26    |  0.00  |
+|        3         |     0.04      |     0.18      |    -0.14    |  0.00  |
+|        4         |     0.40      |     0.36      |    0.04     |  0.06  |
+|        5         |     0.33      |     0.11      |    0.22     |  0.00  |
+|        6         |     0.20      |     0.04      |    0.16     |  0.00  |
+|        7         |     0.00      |     0.00      |    0.00     |  0.38  |
+|        8         |     0.02      |     0.01      |    0.02     |  0.00  |
 
 Combination sizes of facial expressions in the angry condition
 
-<img src="README_files/figure-markdown_strict/size.plot-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-size.plot-1.png" width="100%" style="display: block; margin: auto;" />
 
 What the table and plot show us is that angry faces are actually quite
 complex, compared to the other emotions: events containing 0-3 Action
@@ -3096,83 +1081,17 @@ the range of combination sizes for all emotions.
 
 If we do the same for happy faces, we see a very different pattern
 
-<table>
-<caption>Combination sizes of happy expressions in the angry condition</caption>
-<thead>
-<tr class="header">
-<th style="text-align: center;">combination.size</th>
-<th style="text-align: center;">observed.prob</th>
-<th style="text-align: center;">expected.prob</th>
-<th style="text-align: center;">effect.size</th>
-<th style="text-align: center;">pvalue</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">1.00</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0.03</td>
-<td style="text-align: center;">0.03</td>
-<td style="text-align: center;">-0.01</td>
-<td style="text-align: center;">0.24</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.76</td>
-<td style="text-align: center;">0.08</td>
-<td style="text-align: center;">0.69</td>
-<td style="text-align: center;">0.00</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">0.18</td>
-<td style="text-align: center;">0.16</td>
-<td style="text-align: center;">0.02</td>
-<td style="text-align: center;">0.16</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">4</td>
-<td style="text-align: center;">0.03</td>
-<td style="text-align: center;">0.46</td>
-<td style="text-align: center;">-0.43</td>
-<td style="text-align: center;">0.00</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">5</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.18</td>
-<td style="text-align: center;">-0.18</td>
-<td style="text-align: center;">0.00</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">6</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.07</td>
-<td style="text-align: center;">-0.07</td>
-<td style="text-align: center;">0.00</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">7</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.34</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">0.01</td>
-<td style="text-align: center;">-0.01</td>
-<td style="text-align: center;">0.05</td>
-</tr>
-</tbody>
-</table>
+| combination.size | observed.prob | expected.prob | effect.size | pvalue |
+|:----------------:|:-------------:|:-------------:|:-----------:|:------:|
+|        0         |     0.00      |     0.00      |    0.00     |  1.00  |
+|        1         |     0.03      |     0.03      |    -0.01    |  0.22  |
+|        2         |     0.76      |     0.08      |    0.69     |  0.00  |
+|        3         |     0.18      |     0.16      |    0.02     |  0.17  |
+|        4         |     0.03      |     0.46      |    -0.43    |  0.00  |
+|        5         |     0.00      |     0.18      |    -0.18    |  0.00  |
+|        6         |     0.00      |     0.07      |    -0.07    |  0.00  |
+|        7         |     0.00      |     0.00      |    0.00     |  0.40  |
+|        8         |     0.00      |     0.01      |    -0.01    |  0.05  |
 
 Combination sizes of happy expressions in the angry condition
 
@@ -3207,67 +1126,23 @@ predicting each new facial expression is harder. So, the first entropy
 measure gives the ratio between observed overall entropy and predicted
 overall entropy under random conditions.
 
-    xx <- lapply(multi.facs, function(x) {
-      entropy.overall(x)
-    })
-    xx <- do.call(rbind, xx)
-    xx <- cbind(emotion = names(multi.facs), xx)
+``` r
+xx <- lapply(multi.facs, function(x) {
+  entropy.overall(x)
+})
+xx <- do.call(rbind, xx)
+xx <- cbind(emotion = names(multi.facs), xx)
+```
 
-<table>
-<caption>Ratios between expected and observed entropies in different emotions</caption>
-<thead>
-<tr class="header">
-<th style="text-align: center;">emotion</th>
-<th style="text-align: center;">observed.entropy</th>
-<th style="text-align: center;">expected.entropy</th>
-<th style="text-align: center;">entropy.ratio</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">anger</td>
-<td style="text-align: center;">4.39</td>
-<td style="text-align: center;">5.49</td>
-<td style="text-align: center;">0.80</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">contempt</td>
-<td style="text-align: center;">2.46</td>
-<td style="text-align: center;">4.02</td>
-<td style="text-align: center;">0.61</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">disgust</td>
-<td style="text-align: center;">4.11</td>
-<td style="text-align: center;">5.87</td>
-<td style="text-align: center;">0.70</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">fear</td>
-<td style="text-align: center;">4.40</td>
-<td style="text-align: center;">4.64</td>
-<td style="text-align: center;">0.95</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">happy</td>
-<td style="text-align: center;">1.45</td>
-<td style="text-align: center;">5.86</td>
-<td style="text-align: center;">0.25</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">sadness</td>
-<td style="text-align: center;">3.26</td>
-<td style="text-align: center;">4.81</td>
-<td style="text-align: center;">0.68</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">surprise</td>
-<td style="text-align: center;">2.04</td>
-<td style="text-align: center;">6.36</td>
-<td style="text-align: center;">0.32</td>
-</tr>
-</tbody>
-</table>
+| emotion  | observed.entropy | expected.entropy | entropy.ratio |
+|:--------:|:----------------:|:----------------:|:-------------:|
+|  anger   |       4.39       |       5.49       |     0.80      |
+| contempt |       2.46       |       4.00       |     0.62      |
+| disgust  |       4.11       |       5.86       |     0.70      |
+|   fear   |       4.40       |       4.64       |     0.95      |
+|  happy   |       1.45       |       5.86       |     0.25      |
+| sadness  |       3.26       |       4.81       |     0.68      |
+| surprise |       2.04       |       6.37       |     0.32      |
 
 Ratios between expected and observed entropies in different emotions
 
