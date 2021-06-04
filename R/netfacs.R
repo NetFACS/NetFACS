@@ -448,7 +448,7 @@ netfacs <- function(data,
         randomizeMatrix(
           samp = data,
           null.model = "richness",
-          iterations = 1
+          iterations = 100
         )
       
       elements.boot <- lapply(1:nrow(xx), function(x) {
@@ -463,8 +463,8 @@ netfacs <- function(data,
       xx <-
         randomizeMatrix(
           samp = data,
-          null.model = "trialswap",
-          iterations = 1
+          null.model = "independentswap",
+          iterations = 100
         )
       
       elements.boot <- lapply(1:nrow(xx), function(x) {
