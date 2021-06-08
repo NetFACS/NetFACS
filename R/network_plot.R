@@ -99,9 +99,10 @@ network.plot <- function(netfacs.graph,
         # this creates and changes the edges
         arrow = NULL,
         colour = "grey",
+        fontface = 'bold',
         end_cap = circle(2, "mm"),
         start_cap = circle(2, "mm"),
-        label_dodge = unit(3, "mm"),
+        label_dodge = unit(2, "mm"),
         angle_calc = "along",
         show.legend = FALSE
       ) +
@@ -114,7 +115,7 @@ network.plot <- function(netfacs.graph,
         ),
         show.legend = FALSE
       ) +
-      scale_size(range = c(2, 7)) +
+      scale_size(range = c(4, 12)) +
       ggtitle(title) +
       theme_graph(base_family = "sans")
 
@@ -162,9 +163,10 @@ network.plot <- function(netfacs.graph,
         mapping = aes(label = round(.data$observed.prob, 2)),
         arrow = NULL,
         colour = "grey",
-        end_cap = circle(2, "mm"),
-        start_cap = circle(2, "mm"),
-        label_dodge = unit(3, "mm"),
+        fontface = 'bold',
+        end_cap = circle(5, "mm"),
+        start_cap = circle(5, "mm"),
+        label_dodge = unit(2, "mm"),
         angle_calc = "along",
         show.legend = FALSE
       ) +
@@ -177,7 +179,7 @@ network.plot <- function(netfacs.graph,
         ),
         show.legend = FALSE
       ) +
-      scale_size(range = c(2, 7)) +
+      scale_size(range = c(4, 12)) +
       ggtitle(paste(c(title, "; Modularity = ", modular), collapse = "")) +
       theme_graph(base_family = "sans")
 

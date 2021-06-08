@@ -159,10 +159,11 @@ network.conditional <- function(netfacs.data,
         angle = 15,
         length = unit(3, "mm")
       ),
-      end_cap = circle(2, "mm"),
-      start_cap = circle(2, "mm"),
+      end_cap = circle(4, "mm"),
+      start_cap = circle(4, "mm"),
       colour = "grey",
-      label_dodge = unit(3, "mm"),
+      fontface = 'bold',
+      label_dodge = unit(2, "mm"),
       angle_calc = "along",
       show.legend = FALSE
     ) +
@@ -174,7 +175,7 @@ network.conditional <- function(netfacs.data,
       ),
       show.legend = FALSE
     ) +
-    scale_size(range = c(2, 7)) +
+    scale_size(range = c(4, 12)) +
     theme_graph()
 
   if (plot.bubbles == T) {

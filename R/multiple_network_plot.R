@@ -55,14 +55,15 @@ multiple.network.plot <- function(netfacs.graphs) {
   pdf(NULL)
   dev.control(displaylist = "enable")
   plot.new()
-  par(mfrow = c(2, ceiling(length(netfacs.graphs) / 2)), mar = c(1, 1, 1, 1), bg = "white")
+  par(mfrow = c(2, ceiling(length(netfacs.graphs) / 2)), 
+      mar = c(1, 1, 1, 1), bg = "white")
   for (i in 1:length(netfacs.graphs)) {
     net.i <- graph.empty(n = length(all.nodes), directed = F)
     V(net.i)$name <- all.nodes
     net.i <- net.i %u% netfacs.graphs[[i]]
     node.size <- vertex.attributes(net.i)$element.significance
-    node.size[node.size > 0.01] <- 10
-    node.size[node.size <= 0.01] <- 20
+    node.size[node.size > 0.01] <- 30
+    node.size[node.size <= 0.01] <- 50
     node.size[is.na(node.size)] <- 0
 
     edge.weight <- edge.attributes(net.i)$weight*10
@@ -83,7 +84,9 @@ multiple.network.plot <- function(netfacs.graphs) {
       layout = l,
       main = names(netfacs.graphs)[i],
       edge.width = edge.size,
-      vertex.size = node.size
+      vertex.size = node.size,
+      vertex.label.size = 5,
+      vertex.label.cex = 1.5
     )
   }
   p <- recordPlot()

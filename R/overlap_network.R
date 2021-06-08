@@ -165,10 +165,11 @@ overlap.network <- function(netfacs.list,
       ),
       label_size = 3,
       arrow = arrow(type = "closed", angle = 15, length = unit(2, "mm")),
-      end_cap = circle(2, "mm"),
-      start_cap = circle(2, "mm"),
+      end_cap = circle(4, "mm"),
+      start_cap = circle(4, "mm"),
       colour = "grey",
-      label_dodge = unit(3, "mm"),
+      fontface = 'bold',
+      label_dodge = unit(2, "mm"),
       angle_calc = "along", show.legend = F
     )
 
@@ -213,10 +214,11 @@ overlap.network <- function(netfacs.list,
         angle = 15,
         length = unit(2, "mm")
       ),
-      end_cap = circle(2, "mm"),
-      start_cap = circle(2, "mm"),
+      end_cap = circle(4, "mm"),
+      start_cap = circle(4, "mm"),
       colour = "grey",
-      label_dodge = unit(3, "mm"),
+      fontface = 'bold',
+      label_dodge = unit(2, "mm"),
       angle_calc = "along",
       show.legend = FALSE
     )
@@ -263,10 +265,11 @@ overlap.network <- function(netfacs.list,
         angle = 15,
         length = unit(2, "mm")
       ),
-      end_cap = circle(2, "mm"),
-      start_cap = circle(2, "mm"),
+      end_cap = circle(4, "mm"),
+      start_cap = circle(4, "mm"),
       colour = "grey",
-      label_dodge = unit(3, "mm"),
+      fontface = 'bold',
+      label_dodge = unit(2, "mm"),
       angle_calc = "along",
       show.legend = FALSE
     )
@@ -305,10 +308,11 @@ overlap.network <- function(netfacs.list,
     ggtitle("Edges with high specificity and occurrence") +
     geom_edge_fan(
       arrow = NULL,
-      end_cap = circle(2, "mm"),
-      start_cap = circle(2, "mm"),
+      end_cap = circle(4, "mm"),
+      start_cap = circle(4, "mm"),
       colour = "grey",
-      label_dodge = unit(3, "mm"),
+      fontface = 'bold',
+      label_dodge = unit(2, "mm"),
       angle_calc = "along", show.legend = F
     )
 
