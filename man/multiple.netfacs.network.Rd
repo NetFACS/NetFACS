@@ -16,7 +16,7 @@ multiple.netfacs.network(
 \arguments{
 \item{netfacs.list}{list of multiple objects resulting from netfacs() function or the multiple.netfacs() function}
 
-\item{link}{determines how nodes/elements are connected. 'unweighted' gives a 1 to significant connections and 0 to all others; 'weighted' gives the difference between observed and expected probability of co-occurrence; 'raw' just uses the observed probability of co-occurrence; 'SRI' uses the simple ratio index/affinity (probability of co-occurrence/ (probablities of each element and the combination))}
+\item{link}{determines how nodes/elements are connected. 'unweighted' gives a 1 to significant connections and 0 to all others; 'weighted' gives the difference between observed and expected probability of co-occurrence; 'raw' just uses the observed probability of co-occurrence; 'SRI' uses the simple ratio index/affinity (probability of co-occurrence/ (probabilities of each element and the combination))}
 
 \item{significance}{numeric value, determining the p-value below which combinations are considered to be dissimilar enough from the null distribution}
 

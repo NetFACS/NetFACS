@@ -7,7 +7,7 @@
 #'
 #'
 #' @param elements vector with either one element per index (for videos) or all elements that occurred in the whole event (for photos)
-#' @param type either 'video' or 'photo'. If 'photo', the function separates the string and returns a matrix of the correct dimensions. If 'video', the function creates a matrix using the highest common factor of all 'durations' and for each of those 'frames' assignes whether each element was present or absent
+#' @param type either 'video' or 'photo'. If 'photo', the function separates the string and returns a matrix of the correct dimensions. If 'video', the function creates a matrix using the highest common factor of all 'durations' and for each of those 'frames' assigns whether each element was present or absent
 #' @param video.id name of the video, so all cases are treated together. For photos, can be entered so that photos can be matched to IDs after
 #' @param start.time for videos, time when the element is first active
 #' @param duration for videos, how long is the element active for

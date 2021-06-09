@@ -4,7 +4,7 @@
 #'
 #' @param netfacs.graph igraph network object resulting from netfacs.network() function
 #'
-#' @return Function returns a data frame with the element, its 'strength' (mean probability of co-occurrance), 'eigenvector' centrality (connection to other highly connected elements), 'betweeness' centrality (number of connections running through the element), and a number of other network measures
+#' @return Function returns a data frame with the element, its 'strength' (mean probability of co-occurrence), 'eigenvector' centrality (connection to other highly connected elements), 'betweenness' centrality (number of connections running through the element), and a number of other network measures
 #'
 #' @export
 #' @importFrom igraph strength

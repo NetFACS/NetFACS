@@ -2,7 +2,7 @@
 #'
 #' Take dataset and report observed and expected likelihood that elements and combinations of elements occur in this dataset, and whether this differs from a null condition
 #' Expected values are based on bootstraps of null distribution, so the values represent distribution of element co-occurrence under null condition; or permutations of the observed distribution to test it against 'random'.
-#' The resulting object is the basis for most other functions in this pacakge.
+#' The resulting object is the basis for most other functions in this package.
 #'
 #' @param data matrix with one column per element, and one row per event, consisting of 1 (element was active during that event) and 0 (element was not active)
 #' @param condition character vector of same length as 'data' that contains information on the condition each event belongs to, so probabilities can be compare across conditions; if NULL, all events will be tested against random
