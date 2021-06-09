@@ -340,7 +340,6 @@ netfacs <- function(data,
             "combination.size",
             "random.level.null",
             "calculate_prob_of_comb",
-            "compute_combinations",
             "Table"
           ),
           envir = environment()
@@ -510,7 +509,6 @@ netfacs <- function(data,
             "rs.test",
             "combination.size",
             "calculate_prob_of_comb",
-            "compute_combinations",
             "calculate_combination_size",
             "randomizeMatrix"
           ),
