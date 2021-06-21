@@ -31,7 +31,6 @@
 #' @importFrom parallel stopCluster
 #' @importFrom doParallel registerDoParallel
 #' @importFrom utils data
-#' @importFrom compiler cmpfun
 #'
 #' @export
 #'
