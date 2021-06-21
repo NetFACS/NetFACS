@@ -56,7 +56,7 @@ multiple.netfacs <- function(data,
                              use_parallel = TRUE,
                              n_cores = 2) {
   conditions <- sort(unique(condition))
-  netfacs.comp <- cmpfun(netfacs)
+  
   netfacs.condition <- lapply(conditions, function(x) {
     xx <- netfacs.comp(
       data = data,
