@@ -58,7 +58,7 @@ multiple.netfacs <- function(data,
   conditions <- sort(unique(condition))
   
   netfacs.condition <- lapply(conditions, function(x) {
-    xx <- netfacs.comp(
+    xx <- netfacs(
       data = data,
       condition = condition,
       test.condition = x,
