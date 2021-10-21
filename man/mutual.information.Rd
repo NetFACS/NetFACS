@@ -17,6 +17,7 @@ Calculates the pointwise mutual information of units with each other
 }
 \examples{
 ### how do angry facial expressions differ from non-angry ones?
+\dontrun{
 data(emotions_set)
 angry.face <- netfacs(
   data = emotions_set[[1]],
@@ -28,4 +29,5 @@ angry.face <- netfacs(
 
 mutual.information(angry.face
 )
+}
 }

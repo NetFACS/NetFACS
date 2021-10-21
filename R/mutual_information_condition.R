@@ -12,6 +12,7 @@
 #'
 #' @examples
 #' ### how do angry facial expressions differ from non-angry ones?
+#' \dontrun{
 #' data(emotions_set)
 #' angry.face <- netfacs(
 #'  data = emotions_set[[1]],
@@ -23,7 +24,7 @@
 #' )
 #'
 #' head(mutual.information.condition(angry.face), 20)
-
+#' }
 
 mutual.information.condition <- function(netfacs.data){ 
   

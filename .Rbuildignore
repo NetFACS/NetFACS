@@ -16,3 +16,5 @@ README_files/
 removed c++ functions/*
 ^packrat/
 ^\.Rprofile$
+^CRAN-RELEASE$
+cran-comments.md

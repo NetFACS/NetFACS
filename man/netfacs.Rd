@@ -106,8 +106,6 @@ angry.face <- netfacs(
 
 head(angry.face$result, 20)
 angry.face$event.size.information
-
-
 }
 \author{
 Alex Mielke

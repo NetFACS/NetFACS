@@ -87,9 +87,6 @@
 #'
 #' head(angry.face$result, 20)
 #' angry.face$event.size.information
-#' 
-#' 
-
 
 netfacs <- function(data,
                     condition = NULL,
