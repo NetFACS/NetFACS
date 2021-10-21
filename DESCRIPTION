@@ -35,7 +35,7 @@ Imports:
     rlang,
     Rfast,
     arrangements
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 NeedsCompilation: yes
 ByteCompile: true
 VignetteBuilder: knitr

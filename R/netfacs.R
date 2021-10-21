@@ -62,7 +62,6 @@
 #' @importFrom parallel stopCluster
 #' @importFrom doParallel registerDoParallel
 #' @importFrom Rfast rowsums rowmeans Table
-#' @importFrom compiler cmpfun
 #'
 #'
 #' @author Alex Mielke
@@ -104,8 +103,6 @@ netfacs <- function(data,
                     tail = "upper.tail",
                     use_parallel = TRUE,
                     n_cores = 2) {
-  # set the function for the rules generation
-  calculate_prob_of_comb <- cmpfun(calculate_prob_of_comb)
   
   # fix column names of dataset to not include special characters or spaces
   colnames(data) <- gsub(

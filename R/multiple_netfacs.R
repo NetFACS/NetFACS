@@ -31,7 +31,6 @@
 #' @importFrom parallel stopCluster
 #' @importFrom doParallel registerDoParallel
 #' @importFrom utils data
-#' @importFrom compiler cmpfun
 #'
 #' @export
 #'
@@ -57,9 +56,9 @@ multiple.netfacs <- function(data,
                              use_parallel = TRUE,
                              n_cores = 2) {
   conditions <- sort(unique(condition))
-  netfacs.comp <- cmpfun(netfacs)
+  
   netfacs.condition <- lapply(conditions, function(x) {
-    xx <- netfacs.comp(
+    xx <- netfacs(
       data = data,
       condition = condition,
       test.condition = x,
