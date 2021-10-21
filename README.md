@@ -62,8 +62,8 @@ NetFACS is based mainly on different probabilities: unconditional
 probability is the simply the proportion of occurrence;
 $P(A \\cap B) = \\frac{number of occurrences A+B}{number of possible occurrences A+B}$).
 The unconditional probability of a combination AB is not directional,
-i.e. it is the same for AB as it is for BA: (*P*(*A* ∩ *B*) ==
-*P*(*B* ∩ *A*)). We use the unconditional probability mainly to express
+i.e. it is the same for AB as it is for BA: (*P*(*A*∩*B*) ==
+*P*(*B*∩*A*)). We use the unconditional probability mainly to express
 how often an AU or a combination of AUs occurs at all, either in the
 whole data set or in a specific context. Conditional probability, on the
 other hand, is the probability of an event A given an event B;
@@ -71,10 +71,10 @@ $P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)}$). Thus, it tells us not how
 often A occurs at all, but how often A occurs in the subset of cases
 where we know that B is present. Therefore, the conditional
 probabilities can differ depending on which direction we are looking at
-(*P*(*A* ∣ *B*) != *P*(*B* ∣ *A*)). For example, in the English
-language, the letter ‘h’ is often accompanied by the letter ‘s’, but the
-reverse is not true: most cases of ‘s’ do not involve ‘h’. We can
-explore the conditional probability between two elements, or between an
+(*P*(*A*∣*B*) != *P*(*B*∣*A*)). For example, in the English language,
+the letter ‘h’ is often accompanied by the letter ‘s’, but the reverse
+is not true: most cases of ‘s’ do not involve ‘h’. We can explore the
+conditional probability between two elements, or between an
 element/combination and a context. Probabilities are used as they are
 intuitive for most people, in contrast to many more opaque association
 indices that are often used in social network analysis. It also means
@@ -91,7 +91,7 @@ Studio will often ask the user whether they want to update a lot of
 other packages. This might sometimes not be straightforward and require
 several attempts. If one of them gets stuck, it is worth installing it
 straight from CRAN after restarting the R session rather than within the
-install\_github command.
+install_github command.
 
 ``` r
 ## install NetFACS from GitHub
@@ -111,11 +111,12 @@ library(NetFACS)
 
 Currently, there are two practice data sets in the package: one is the
 Extended Cohn-Kanade Database for posed FACS data (all basic AUs, 7
-emotions) (Lucey et al. 2010), where co-occurrence is defined as Action
-Units happening in the same facial expression, and one is the Communist
-Manifesto in French, German, and English, where co-occurrence is defined
-as letters happening in the same word. These can be accessed the
-following way:
+emotions) ([Lucey et
+al. 2010](https://doi.org/10.1109/CVPRW.2010.5543262)), where
+co-occurrence is defined as Action Units happening in the same facial
+expression, and one is the Communist Manifesto in French, German, and
+English, where co-occurrence is defined as letters happening in the same
+word. These can be accessed the following way:
 
 ``` r
 data("letternet") # this is the Manifesto #
@@ -354,7 +355,7 @@ These are the function parameters and what they do:
     several data points, or data points come from the same video, noting
     this in the *random.level* parameter means that random selection
     occurs on the level of the video or individual rather than each
-    event separatedly. Thus, the probability space of the null
+    event separately. Thus, the probability space of the null
     distribution is not biased by one individual or video.
 -   combination.size: If null, the algorithm will pop out all possible
     combinations. If we don’t care for the higher-order combinations
@@ -363,8 +364,8 @@ These are the function parameters and what they do:
 -   tail: Should p-values be *upper.tail* (the observed value is larger
     than the expected values) or *left.tail* (the observed value is
     smaller than the expected values)?
--   use\_parallel: Should processing be done in parallel?
--   n\_cores: How many cores should be used for parallel processing?
+-   use_parallel: Should processing be done in parallel?
+-   n_cores: How many cores should be used for parallel processing?
 
 Here, I will give an example where we compare the facial expression of
 anger against all other facial expression. We assume that every
@@ -405,26 +406,26 @@ angry.face <- netfacs(
 
 | combination | combination.size | count | observed.prob | expected.prob | effect.size | pvalue | specificity | prob.increase |
 |:-----------:|:----------------:|:-----:|:-------------:|:-------------:|:-----------:|:------:|:-----------:|:-------------:|
-|      4      |        1         |  40   |     0.89      |     0.29      |    0.60     |  0.00  |    0.33     |     3.04      |
-|     17      |        1         |  39   |     0.87      |     0.27      |    0.60     |  0.00  |    0.34     |     3.25      |
-|     23      |        1         |  36   |     0.80      |     0.02      |    0.78     |  0.00  |    0.84     |     32.23     |
-|     24      |        1         |  33   |     0.73      |     0.04      |    0.70     |  0.00  |    0.77     |     20.50     |
+|      4      |        1         |  40   |     0.89      |     0.29      |    0.60     |  0.00  |    0.33     |     3.05      |
+|     17      |        1         |  39   |     0.87      |     0.27      |    0.60     |  0.00  |    0.34     |     3.24      |
+|     23      |        1         |  36   |     0.80      |     0.02      |    0.78     |  0.00  |    0.84     |     32.56     |
+|     24      |        1         |  33   |     0.73      |     0.04      |    0.70     |  0.00  |    0.77     |     20.64     |
 |      7      |        1         |  32   |     0.71      |     0.17      |    0.54     |  0.00  |    0.41     |     4.25      |
 |      6      |        1         |   8   |     0.18      |     0.31      |    -0.13    |  1.00  |    0.08     |     0.57      |
-|     14      |        1         |   7   |     0.16      |     0.09      |    0.07     |  0.00  |    0.22     |     1.73      |
+|     14      |        1         |   7   |     0.16      |     0.09      |    0.07     |  0.00  |    0.22     |     1.77      |
 |      5      |        1         |   6   |     0.13      |     0.31      |    -0.17    |  1.00  |    0.07     |     0.44      |
-|     18      |        1         |   4   |     0.09      |     0.01      |    0.08     |  0.00  |    0.67     |     12.71     |
-|     15      |        1         |   3   |     0.07      |     0.11      |    -0.04    |  1.00  |    0.09     |     0.63      |
+|     18      |        1         |   4   |     0.09      |     0.01      |    0.08     |  0.00  |    0.67     |     12.43     |
+|     15      |        1         |   3   |     0.07      |     0.11      |    -0.04    |  1.00  |    0.09     |     0.62      |
 |      9      |        1         |   3   |     0.07      |     0.21      |    -0.14    |  1.00  |    0.05     |     0.32      |
-|     10      |        1         |   2   |     0.04      |     0.05      |    0.00     |  0.60  |    0.13     |     0.96      |
+|     10      |        1         |   2   |     0.04      |     0.05      |    0.00     |  0.58  |    0.13     |     0.97      |
 |     12      |        1         |   1   |     0.02      |     0.28      |    -0.26    |  1.00  |    0.01     |     0.08      |
-|     16      |        1         |   1   |     0.02      |     0.04      |    -0.02    |  0.98  |    0.08     |     0.56      |
-|    4\_17    |        2         |  36   |     0.80      |     0.20      |    0.60     |  0.00  |    0.40     |     4.10      |
-|   17\_23    |        2         |  31   |     0.69      |     0.01      |    0.67     |  0.00  |    0.89     |     48.96     |
-|    4\_23    |        2         |  31   |     0.69      |     0.01      |    0.67     |  0.00  |    0.89     |     48.96     |
-|    4\_24    |        2         |  31   |     0.69      |     0.00      |    0.69     |  0.00  |    1.00     |      NA       |
-|   17\_24    |        2         |  28   |     0.62      |     0.01      |    0.61     |  0.00  |    0.88     |     42.63     |
-|    7\_17    |        2         |  28   |     0.62      |     0.09      |    0.53     |  0.00  |    0.52     |     6.71      |
+|     16      |        1         |   1   |     0.02      |     0.04      |    -0.02    |  0.97  |    0.08     |     0.57      |
+|    4_17     |        2         |  36   |     0.80      |     0.20      |    0.60     |  0.00  |    0.40     |     4.09      |
+|    17_23    |        2         |  31   |     0.69      |     0.01      |    0.67     |  0.00  |    0.89     |     48.95     |
+|    4_23     |        2         |  31   |     0.69      |     0.01      |    0.67     |  0.00  |    0.89     |     48.95     |
+|    4_24     |        2         |  31   |     0.69      |     0.00      |    0.69     |  0.00  |    1.00     |      NA       |
+|    17_24    |        2         |  28   |     0.62      |     0.01      |    0.61     |  0.00  |    0.88     |     43.62     |
+|    7_17     |        2         |  28   |     0.62      |     0.09      |    0.53     |  0.00  |    0.52     |     6.72      |
 
 Top rows of the netfacs function results
 
@@ -472,13 +473,13 @@ anger.aus <- netfacs.extract(
 
 | combination | combination.size | count | observed.prob | expected.prob | effect.size | pvalue | specificity | prob.increase |
 |:-----------:|:----------------:|:-----:|:-------------:|:-------------:|:-----------:|:------:|:-----------:|:-------------:|
-|     23      |        1         |  36   |     0.80      |     0.02      |    0.78     |   0    |    0.84     |     32.23     |
-|     24      |        1         |  33   |     0.73      |     0.04      |    0.70     |   0    |    0.77     |     20.50     |
-|      4      |        1         |  40   |     0.89      |     0.29      |    0.60     |   0    |    0.33     |     3.04      |
-|     17      |        1         |  39   |     0.87      |     0.27      |    0.60     |   0    |    0.34     |     3.25      |
+|     23      |        1         |  36   |     0.80      |     0.02      |    0.78     |   0    |    0.84     |     32.56     |
+|     24      |        1         |  33   |     0.73      |     0.04      |    0.70     |   0    |    0.77     |     20.64     |
+|      4      |        1         |  40   |     0.89      |     0.29      |    0.60     |   0    |    0.33     |     3.05      |
+|     17      |        1         |  39   |     0.87      |     0.27      |    0.60     |   0    |    0.34     |     3.24      |
 |      7      |        1         |  32   |     0.71      |     0.17      |    0.54     |   0    |    0.41     |     4.25      |
-|     18      |        1         |   4   |     0.09      |     0.01      |    0.08     |   0    |    0.67     |     12.71     |
-|     14      |        1         |   7   |     0.16      |     0.09      |    0.07     |   0    |    0.22     |     1.73      |
+|     18      |        1         |   4   |     0.09      |     0.01      |    0.08     |   0    |    0.67     |     12.43     |
+|     14      |        1         |   7   |     0.16      |     0.09      |    0.07     |   0    |    0.22     |     1.77      |
 
 Result of netfacs.extract for single elements
 
@@ -550,24 +551,24 @@ anger.aus3 <- netfacs.extract(
 
 | combination | combination.size | count | observed.prob | expected.prob | effect.size | pvalue | specificity | prob.increase |
 |:-----------:|:----------------:|:-----:|:-------------:|:-------------:|:-----------:|:------:|:-----------:|:-------------:|
-|  4\_17\_23  |        3         |  28   |     0.62      |     0.01      |    0.61     |   0    |    0.88     |     44.2      |
-|  4\_17\_24  |        3         |  27   |     0.60      |     0.00      |    0.60     |   0    |    1.00     |      NA       |
-|  4\_23\_24  |        3         |  23   |     0.51      |     0.00      |    0.51     |   0    |    1.00     |      NA       |
-|  4\_7\_24   |        3         |  23   |     0.51      |     0.00      |    0.51     |   0    |    1.00     |      NA       |
-|  7\_17\_23  |        3         |  22   |     0.49      |     0.00      |    0.49     |   0    |    1.00     |      NA       |
-|  7\_17\_24  |        3         |  22   |     0.49      |     0.00      |    0.49     |   0    |    1.00     |      NA       |
+|   4_17_23   |        3         |  28   |     0.62      |     0.01      |    0.61     |   0    |    0.88     |     44.2      |
+|   4_17_24   |        3         |  27   |     0.60      |     0.00      |    0.60     |   0    |    1.00     |      NA       |
+|   4_23_24   |        3         |  23   |     0.51      |     0.00      |    0.51     |   0    |    1.00     |      NA       |
+|   4_7\_24   |        3         |  23   |     0.51      |     0.00      |    0.51     |   0    |    1.00     |      NA       |
+|   7_17_23   |        3         |  22   |     0.49      |     0.00      |    0.49     |   0    |    1.00     |      NA       |
+|   7_17_24   |        3         |  22   |     0.49      |     0.00      |    0.49     |   0    |    1.00     |      NA       |
 
 Results of netfacs.extract function for combinations of three elements
 
-Here, we see that for example combination AU4\_17\_23 appears 28 times
+Here, we see that for example combination AU4_17_23 appears 28 times
 (62% of all angry faces), which is 44 times more than we would have
 expected. Many of the combinations only occur in the angry condition,
 and they get assigned an ‘increased probability’ value of NA. That many
 of these higher-order combinations contain very similar combinations
-(e.g. AU4\_17\_23 and AU4\_17\_24) can mean two things: either, they are
+(e.g. AU4_17_23 and AU4_17_24) can mean two things: either, they are
 significant because all these elements declare anger and they are
 combined randomly; or they are all part of one standard higher-order
-combination (e.g. AU4\_17\_23\_24) that occurs over and over again. By
+combination (e.g. AU4_17_23_24) that occurs over and over again. By
 looking at the different levels (3rd order, 4th order etc), we can
 resolve this question.
 
@@ -603,15 +604,6 @@ decreases the likelihood that a combination is ‘angry’ (specificity
 increase = -0.09). The specificity increase is available for the first
 level (single elements) and second level (dyads of elements).
 
-<table class="kable_wrapper">
-<caption>
-Results of the specificity increase in combinations due to to inclusion
-of each element
-</caption>
-<tbody>
-<tr>
-<td>
-
 | element | number.combinations | specificity.increase | count |
 |:-------:|:-------------------:|:--------------------:|:-----:|
 |    5    |         37          |         0.35         |   6   |
@@ -629,10 +621,8 @@ of each element
 |   15    |         30          |         0.02         |   3   |
 |   12    |          8          |        -0.09         |   1   |
 
-</td>
-</tr>
-</tbody>
-</table>
+Results of the specificity increase in combinations due to to inclusion
+of each element
 
 To understand the importance of any element in our communication system,
 we should look for the ones that combine two aspects: they should be
@@ -680,20 +670,20 @@ conditional.probs <- network.conditional(
 )
 ```
 
-| elementA | elementB | combination | count | Probability\_A | Probability\_B | Probability\_AandB | Probability\_AgivenB |
-|:--------:|:--------:|:-----------:|:-----:|:--------------:|:--------------:|:------------------:|:--------------------:|
-|    4     |    17    |    4\_17    |  36   |      0.89      |      0.87      |        0.80        |         0.92         |
-|    17    |    4     |    4\_17    |  36   |      0.87      |      0.89      |        0.80        |         0.90         |
-|    17    |    23    |   17\_23    |  31   |      0.87      |      0.80      |        0.69        |         0.86         |
-|    23    |    17    |   17\_23    |  31   |      0.80      |      0.87      |        0.69        |         0.79         |
-|    4     |    23    |    4\_23    |  31   |      0.89      |      0.80      |        0.69        |         0.86         |
-|    23    |    4     |    4\_23    |  31   |      0.80      |      0.89      |        0.69        |         0.78         |
-|    5     |    23    |    5\_23    |   6   |      0.13      |      0.80      |        0.13        |         0.17         |
-|    23    |    5     |    5\_23    |   6   |      0.80      |      0.13      |        0.13        |         1.00         |
-|    6     |    17    |    6\_17    |   6   |      0.18      |      0.87      |        0.13        |         0.15         |
-|    17    |    6     |    6\_17    |   6   |      0.87      |      0.18      |        0.13        |         0.75         |
-|    14    |    17    |   14\_17    |   5   |      0.16      |      0.87      |        0.11        |         0.13         |
-|    17    |    14    |   14\_17    |   5   |      0.87      |      0.16      |        0.11        |         0.71         |
+| elementA | elementB | combination | count | Probability_A | Probability_B | Probability_AandB | Probability_AgivenB |
+|:--------:|:--------:|:-----------:|:-----:|:-------------:|:-------------:|:-----------------:|:-------------------:|
+|    4     |    17    |    4_17     |  36   |     0.89      |     0.87      |       0.80        |        0.92         |
+|    17    |    4     |    4_17     |  36   |     0.87      |     0.89      |       0.80        |        0.90         |
+|    17    |    23    |    17_23    |  31   |     0.87      |     0.80      |       0.69        |        0.86         |
+|    23    |    17    |    17_23    |  31   |     0.80      |     0.87      |       0.69        |        0.79         |
+|    4     |    23    |    4_23     |  31   |     0.89      |     0.80      |       0.69        |        0.86         |
+|    23    |    4     |    4_23     |  31   |     0.80      |     0.89      |       0.69        |        0.78         |
+|    5     |    23    |    5_23     |   6   |     0.13      |     0.80      |       0.13        |        0.17         |
+|    23    |    5     |    5_23     |   6   |     0.80      |     0.13      |       0.13        |        1.00         |
+|    6     |    17    |    6_17     |   6   |     0.18      |     0.87      |       0.13        |        0.15         |
+|    17    |    6     |    6_17     |   6   |     0.87      |     0.18      |       0.13        |        0.75         |
+|    14    |    17    |    14_17    |   5   |     0.16      |     0.87      |       0.11        |        0.13         |
+|    17    |    14    |    14_17    |   5   |     0.87      |     0.16      |       0.11        |        0.71         |
 
 Conditional probabilities for a subset of dyadic combinations
 
@@ -947,27 +937,27 @@ centrality measures, and one can extract them all at once.
 net.sum <- network.summary(angry.net)
 ```
 
-| element | strength | eigenvector | betweenness | transitivity | hub\_score | page\_rank | modularity | comm.membership | comm.value |
-|:-------:|:--------:|:-----------:|:-----------:|:------------:|:----------:|:----------:|:----------:|:---------------:|:----------:|
-|   17    |  0.222   |    1.000    |    0.084    |    0.679     |   1.000    |   0.120    |   0.000    |        2        |   0.022    |
-|   23    |  0.222   |    0.938    |    0.265    |    0.571     |   0.938    |   0.129    |   -0.112   |        1        |   0.022    |
-|   24    |  0.194   |    0.937    |    0.033    |    0.810     |   0.938    |   0.106    |   -0.117   |        2        |   0.022    |
-|    4    |  0.222   |    1.000    |    0.084    |    0.679     |   1.000    |   0.120    |   -0.097   |        2        |   0.022    |
-|    6    |  0.139   |    0.753    |    0.000    |    1.000     |   0.754    |   0.078    |   -0.092   |        2        |   0.022    |
-|   14    |  0.111   |    0.606    |    0.000    |    1.000     |   0.607    |   0.064    |   -0.039   |        2        |   0.022    |
-|   18    |  0.139   |    0.753    |    0.000    |    1.000     |   0.754    |   0.078    |   0.002    |        2        |   0.022    |
-|    7    |  0.194   |    0.937    |    0.033    |    0.810     |   0.938    |   0.106    |   0.022    |        2        |   0.022    |
-|    5    |  0.083   |    0.459    |    0.000    |    1.000     |   0.460    |   0.053    |   -0.001   |        1        |   0.022    |
-|    9    |  0.028   |    0.147    |    0.000    |     NaN      |   0.147    |   0.027    |   0.000    |        3        |   0.022    |
-|   15    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |        4        |   0.022    |
-|   10    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |        5        |   0.022    |
-|   12    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |        6        |   0.022    |
-|   16    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |        7        |   0.022    |
-|    1    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |        8        |   0.022    |
-|    2    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |        9        |   0.022    |
-|   20    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |       10        |   0.022    |
-|   26    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |       11        |   0.022    |
-|   27    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000    |   0.013    |   0.000    |       12        |   0.022    |
+| element | strength | eigenvector | betweenness | transitivity | hub_score | page_rank | modularity | comm.membership | comm.value |
+|:-------:|:--------:|:-----------:|:-----------:|:------------:|:---------:|:---------:|:----------:|:---------------:|:----------:|
+|   17    |  0.222   |    1.000    |    0.084    |    0.679     |   1.000   |   0.120   |   0.000    |        2        |   0.022    |
+|   23    |  0.222   |    0.938    |    0.265    |    0.571     |   0.938   |   0.129   |   -0.112   |        1        |   0.022    |
+|   24    |  0.194   |    0.937    |    0.033    |    0.810     |   0.938   |   0.106   |   -0.117   |        2        |   0.022    |
+|    4    |  0.222   |    1.000    |    0.084    |    0.679     |   1.000   |   0.120   |   -0.097   |        2        |   0.022    |
+|    6    |  0.139   |    0.753    |    0.000    |    1.000     |   0.754   |   0.078   |   -0.092   |        2        |   0.022    |
+|   14    |  0.111   |    0.606    |    0.000    |    1.000     |   0.607   |   0.064   |   -0.039   |        2        |   0.022    |
+|   18    |  0.139   |    0.753    |    0.000    |    1.000     |   0.754   |   0.078   |   0.002    |        2        |   0.022    |
+|    7    |  0.194   |    0.937    |    0.033    |    0.810     |   0.938   |   0.106   |   0.022    |        2        |   0.022    |
+|    5    |  0.083   |    0.459    |    0.000    |    1.000     |   0.460   |   0.053   |   -0.001   |        1        |   0.022    |
+|    9    |  0.028   |    0.147    |    0.000    |     NaN      |   0.147   |   0.027   |   0.000    |        3        |   0.022    |
+|   15    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000   |   0.013   |   0.000    |        4        |   0.022    |
+|   10    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000   |   0.013   |   0.000    |        5        |   0.022    |
+|   12    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000   |   0.013   |   0.000    |        6        |   0.022    |
+|   16    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000   |   0.013   |   0.000    |        7        |   0.022    |
+|    1    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000   |   0.013   |   0.000    |        8        |   0.022    |
+|    2    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000   |   0.013   |   0.000    |        9        |   0.022    |
+|   20    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000   |   0.013   |   0.000    |       10        |   0.022    |
+|   26    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000   |   0.013   |   0.000    |       11        |   0.022    |
+|   27    |  0.000   |    0.156    |    0.000    |     NaN      |   0.000   |   0.013   |   0.000    |       12        |   0.022    |
 
 Network centrality measures for angry faces
 
@@ -980,8 +970,8 @@ The different network measures capture different aspects of centrality.
     does it connect otherwise unconnected elements?
 -   transitivity: how many triads is the element in (triad == all three
     elements are connected)
--   hub\_score: similar to eigenvector
--   page\_rank: calculates the influence an element has over all it’s
+-   hub_score: similar to eigenvector
+-   page_rank: calculates the influence an element has over all it’s
     neighbours
 -   modularity: if modularity is high, the element clearly clusters with
     other elements
@@ -997,9 +987,9 @@ we can also calculate information flow etc within across a network.
 net.sum.graph <- network.summary.graph(angry.net)
 ```
 
-| nr.elements | nr.edges | density | transitivity | diameter | degree\_centralization | mean\_distance |
-|:-----------:|:--------:|:-------:|:------------:|:--------:|:----------------------:|:--------------:|
-|     19      |    28    |  0.164  |    0.755     |    3     |         0.281          |      1.4       |
+| nr.elements | nr.edges | density | transitivity | diameter | degree_centralization | mean_distance |
+|:-----------:|:--------:|:-------:|:------------:|:--------:|:---------------------:|:-------------:|
+|     19      |    28    |  0.164  |    0.755     |    3     |         0.281         |      1.4      |
 
 Network graph measures for anry faces
 
@@ -1022,15 +1012,15 @@ xx <- do.call(rbind, xx)
 xx <- cbind(emotion = names(multi.net), xx)
 ```
 
-| emotion  | nr.elements | nr.edges | density | transitivity | diameter | degree\_centralization | mean\_distance |
-|:--------:|:-----------:|:--------:|:-------:|:------------:|:--------:|:----------------------:|:--------------:|
-|  anger   |     19      |    28    |  0.164  |    0.755     |   0.29   |         0.281          |      1.40      |
-| contempt |     19      |    4     |  0.023  |    0.600     |   0.47   |         0.143          |      1.33      |
-| disgust  |     19      |    14    |  0.082  |    0.780     |   0.56   |         0.251          |      1.33      |
-|   fear   |     19      |    35    |  0.205  |    0.561     |   0.31   |         0.406          |      1.47      |
-|  happy   |     19      |    6     |  0.035  |    0.545     |   0.21   |         0.187          |      1.40      |
-| sadness  |     19      |    10    |  0.058  |    0.778     |   0.98   |         0.164          |      1.40      |
-| surprise |     19      |    17    |  0.099  |    0.814     |   0.16   |         0.234          |      1.19      |
+| emotion  | nr.elements | nr.edges | density | transitivity | diameter | degree_centralization | mean_distance |
+|:--------:|:-----------:|:--------:|:-------:|:------------:|:--------:|:---------------------:|:-------------:|
+|  anger   |     19      |    28    |  0.164  |    0.755     |   0.29   |         0.281         |     1.40      |
+| contempt |     19      |    4     |  0.023  |    0.600     |   0.47   |         0.143         |     1.33      |
+| disgust  |     19      |    14    |  0.082  |    0.780     |   0.56   |         0.251         |     1.33      |
+|   fear   |     19      |    35    |  0.205  |    0.561     |   0.31   |         0.406         |     1.47      |
+|  happy   |     19      |    6     |  0.035  |    0.545     |   0.21   |         0.187         |     1.40      |
+| sadness  |     19      |    10    |  0.058  |    0.778     |   0.98   |         0.164         |     1.40      |
+| surprise |     19      |    17    |  0.099  |    0.814     |   0.16   |         0.234         |     1.19      |
 
 Network graph measures for all faces
 
@@ -1065,7 +1055,7 @@ size.plot <- event.size.plot(netfacs.data = angry.face)
 |        4         |     0.40      |     0.36      |    0.04     |  0.06  |
 |        5         |     0.33      |     0.11      |    0.22     |  0.00  |
 |        6         |     0.20      |     0.04      |    0.16     |  0.00  |
-|        7         |     0.00      |     0.00      |    0.00     |  0.38  |
+|        7         |     0.00      |     0.00      |    0.00     |  0.36  |
 |        8         |     0.02      |     0.01      |    0.02     |  0.00  |
 
 Combination sizes of facial expressions in the angry condition
@@ -1084,14 +1074,14 @@ If we do the same for happy faces, we see a very different pattern
 | combination.size | observed.prob | expected.prob | effect.size | pvalue |
 |:----------------:|:-------------:|:-------------:|:-----------:|:------:|
 |        0         |     0.00      |     0.00      |    0.00     |  1.00  |
-|        1         |     0.03      |     0.03      |    -0.01    |  0.22  |
+|        1         |     0.03      |     0.04      |    -0.01    |  0.21  |
 |        2         |     0.76      |     0.08      |    0.69     |  0.00  |
-|        3         |     0.18      |     0.16      |    0.02     |  0.17  |
+|        3         |     0.18      |     0.16      |    0.02     |  0.16  |
 |        4         |     0.03      |     0.46      |    -0.43    |  0.00  |
 |        5         |     0.00      |     0.18      |    -0.18    |  0.00  |
 |        6         |     0.00      |     0.07      |    -0.07    |  0.00  |
-|        7         |     0.00      |     0.00      |    0.00     |  0.40  |
-|        8         |     0.00      |     0.01      |    -0.01    |  0.05  |
+|        7         |     0.00      |     0.00      |    0.00     |  0.39  |
+|        8         |     0.00      |     0.01      |    -0.01    |  0.04  |
 
 Combination sizes of happy expressions in the angry condition
 
@@ -1137,12 +1127,12 @@ xx <- cbind(emotion = names(multi.facs), xx)
 | emotion  | observed.entropy | expected.entropy | entropy.ratio |
 |:--------:|:----------------:|:----------------:|:-------------:|
 |  anger   |       4.39       |       5.49       |     0.80      |
-| contempt |       2.46       |       4.00       |     0.62      |
-| disgust  |       4.11       |       5.86       |     0.70      |
+| contempt |       2.46       |       3.99       |     0.62      |
+| disgust  |       4.11       |       5.87       |     0.70      |
 |   fear   |       4.40       |       4.64       |     0.95      |
-|  happy   |       1.45       |       5.86       |     0.25      |
+|  happy   |       1.45       |       5.88       |     0.25      |
 | sadness  |       3.26       |       4.81       |     0.68      |
-| surprise |       2.04       |       6.37       |     0.32      |
+| surprise |       2.04       |       6.36       |     0.32      |
 
 Ratios between expected and observed entropies in different emotions
 

@@ -57,7 +57,7 @@ library(NetFACS)
 
 ## Data sets
 
-Currently, there are two practice data sets in the package: one is the Extended Cohn-Kanade Database for posed FACS data (all basic AUs, 7 emotions) (Lucey et al. 2010), where co-occurrence is defined as Action Units happening in the same facial expression, and one is the Communist Manifesto in French, German, and English, where co-occurrence is defined as letters happening in the same word. These can be accessed the following way:
+Currently, there are two practice data sets in the package: one is the Extended Cohn-Kanade Database for posed FACS data (all basic AUs, 7 emotions) ([Lucey et al. 2010](https://doi.org/10.1109/CVPRW.2010.5543262)), where co-occurrence is defined as Action Units happening in the same facial expression, and one is the Communist Manifesto in French, German, and English, where co-occurrence is defined as letters happening in the same word. These can be accessed the following way:
 
 ```{r read.data, echo = T}
 data("letternet") # this is the Manifesto #
