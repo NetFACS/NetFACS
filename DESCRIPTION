@@ -28,7 +28,6 @@ Imports:
     parallel,
     doParallel,
     igraph,
-    compiler,
     ggplot2,
     ggraph,
     picante,
