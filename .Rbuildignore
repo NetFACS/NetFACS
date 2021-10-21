@@ -12,7 +12,7 @@ vignettes/
 README_cache/
 README_files/
 ^\.github$
-README.md
+^README\.Rmd$
 removed c++ functions/*
 ^packrat/
 ^\.Rprofile$
