@@ -2,7 +2,7 @@
 title: "NetFACS Tutorial"
 subtitle: 'Analysing communication data using network analysis'
 author:
-  - Alex Mielke, Alan Rincon, Claire Perez, Christof Neumann, Julie Duboscq, Bridget Waller, Jerome Micheletta
+  - Alex Mielke, Alan Rincon, Claire Perez, Julie Duboscq, Bridget Waller, Jerome Micheletta
 output:
   pdf_document: default
 geometry: "left=1cm,right=1cm,top=2cm,bottom=2cm"
