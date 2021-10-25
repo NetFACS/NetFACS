@@ -3,16 +3,26 @@ title: "NetFACS Tutorial"
 subtitle: 'Analysing communication data using network analysis'
 author:
   - Alex Mielke, Alan Rincon, Claire Perez, Julie Duboscq, Bridget Waller, Jerome Micheletta
-output:
-  pdf_document: default
+output: rmarkdown::html_vignette
+# output:
+#   pdf_document: default
 geometry: "left=1cm,right=1cm,top=2cm,bottom=2cm"
-date: "Last updated: 28-10-2020"
+date: "25-10-2021"
 linestretch: 1.5
 vignette: >
   %\VignetteIndexEntry{my-vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 ```{r setup, include = FALSE}
 library(NetFACS)
@@ -58,7 +68,7 @@ library(NetFACS)
 
 ## Data sets
 
-Currently, there are two practice data sets in the package: one is the Extended Cohn-Kanade Database for posed FACS data (all basic AUs, 7 emotions) (Lucey et al. 2010), where co-occurrence is defined as Action Units happening in the same facial expression, and one is the Communist Manifesto in French, German, and English, where co-occurrence is defined as letters happening in the same word. These can be accessed the following way:
+Currently, there are two practice data sets in the package: one is the Extended Cohn-Kanade Database for posed FACS data (all basic AUs, 7 emotions) ([Lucey et al. 2010](https://doi.org/10.1109/CVPRW.2010.5543262)), where co-occurrence is defined as Action Units happening in the same facial expression, and one is the Communist Manifesto in French, German, and English, where co-occurrence is defined as letters happening in the same word. These can be accessed the following way:
 
 ```{r read.data, echo = T}
 data("letternet") # this is the Manifesto #
@@ -147,7 +157,7 @@ These are the function parameters and what they do:
 * duration: when analysing videos with FACS, each event could differ in duration; for example, some events contain 5 frames, while another contains 10 frames. If this information is available, FACS will weight the results accordingly. Here, you should enter a vector of the same length as the data set that defines the duration of each event. It doesn't matter if you put seconds or frames as duration, the function will determine the smallest value and compare all other values to this.
 * ran.trials: determines how many permutations or bootstraps are performed. The larger, the better and more accurate, but things take longer. 1000 iterations is usually good.
 * control: Here, you would enter a list of control variables. So, for example, to control for gender and place of origin, you would enter 'list(gender, place.of.origin)'; if these were available. This way, in the bootstraps, he algorithm will approximate the distribution of these control parameters in the test and null condition. So, if there are 10 males and 20 females in the angry faces, the null condition will select a ratio of 1 to 2 as well, to prevent difference to be driven by differences in the data set. Note that you need enough data to include control variables: if there are no female faces in one of the conditions, the algorithm will fail at adjusting the distribution. 
-* random.level: Should be a vector of the same length as the data matrix that assigns each event a higher-level identifier, such as individual or video. For the bootstraps, this works similar to a random effect in that it controls for the fact that some data points belong to the same hierachical level. So, if an individual provides several data points, or data points come from the same video, noting this in the *random.level* parameter means that random selection occurs on the level of the video or individual rather than each event separatedly. Thus, the probability space of the null distribution is not biased by one individual or video.
+* random.level: Should be a vector of the same length as the data matrix that assigns each event a higher-level identifier, such as individual or video. For the bootstraps, this works similar to a random effect in that it controls for the fact that some data points belong to the same hierachical level. So, if an individual provides several data points, or data points come from the same video, noting this in the *random.level* parameter means that random selection occurs on the level of the video or individual rather than each event separately. Thus, the probability space of the null distribution is not biased by one individual or video.
 * combination.size: If null, the algorithm will pop out all possible combinations. If we don't care for the higher-order combinations (e.g. combinations of 5 elements), we can speed the analysis up by limiting this to 2 or 3.
 * tail: Should p-values be *upper.tail* (the observed value is larger than the expected values) or *left.tail* (the observed value is smaller than the expected values)?
 * use_parallel: Should processing be done in parallel?

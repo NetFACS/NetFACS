@@ -8,7 +8,6 @@ to do/*
 prototypes/*
 ^LICENSE\.md$
 tests/
-vignettes/
 README_cache/
 README_files/
 ^\.github$
