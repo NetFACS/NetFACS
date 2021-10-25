@@ -88,6 +88,7 @@ The resulting object is the basis for most other functions in this package.
 }
 \examples{
 ### how do angry facial expressions differ from non-angry ones?
+\dontrun{
 data(emotions_set)
 angry.face <- netfacs(
   data = emotions_set[[1]],
@@ -106,6 +107,7 @@ angry.face <- netfacs(
 
 head(angry.face$result, 20)
 angry.face$event.size.information
+}
 }
 \author{
 Alex Mielke

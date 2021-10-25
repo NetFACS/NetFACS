@@ -11,6 +11,7 @@
 #'
 #' @examples
 #' ### how do angry facial expressions differ from non-angry ones?
+#' \dontrun{
 #' data(emotions_set)
 #' angry.face <- netfacs(
 #'   data = emotions_set[[1]],
@@ -22,6 +23,9 @@
 #' )
 #'
 #' element.specificity(angry.face)$element
+#' }
+#' 
+
 element.specificity <- function(netfacs.data) {
   # create dataset
   data <- netfacs.data$result

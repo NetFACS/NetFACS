@@ -17,6 +17,7 @@ The function takes all elements and dyadic combinations of elements in a netfacs
 }
 \examples{
 ### how do angry facial expressions differ from non-angry ones?
+\dontrun{
 data(emotions_set)
 angry.face <- netfacs(
   data = emotions_set[[1]],
@@ -28,4 +29,6 @@ angry.face <- netfacs(
 )
 
 element.specificity(angry.face)$element
+}
+
 }
