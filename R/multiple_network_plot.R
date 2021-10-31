@@ -55,8 +55,10 @@ multiple.network.plot <- function(netfacs.graphs) {
   pdf(NULL)
   dev.control(displaylist = "enable")
   plot.new()
-  par(mfrow = c(2, ceiling(length(netfacs.graphs) / 2)), 
-      mar = c(1, 1, 1, 1), bg = "white")
+  oldpar <- par(mfrow = c(2, ceiling(length(netfacs.graphs) / 2)), 
+                mar = c(1, 1, 1, 1), bg = "white")
+  on.exit(par(oldpar), add = TRUE) # restore user state
+  
   for (i in 1:length(netfacs.graphs)) {
     net.i <- graph.empty(n = length(all.nodes), directed = F)
     V(net.i)$name <- all.nodes

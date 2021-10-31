@@ -7,7 +7,7 @@ output: rmarkdown::html_vignette
 # output:
 #   pdf_document: default
 geometry: "left=1cm,right=1cm,top=2cm,bottom=2cm"
-date: "25-10-2021"
+date: "2021-10-25"
 linestretch: 1.5
 vignette: >
   %\VignetteIndexEntry{my-vignette}
@@ -28,7 +28,6 @@ knitr::opts_chunk$set(
 library(NetFACS)
 library(ggplot2)
 library(knitr)
-options(warn = -1)
 ```
 
 
@@ -53,14 +52,8 @@ Let's start by creating the package and loading the library. NetFACS is currentl
 
 
 ```{r load.netfacs, echo = T, message=F, eval = F}
-## install NetFACS from GitHub
-
-library("devtools")
-devtools::install_github(
-  "NetFACS/NetFACS",
-  force = T,
-  quiet = T
-)
+# install NetFACS from GitHub
+devtools::install_github("NetFACS/NetFACS")
 
 # read library
 library(NetFACS)

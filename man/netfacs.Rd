@@ -88,7 +88,7 @@ The resulting object is the basis for most other functions in this package.
 }
 \examples{
 ### how do angry facial expressions differ from non-angry ones?
-\dontrun{
+\donttest{
 data(emotions_set)
 angry.face <- netfacs(
   data = emotions_set[[1]],

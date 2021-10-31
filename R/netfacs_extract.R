@@ -37,8 +37,9 @@ netfacs.extract <- function(netfacs.data,
                             min.specificity = 0,
                             significance = 0.01) {
 
-  # set digits printed to 3
-  options(digits = 3)
+  # set digits printed to 3, restore user state
+  op <- options(digits = 3)         
+  on.exit(options(op), add = TRUE) 
 
   net.data <- netfacs.data$result[netfacs.data$result$combination.size == level, ]
   if (is.null(netfacs.data$used.parameters$test.condition)) {

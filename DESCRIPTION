@@ -7,14 +7,29 @@ Authors@R: c(
            family = "Mielke",
            role = c("aut"),
            email = "mielke.alexand@gmail.com"),
-    person(given = "Alan",
+    person(given = "Bridget M.",
+           family = "Waller",
+           role = c("ctb")),
+    person(given = "Claire",
+           family = "Perez",
+           role = c("ctb")),
+    person(given = "Alan V.",
            family = "Rincon",
            role = c("aut", "cre"),
-           email = "avrincon1@gmail.com")
+           email = "avrincon1@gmail.com"),
+    person(given = "Julie",
+           family = "Duboscq",
+           role = c("ctb")),
+    person(given = "Jerome",
+           family = "Micheletta",
+           role = c("ctb"))
            )
-Description: The 'NetFACS' package provides a tool set to analyse communication 
-    data, mainly for facial expressions coded with the Facial Action Coding 
-    System, based on network theory and resampling methods.
+Description: Functions to analyze and visualize communication data, 
+      based on network theory and resampling methods. 
+      Farine, D. R. (2017) <doi:10.1111/2041-210X.12772>;
+      Carsey, T., & Harden, J. (2014) <doi:10.4135/9781483319605>.
+      Primarily targeted at datasets of facial expressions coded with the Facial Action Coding System. 
+      Ekman, P., Friesen, W. V., & Hager, J. C. (2002). "Facial action coding system - investigator's guide" <https://www.paulekman.com/facial-action-coding-system/>.
 License: Apache License (>= 2.0)
 Encoding: UTF-8
 LazyData: true
