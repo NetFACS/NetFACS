@@ -1,6 +1,6 @@
 Package: NetFACS
 Title: Network Applications to Facial Communication Data
-Version: 0.2.0
+Version: 0.2.0.9000
 Date: 2021-10-25
 Authors@R: c(
     person(given = "Alex",
@@ -9,20 +9,20 @@ Authors@R: c(
            email = "mielke.alexand@gmail.com"),
     person(given = "Bridget M.",
            family = "Waller",
-           role = c("ctb")),
+           role = c("aut")),
     person(given = "Claire",
            family = "Perez",
-           role = c("ctb")),
+           role = c("aut")),
     person(given = "Alan V.",
            family = "Rincon",
            role = c("aut", "cre"),
            email = "avrincon1@gmail.com"),
     person(given = "Julie",
            family = "Duboscq",
-           role = c("ctb")),
+           role = c("aut")),
     person(given = "Jerome",
            family = "Micheletta",
-           role = c("ctb"))
+           role = c("aut"))
            )
 Description: Functions to analyze and visualize communication data, 
       based on network theory and resampling methods. 
