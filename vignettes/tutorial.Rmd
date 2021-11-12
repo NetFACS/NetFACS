@@ -48,16 +48,23 @@ NetFACS is based mainly on different probabilities: unconditional probability	is
 
 ### Install the package
 
-Let's start by creating the package and loading the library. NetFACS is currently depending on a variety of packages, some of which (e.g., ggplot) rely on a number of other packages, so installing all packages might be time-consuming. When downloading the package from Github, R Studio will often ask the user whether they want to update a lot of other packages. This might sometimes not be straightforward and require several attempts. If one of them gets stuck, it is worth installing it straight from CRAN after restarting the R session rather than within the install_github command.
-
+Let's start by installing the package and loading the library.
 
 ```{r load.netfacs, echo = T, message=F, eval = F}
-# install NetFACS from GitHub
-devtools::install_github("NetFACS/NetFACS")
+# install NetFACS from CRAN
+install.packages("NetFACS")
 
 # read library
 library(NetFACS)
 ```
+
+Alternatively, you can install the latest development version of NetFACS from GitHub with:
+
+```{r instal.dev, echo = T, message=F, eval = F}
+# install NetFACS from GitHub
+devtools::install_github("NetFACS/NetFACS")
+```
+
 
 ## Data sets
 

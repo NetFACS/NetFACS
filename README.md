@@ -83,22 +83,22 @@ on probabilities, such as Bayesian models and Markov Chains.
 
 ### Install the package
 
-Let’s start by creating the package and loading the library. NetFACS is
-currently depending on a variety of packages, some of which (e.g.,
-ggplot) rely on a number of other packages, so installing all packages
-might be time-consuming. When downloading the package from Github, R
-Studio will often ask the user whether they want to update a lot of
-other packages. This might sometimes not be straightforward and require
-several attempts. If one of them gets stuck, it is worth installing it
-straight from CRAN after restarting the R session rather than within the
-install_github command.
+Let’s start by installing the package and loading the library.
+
+``` r
+# install NetFACS from CRAN
+install.packages("NetFACS")
+
+# read library
+library(NetFACS)
+```
+
+Alternatively, you can install the latest development version of NetFACS
+from GitHub with:
 
 ``` r
 # install NetFACS from GitHub
 devtools::install_github("NetFACS/NetFACS")
-
-# read library
-library(NetFACS)
 ```
 
 ## Data sets
@@ -1068,13 +1068,13 @@ If we do the same for happy faces, we see a very different pattern
 | combination.size | observed.prob | expected.prob | effect.size | pvalue |
 |:----------------:|:-------------:|:-------------:|:-----------:|:------:|
 |        0         |     0.00      |     0.00      |    0.00     |  1.00  |
-|        1         |     0.03      |     0.03      |    -0.01    |  0.22  |
+|        1         |     0.03      |     0.04      |    -0.01    |  0.22  |
 |        2         |     0.76      |     0.08      |    0.69     |  0.00  |
-|        3         |     0.18      |     0.16      |    0.02     |  0.17  |
+|        3         |     0.18      |     0.16      |    0.02     |  0.16  |
 |        4         |     0.03      |     0.46      |    -0.43    |  0.00  |
 |        5         |     0.00      |     0.18      |    -0.18    |  0.00  |
 |        6         |     0.00      |     0.07      |    -0.07    |  0.00  |
-|        7         |     0.00      |     0.00      |    0.00     |  0.36  |
+|        7         |     0.00      |     0.00      |    0.00     |  0.33  |
 |        8         |     0.00      |     0.01      |    -0.01    |  0.05  |
 
 Combination sizes of happy expressions in the angry condition
