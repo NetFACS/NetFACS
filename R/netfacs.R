@@ -103,6 +103,8 @@ netfacs <- function(data,
                     use_parallel = TRUE,
                     n_cores = 2) {
   
+  if(any(is.na(data))) stop("Please remove all NAs from the data.")
+  
   # fix column names of dataset to not include special characters or spaces
   colnames(data) <- gsub(
     colnames(data),
