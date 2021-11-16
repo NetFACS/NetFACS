@@ -40,15 +40,20 @@ Suggests:
 Depends:
     R (>= 3.5.0)
 Imports:
-    parallel,
+    arrangements,
     doParallel,
+    dplyr,
     igraph,
     ggplot2,
     ggraph,
+    magrittr,
+    parallel,
     picante,
     rlang,
     Rfast,
-    arrangements
+    tibble,
+    tidygraph,
+    tidyr
 RoxygenNote: 7.1.2
 NeedsCompilation: yes
 ByteCompile: true
