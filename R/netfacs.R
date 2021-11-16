@@ -104,6 +104,10 @@ netfacs <- function(data,
                     n_cores = 2) {
   
   if(any(is.na(data))) stop("Please remove all NAs from the data.")
+  # elements will later be split and combined using "_", and therefore element names must not contain "_"
+  if(any(grepl(pattern = "_", colnames(data)))){
+    stop("Column names of data must not contain '_'.")
+  }
   
   # fix column names of dataset to not include special characters or spaces
   colnames(data) <- gsub(
@@ -115,12 +119,6 @@ netfacs <- function(data,
   colnames(data) <- gsub(
     colnames(data),
     pattern = "+",
-    replacement = "",
-    fixed = TRUE
-  )
-  colnames(data) <- gsub(
-    colnames(data),
-    pattern = "_",
     replacement = "",
     fixed = TRUE
   )
