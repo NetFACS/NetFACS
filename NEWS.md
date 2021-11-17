@@ -1,6 +1,8 @@
 # NetFACS 0.2.0.9000
 
-- netfacs() now gives an informative error message when there are NAs in the data
+- Networks created by the NetFACS package are now of class tbl_graph as well as igraph
+- netfacs() now gives more informative error messages
+- Now imports dplyr, ggraph, magrittr, tibble, tidygraph and tidyr
 
 # NetFACS 0.2.0
 

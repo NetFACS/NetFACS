@@ -42,12 +42,13 @@ probability network}
 surrounded by bubbles; if FALSE, the edges connect the names directly}
 }
 \value{
-Function returns a ggraph plot where each condition is connected to
-those elements that occur significantly in this condition, and each element
-is connected to each condition under which it occurs significantly more than
-expected. Creates four graphs: context specificity, occurrence in that context,
-a combined graph, and a 'reduced' graph where edges are only included if they pass the
-'specificity' value set by the user
+Function returns a \code{\link[ggraph]{ggraph}} plot where each
+  condition is connected to those elements that occur significantly in this
+  condition, and each element is connected to each condition under which it
+  occurs significantly more than expected. Creates four graphs: context
+  specificity, occurrence in that context, a combined graph, and a 'reduced'
+  graph where edges are only included if they pass the 'specificity' value
+  set by the user
 }
 \description{
 The function takes multiple netfacs objects and plots how different elements

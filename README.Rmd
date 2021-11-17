@@ -66,8 +66,8 @@ data("emotions_set") # this is the CK Database #
 Important for the NetFACS package at the moment is that the basic data used to calculate probabilities are stored in a data frame with each event as a row (this can be a communication sequence, a facial expression, a frame in a video, or a word, for example), and each element as a column (for example, Action Units in FACS data or letters for words). Elements get a 0 if they are absent in this event, and a 1 if they are present. So, for example, the word 'word' would have a 1 in the columns for d,o,r, and w, and 0 in all other letter columns. It's usually good to have a second data frame of the same length that contains additional information about the condition, duration, etc. This will look like this for the words:
 
 ```{r cm.table, echo=FALSE}
-kable(head(letternet[[1]]), row.names = F, caption = "Letter data for words in the Communist Manifesto")
-kable(head(letternet[[2]]), row.names = F, caption = "Additional information for Communist Manifesto")
+kable(head(letternet[[1]]), row.names = FALSE, caption = "Letter data for words in the Communist Manifesto")
+kable(head(letternet[[2]]), row.names = FALSE, caption = "Additional information for Communist Manifesto")
 ```
 
 
@@ -89,7 +89,7 @@ odd.photo <- data.frame(
     "AU6/AU12"
   )
 )
-kable(odd.photo, row.names = F, caption = "Photo Data")
+kable(odd.photo, row.names = FALSE, caption = "Photo Data")
 ```
 Videos, on the other hand, will sometimes look this: 
 
@@ -106,7 +106,7 @@ odd.video <- data.frame(
                   0.1, 0.4, 0.4),
   durations = rep(0.3, times = 8)
 )
-kable(odd.video, row.names = F, caption = "Video Data")
+kable(odd.video, row.names = FALSE, caption = "Video Data")
 ```
 The prepare.netfacs() function can take either of these inputs and turn them into the right format. This will look something like this:
 
@@ -120,10 +120,10 @@ au.prepared <- prepare.netfacs(
   frame.duration = 0.05
 )
 kable(head(au.prepared$element.matrix),
-      row.names = F,
+      row.names = FALSE,
       caption = "Element Matrix of prepare.netfacs")
 kable(head(au.prepared$video.info),
-      row.names = F,
+      row.names = FALSE,
       caption = "Video Info of prepare.netfacs")
 ```
 
@@ -179,7 +179,7 @@ angry.face <- netfacs(
   random.level = NULL, # Works like a random effect.
   combination.size = 4, # limit the analysis to make things faster,
   tail = "upper.tail", # should the p-value reflect two-tailed or right/left tailed testing?
-  use_parallel = T, # use parallel processing
+  use_parallel = TRUE, # use parallel processing
   n_cores = NULL # number of cores for parallel processing
 )
 ```
@@ -187,7 +187,7 @@ angry.face <- netfacs(
 ```{r netfacs.table, echo=FALSE}
 kable(
   head(angry.face$result[angry.face$result$count > 0,], 20),
-  row.names = F,
+  row.names = FALSE,
   align = "c",
   caption = "Top rows of the netfacs function results"
 )
@@ -226,7 +226,7 @@ anger.aus <- netfacs.extract(
 ```{r first.level.table, echo=FALSE}
 kable(anger.aus[order(-1 * anger.aus$effect.size),],
       align = "c",
-      row.names = F,
+      row.names = FALSE,
       caption = "Result of netfacs.extract for single elements")
 ```
 
@@ -271,7 +271,7 @@ anger.aus3 <- netfacs.extract(
 ```{r third.level.table, echo=FALSE}
 kable(head(anger.aus3[order(-1 * anger.aus3$effect.size),]),
       align = "c",
-      row.names = F,
+      row.names = FALSE,
       caption = "Results of netfacs.extract function for combinations of three elements")
 ```
 
@@ -293,9 +293,9 @@ Here, we see that even though AU5 is pretty rare, as it only occurred 6 times, a
 kable(
   specificity[1],
   align = "c",
-  row.names = F,
+  row.names = FALSE,
   digits = 2,
-  booktabs = T,
+  booktabs = TRUE,
   caption = "Results of the specificity increase in combinations due to to inclusion of each element"
 )
 ```
@@ -323,7 +323,7 @@ conditional.probs <- network.conditional(
 # show only a number of the conditional probabilities
 kable(
   conditional.probs$conditional.probalities[c(1:6, 31:36),],
-  row.names = F,
+  row.names = FALSE,
   align = "c",
   caption = "Conditional probabilities for a subset of dyadic combinations"
 )
@@ -359,7 +359,7 @@ overlap.net <- overlap.network(
   min.prob = 0, # minimum probability of a connection to be included
   min.count = 3, # minimum count of co-occurrences for a connection to be included
   significance = 0.01, # significance level for combinations to be considered
-  clusters = F, # should the bipartite network be clustered
+  clusters = FALSE, # should the bipartite network be clustered
   plot.bubbles = TRUE,
 )
 
@@ -379,7 +379,7 @@ conditional.probs <- network.conditional(
   min.prob = 0.5,
   min.count = 5,
   ignore.element = NULL,
-  plot.bubbles = T
+  plot.bubbles = TRUE
 )
 
 # plot conditional probabilities
@@ -410,9 +410,9 @@ Let's plot our network for angry faces.
 network.plot(
   netfacs.graph = angry.net,
   title = "angry network",
-  clusters = F,
-  plot.bubbles = T,
-  hide_unconnected = T
+  clusters = FALSE,
+  plot.bubbles = TRUE,
+  hide.unconnected = TRUE
 )
 ```
 
@@ -443,7 +443,7 @@ all.face <-
     condition = NULL,
     ran.trials = 1000,
     combination.size = 2,
-    use_parallel = T
+    use_parallel = TRUE
   )
 all.net <-
   netfacs.network(netfacs.data = all.face,
@@ -452,13 +452,13 @@ all.net <-
 ```
 
 
-In this network, dyadic connections between Action Units mean that they occur more often together than would be expected given their own likelihood and the number of elements per event. When plotting this network, we can say 'clusters = T'. In that case, 'igraph' has a community detection algorithm (groups of AUs that form clusters). 
+In this network, dyadic connections between Action Units mean that they occur more often together than would be expected given their own likelihood and the number of elements per event. When plotting this network, we can say 'clusters = TRUE'. In that case, 'igraph' has a community detection algorithm (groups of AUs that form clusters). 
 ```{r all.plot, fig.width=8, fig.height=8, fig.align='center', message=F}
 network.plot(
   netfacs.graph = all.net,
   title = "all network with clusters",
-  clusters = T,
-  plot.bubbles = T
+  clusters = TRUE,
+  plot.bubbles = TRUE
 )
 ```
 
@@ -477,7 +477,7 @@ net.sum <- network.summary(angry.net)
 kable(
   net.sum,
   align = "c",
-  row.names = F,
+  row.names = FALSE,
   digits = 3,
   caption = "Network centrality measures for angry faces"
 )
@@ -505,7 +505,7 @@ net.sum.graph <- network.summary.graph(angry.net)
 kable(
   net.sum.graph,
   align = "c",
-  row.names = F,
+  row.names = FALSE,
   digits = 3,
   caption = "Network graph measures for anry faces"
 )
@@ -527,7 +527,7 @@ xx <- cbind(emotion = names(multi.net), xx)
 kable(
   xx,
   align = "c",
-  row.names = F,
+  row.names = FALSE,
   digits = 3,
   caption = "Network graph measures for all faces"
 )
@@ -550,7 +550,7 @@ size.plot <- event.size.plot(netfacs.data = angry.face)
 kable(
   event.size.angry,
   align = "c",
-  row.names = F,
+  row.names = FALSE,
   digits = 2,
   caption = "Combination sizes of facial expressions in the angry condition"
 )
@@ -570,7 +570,7 @@ happy.face <-
     condition = au.info$emotion,
     test.condition = "happy",
     ran.trials = 1000,
-    use_parallel = T
+    use_parallel = TRUE
   )
 ```
 
@@ -578,7 +578,7 @@ happy.face <-
 kable(
   happy.face$event.size.information,
   align = "c",
-  row.names = F,
+  row.names = FALSE,
   digits = 2,
   caption = "Combination sizes of happy expressions in the angry condition"
 )
@@ -606,7 +606,7 @@ xx <- cbind(emotion = names(multi.facs), xx)
 kable(
   xx,
   align = "c",
-  row.names = F,
+  row.names = FALSE,
   digits = 3,
   caption = "Ratios between expected and observed entropies in different emotions"
 )

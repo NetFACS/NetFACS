@@ -9,7 +9,7 @@ network.plot(
   title = "network",
   clusters = TRUE,
   plot.bubbles = FALSE,
-  hide_unconnected = TRUE
+  hide.unconnected = TRUE
 )
 }
 \arguments{
@@ -21,14 +21,16 @@ network.plot(
 \item{clusters}{if \code{TRUE}, \code{\link[igraph]{cluster_fast_greedy}} is
 used to establish possible clusters in the dataset}
 
-\item{plot.bubbles}{if TRUE, then the nodes in the network plots will be surrounded by bubbles; if FALSE, the edges connect the names directly}
+\item{plot.bubbles}{if TRUE, then the nodes in the network plots will be
+surrounded by bubbles; if FALSE, the edges connect the names directly}
 
-\item{hide_unconnected}{if TRUE, then the nodes that do not have any significant connections will be hidden in the plot}
+\item{hide.unconnected}{if TRUE, then the nodes that do not have any
+significant connections will be hidden in the plot}
 }
 \value{
-Function returns a ggnet plot of the network, where the size of nodes
-indicates how often they occur on their own, and edges indicate significant
-co-occurrance between them
+Function returns a \code{\link[ggraph]{ggraph}} plot of the network,
+  where the size of nodes indicates how often they occur on their own, and
+  edges indicate significant co-occurrence between them
 }
 \description{
 Plots the network created using the \code{\link{netfacs.network}} function;
