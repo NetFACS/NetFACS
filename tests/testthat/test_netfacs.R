@@ -15,7 +15,7 @@ test_that("single core, condition specified is correct",{
         data = m,
         condition = rownames(m),
         test.condition = "b",
-        ran.trials = 10,
+        ran.trials = 102,
         combination.size = 4,
         tail = "upper.tail",
         use_parallel = FALSE,
@@ -32,11 +32,11 @@ test_that("multi-core, condition specified is correct",{
         data = m,
         condition = rownames(m),
         test.condition = "b",
-        ran.trials = 10,
+        ran.trials = 102, # need >100 for multicore
         combination.size = 4,
         tail = "upper.tail",
         use_parallel = TRUE,
-        n_cores = detectCores()-1
+        n_cores = 2
       )
     }
   )
@@ -48,7 +48,7 @@ test_that("single core, condition NOT specified is correct",{
       netfacs(
         data = m,
         condition = NULL,
-        ran.trials = 10,
+        ran.trials = 102,
         combination.size = 4,
         tail = "upper.tail",
         use_parallel = FALSE,
@@ -64,11 +64,63 @@ test_that("multi-core, condition NOT specified is correct",{
       netfacs(
         data = m,
         condition = NULL,
-        ran.trials = 10,
+        ran.trials = 102, # need >100 for multicore
         combination.size = 4,
         tail = "upper.tail",
         use_parallel = TRUE,
-        n_cores = detectCores()-1
+        n_cores = 2
+      )
+    }
+  )
+})
+test_that("error message is given when data has NA",{
+  expect_error(
+    {
+      netfacs(
+        data = NA,
+        condition = emotions_set[[2]]$emotion,
+        test.condition = "anger",
+        null.condition = NULL,
+        ran.trials = 20
+      )
+    }
+  )
+})
+test_that("error message is given when condidion has NA",{
+  expect_error(
+    {
+      netfacs(
+        data = emotions_set[[1]],
+        condition = NA,
+        test.condition = "anger",
+        null.condition = NULL,
+        ran.trials = 20
+      )
+    }
+  )
+})
+test_that("error message is given when test.condidion is not part of condition",{
+  expect_error(
+    {
+      netfacs(
+        data = emotions_set[[1]],
+        condition = emotions_set[[2]]$emotion,
+        test.condition = "AAA",
+        null.condition = "anger",
+        ran.trials = 20
+      )
+    }
+  )
+})
+test_that("error message is given when null.condidion is not part of condition",{
+  expect_error(
+    {
+      netfacs(
+        data = emotions_set[[1]],
+        condition = emotions_set[[2]]$emotion,
+        test.condition = "anger",
+        null.condition = "AAA",
+        ran.trials = 20
       )
     }
   )
