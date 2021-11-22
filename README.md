@@ -11,10 +11,11 @@ facial muscle movements (called ‘Action Units’ or AUs), have some rather
 awkward properties: single AUs are binary (present/absent), they are
 part of larger expressions and combined with each other, their use can
 be non-normally distributed, individuals can provide multiple
-datapoints, data are often autocorrelated etc (see Mielke et al., 2020
-for more information). NetFACS allows users to overcome some of these
-problems and present their results in a form that is easy to communicate
-to other researchers.
+datapoints, data are often autocorrelated etc (see [Mielke et al.,
+2021](https://doi.org/10.3758/s13428-021-01692-5) for more information).
+NetFACS allows users to overcome some of these problems and present
+their results in a form that is easy to communicate to other
+researchers.
 
 This is a tutorial and overview over which functions are currently
 available in the NetFACS package and which questions we can potentially
@@ -1068,6 +1069,7 @@ If we do the same for happy faces, we see a very different pattern
 | combination.size | observed.prob | expected.prob | effect.size | pvalue |
 |:----------------:|:-------------:|:-------------:|:-----------:|:------:|
 |        0         |     0.00      |     0.00      |    0.00     |  1.00  |
+<<<<<<< HEAD
 |        1         |     0.03      |     0.03      |    -0.01    |  0.25  |
 |        2         |     0.76      |     0.08      |    0.69     |  0.00  |
 |        3         |     0.18      |     0.16      |    0.02     |  0.16  |
@@ -1076,6 +1078,16 @@ If we do the same for happy faces, we see a very different pattern
 |        6         |     0.00      |     0.07      |    -0.07    |  0.00  |
 |        7         |     0.00      |     0.00      |    0.00     |  0.36  |
 |        8         |     0.00      |     0.01      |    -0.01    |  0.04  |
+=======
+|        1         |     0.03      |     0.03      |    -0.01    |  0.23  |
+|        2         |     0.76      |     0.08      |    0.69     |  0.00  |
+|        3         |     0.18      |     0.16      |    0.02     |  0.18  |
+|        4         |     0.03      |     0.46      |    -0.43    |  0.00  |
+|        5         |     0.00      |     0.18      |    -0.18    |  0.00  |
+|        6         |     0.00      |     0.07      |    -0.07    |  0.00  |
+|        7         |     0.00      |     0.00      |    0.00     |  0.37  |
+|        8         |     0.00      |     0.01      |    -0.01    |  0.06  |
+>>>>>>> main
 
 Combination sizes of happy expressions in the angry condition
 
