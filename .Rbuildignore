@@ -17,3 +17,4 @@ removed c++ functions/*
 ^\.Rprofile$
 ^CRAN-RELEASE$
 cran-comments.md
+notes/

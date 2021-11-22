@@ -451,8 +451,8 @@ all.net <-
                   link = "unweighted")
 ```
 
-
 In this network, dyadic connections between Action Units mean that they occur more often together than would be expected given their own likelihood and the number of elements per event. When plotting this network, we can say 'clusters = TRUE'. In that case, 'igraph' has a community detection algorithm (groups of AUs that form clusters). 
+
 ```{r all.plot, fig.width=8, fig.height=8, fig.align='center', message=F}
 network.plot(
   netfacs.graph = all.net,

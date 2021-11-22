@@ -7,13 +7,20 @@
 multiple.network.plot(netfacs.graphs)
 }
 \arguments{
-\item{netfacs.graphs}{list of network objects resulting from netfacs.network() function or multiple.netfacs.networks() function}
+\item{netfacs.graphs}{list of network objects resulting from
+\code{\link{netfacs.network}} function or
+\code{\link{multiple.netfacs.networks}} function}
 }
 \value{
-Function returns a igraph.plot connections between nodes in the different networks. Elements that are significantly more likely to occur than expected are large, non-significant elements are small, and absent elements are absent.
+Function returns a \code{\link{ggraph}} plot showing connections
+  between nodes in the different networks. Elements that are significantly
+  more likely to occur than expected are large, non-significant elements are
+  small, and absent elements are absent.
 }
 \description{
-The function takes multiple network objects and plots them next to each other while keeping the element positions etc constant. Uses igraph.plot function
+The function takes multiple network objects and plots them next to each other
+while keeping the element positions etc constant. Uses \code{\link{ggraph}}
+function
 }
 \examples{
 data(emotions_set)

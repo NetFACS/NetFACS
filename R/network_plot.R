@@ -135,50 +135,37 @@ network.plot <- function(netfacs.graph,
     
     p <- 
       g %>% 
-      ggraph(
-        layout = "igraph",
-        algorithm = 'kk'
-      ) +
-      geom_edge_link(
-        aes(label = round(.data$observed.prob, 2)),
-        arrow = NULL,
-        colour = "grey",
-        fontface = 'bold',
-        end_cap = circle(5, "mm"),
-        start_cap = circle(5, "mm"),
-        label_dodge = unit(2, "mm"),
-        angle_calc = "along",
-        show.legend = FALSE
-      ) +
-      geom_node_text(
-        aes(label = .data$name,
-            color = color[net.com$community],
-            size = .data$element.prob,
-            fontface = "bold"
-        ),
-        show.legend = FALSE
-      ) +
+      ggraph(layout = "igraph", 
+             algorithm = 'kk') +
+      geom_edge_link(aes(label = round(.data$observed.prob, 2)),
+                     arrow = NULL,
+                     colour = "grey",
+                     fontface = 'bold',
+                     end_cap = circle(5, "mm"),
+                     start_cap = circle(5, "mm"),
+                     label_dodge = unit(2, "mm"),
+                     angle_calc = "along",
+                     show.legend = FALSE) +
+      geom_node_text(aes(label = .data$name,
+                         color = color[net.com$community],
+                         size = .data$element.prob,
+                         fontface = "bold"),
+                     show.legend = FALSE) +
       scale_size(range = c(4, 12)) +
       ggtitle(paste(c(title, "; Modularity = ", modular), collapse = "")) +
       theme_graph(base_family = "sans")
     
     if (plot.bubbles) {
       p <- p +
-        geom_node_point(
-          aes(size = .data$element.prob + 3, alpha = 0.01),
-          color = color[net.com$community],
-          shape = shape[net.com$community],
-          show.legend = F
-        ) +
+        geom_node_point(aes(size = .data$element.prob + 3, alpha = 0.01),
+                        color = color[net.com$community],
+                        shape = shape[net.com$community],
+                        show.legend = F) +
         coord_fixed() +
-        geom_node_text(
-          mapping = aes(
-            label = .data$name,
-            size = .data$element.prob,
-            fontface = "bold"
-          ),
-          show.legend = FALSE
-        )
+        geom_node_text(aes(label = .data$name,
+                           size = .data$element.prob,
+                           fontface = "bold"),
+                       show.legend = FALSE)
     }
   }
   return(p)
