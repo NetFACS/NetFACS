@@ -21,19 +21,19 @@ netfacs(
 }
 \arguments{
 \item{data}{matrix with one column per element, and one row per event,
-consisting of 1 (element was active during that event) and 0 (element
-was not active)}
+consisting of 1 (element was active during that event) and 0 (element was
+not active)}
 
 \item{condition}{character vector of same length as 'data' that contains
-information on the condition each event belongs to, so probabilities
-can be compared across conditions; if NULL, all events will be tested
-against a random null condition based on permutations}
+information on the condition each event belongs to, so probabilities can be
+compared across conditions; if NULL, all events will be tested against a
+random null condition based on permutations}
 
 \item{test.condition}{level of 'condition' that is supposed to be tested}
 
 \item{null.condition}{level of 'condition' that is used to create the null
-distribution of values; if NULL, all levels that are not the test
-condition will be used}
+distribution of values; if NULL, all levels that are not the test condition
+will be used}
 
 \item{duration}{numeric vector that contains information on the duration of
 each event; if NULL, all events are assumed to have equal duration}
@@ -43,24 +43,24 @@ null distribution}
 
 \item{control}{list of vectors that are used as control variables. During
 bootstraps, the ratio of events in each level will be adapted. So, for
-example, if in the test distribution, there are three angry
-participants for each happy participant, the null distribution will
-maintain that ratio}
+example, if in the test distribution, there are three angry participants
+for each happy participant, the null distribution will maintain that ratio}
 
 \item{random.level}{character vector of the level on which the randomization
 should take place. If NULL, the randomization takes place on the event
 level (i.e., every row can either be selected or not); if a vector is
-provided, the randomization takes place on the levels of that vector
-rather than individual events}
+provided, the randomization takes place on the levels of that vector rather
+than individual events}
 
 \item{combination.size}{if not all combinations of elements are of interest
-(e.g., if the question only concerns single elements or dyads of
-elements), this variable allows to reduce the results to those
-combinations, increasing speed}
+(e.g., if the question only concerns single elements or dyads of elements),
+this variable allows to reduce the results to those combinations,
+increasing speed}
 
-\item{tail}{either 'upper.tail' (proportion of null probabilities
-that are larger than observed probabilities), or 'lower.tail' (proportion of null
-probabilities that are smaller than observed probabilities); default is 'upper.tail'}
+\item{tail}{either 'upper.tail' (proportion of null probabilities that are
+larger than observed probabilities), or 'lower.tail' (proportion of null
+probabilities that are smaller than observed probabilities); default is
+'upper.tail'}
 
 \item{use_parallel}{logical, should the bootstrap be parallelized (default is
 \code{TRUE})}
@@ -69,22 +69,34 @@ probabilities that are smaller than observed probabilities); default is 'upper.t
 Default is the number of available cores minus 1.}
 }
 \value{
-Function returns a Result data frame that includes the combination name, how many elements it consisted of, how often it was observed, the probability it was observed under this condition, the expected probability under null condition (based on the permutation or bootstrap), effect size (difference between observed probability and expected probability), p-value (how many randomisations were more extreme), and for direct comparisons of contexts the specificity (probability that the condition is in fact the test condition if that combination is known) and probability increase (the factor by which the probability of the element is higher in the test than null condition)
+Function returns a Result data frame that includes the combination
+  name, how many elements it consisted of, how often it was observed, the
+  probability it was observed under this condition, the expected probability
+  under null condition (based on the permutation or bootstrap), effect size
+  (difference between observed probability and expected probability), p-value
+  (how many randomisations were more extreme), and for direct comparisons of
+  contexts the specificity (probability that the condition is in fact the
+  test condition if that combination is known) and probability increase (the
+  factor by which the probability of the element is higher in the test than
+  null condition)
 
-'event.size.information' contains information about the observed and expected size of combination or elements per event based on the randomisations
+'event.size.information' contains information about the observed and
+  expected size of combination or elements per event based on the
+  randomisations
 }
 \description{
-The \code{\link{netfacs}} function underlies most other functions in this package. \cr
-It takes the data set and reports the observed and expected probabilities that elements and
-combinations of elements occur in this data set, and whether this differs
-from a null condition.
+The \code{\link{netfacs}} function underlies most other functions in this
+package. \cr It takes the data set and reports the observed and expected
+probabilities that elements and combinations of elements occur in this data
+set, and whether this differs from a null condition.
 }
 \details{
 Expected values are based on bootstraps of null distribution, so the
-values represent distribution of element co-occurrence under null condition;
-or permutations of the observed distribution to test it against 'random'.
+  values represent distribution of element co-occurrence under null
+  condition; or permutations of the observed distribution to test it against
+  'random'.
 
-The resulting object is the basis for most other functions in this package.
+  The resulting object is the basis for most other functions in this package.
 }
 \examples{
 ### how do angry facial expressions differ from non-angry ones?

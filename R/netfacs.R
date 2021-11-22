@@ -1,55 +1,67 @@
 #' Create probability distribution of combinations of elements in the data
 #'
-#' The \code{\link{netfacs}} function underlies most other functions in this package. \cr
-#' It takes the data set and reports the observed and expected probabilities that elements and
-#' combinations of elements occur in this data set, and whether this differs
-#' from a null condition.
+#' The \code{\link{netfacs}} function underlies most other functions in this
+#' package. \cr It takes the data set and reports the observed and expected
+#' probabilities that elements and combinations of elements occur in this data
+#' set, and whether this differs from a null condition.
 #'
 #' @param data matrix with one column per element, and one row per event,
-#'        consisting of 1 (element was active during that event) and 0 (element
-#'        was not active)
+#'   consisting of 1 (element was active during that event) and 0 (element was
+#'   not active)
 #' @param condition character vector of same length as 'data' that contains
-#'        information on the condition each event belongs to, so probabilities
-#'        can be compared across conditions; if NULL, all events will be tested
-#'        against a random null condition based on permutations
+#'   information on the condition each event belongs to, so probabilities can be
+#'   compared across conditions; if NULL, all events will be tested against a
+#'   random null condition based on permutations
 #' @param test.condition level of 'condition' that is supposed to be tested
 #' @param null.condition level of 'condition' that is used to create the null
-#'        distribution of values; if NULL, all levels that are not the test
-#'        condition will be used
+#'   distribution of values; if NULL, all levels that are not the test condition
+#'   will be used
 #' @param duration numeric vector that contains information on the duration of
-#'        each event; if NULL, all events are assumed to have equal duration
+#'   each event; if NULL, all events are assumed to have equal duration
 #' @param ran.trials Number of randomisations that will be performed to find the
-#'        null distribution
+#'   null distribution
 #' @param random.level character vector of the level on which the randomization
-#'        should take place. If NULL, the randomization takes place on the event
-#'        level (i.e., every row can either be selected or not); if a vector is
-#'        provided, the randomization takes place on the levels of that vector
-#'        rather than individual events
+#'   should take place. If NULL, the randomization takes place on the event
+#'   level (i.e., every row can either be selected or not); if a vector is
+#'   provided, the randomization takes place on the levels of that vector rather
+#'   than individual events
 #' @param control list of vectors that are used as control variables. During
-#'        bootstraps, the ratio of events in each level will be adapted. So, for
-#'        example, if in the test distribution, there are three angry
-#'        participants for each happy participant, the null distribution will
-#'        maintain that ratio
+#'   bootstraps, the ratio of events in each level will be adapted. So, for
+#'   example, if in the test distribution, there are three angry participants
+#'   for each happy participant, the null distribution will maintain that ratio
 #' @param combination.size if not all combinations of elements are of interest
-#'        (e.g., if the question only concerns single elements or dyads of
-#'        elements), this variable allows to reduce the results to those
-#'        combinations, increasing speed
-#' @param tail either 'upper.tail' (proportion of null probabilities
-#'         that are larger than observed probabilities), or 'lower.tail' (proportion of null
-#'         probabilities that are smaller than observed probabilities); default is 'upper.tail'
+#'   (e.g., if the question only concerns single elements or dyads of elements),
+#'   this variable allows to reduce the results to those combinations,
+#'   increasing speed
+#' @param tail either 'upper.tail' (proportion of null probabilities that are
+#'   larger than observed probabilities), or 'lower.tail' (proportion of null
+#'   probabilities that are smaller than observed probabilities); default is
+#'   'upper.tail'
 #' @param use_parallel logical, should the bootstrap be parallelized (default is
-#'        \code{TRUE})
+#'   \code{TRUE})
 #' @param n_cores numeric, the number cores to be used for parallelization.
-#'        Default is the number of available cores minus 1.
+#'   Default is the number of available cores minus 1.
 #'
 #' @details Expected values are based on bootstraps of null distribution, so the
-#' values represent distribution of element co-occurrence under null condition;
-#' or permutations of the observed distribution to test it against 'random'.
+#'   values represent distribution of element co-occurrence under null
+#'   condition; or permutations of the observed distribution to test it against
+#'   'random'.
 #'
-#' The resulting object is the basis for most other functions in this package.
+#'   The resulting object is the basis for most other functions in this package.
 #'
-#' @return Function returns a Result data frame that includes the combination name, how many elements it consisted of, how often it was observed, the probability it was observed under this condition, the expected probability under null condition (based on the permutation or bootstrap), effect size (difference between observed probability and expected probability), p-value (how many randomisations were more extreme), and for direct comparisons of contexts the specificity (probability that the condition is in fact the test condition if that combination is known) and probability increase (the factor by which the probability of the element is higher in the test than null condition)
-#' @return 'event.size.information' contains information about the observed and expected size of combination or elements per event based on the randomisations
+#' @return Function returns a Result data frame that includes the combination
+#'   name, how many elements it consisted of, how often it was observed, the
+#'   probability it was observed under this condition, the expected probability
+#'   under null condition (based on the permutation or bootstrap), effect size
+#'   (difference between observed probability and expected probability), p-value
+#'   (how many randomisations were more extreme), and for direct comparisons of
+#'   contexts the specificity (probability that the condition is in fact the
+#'   test condition if that combination is known) and probability increase (the
+#'   factor by which the probability of the element is higher in the test than
+#'   null condition)
+#' @return 'event.size.information' contains information about the observed and
+#'   expected size of combination or elements per event based on the
+#'   randomisations
 #'
 #' @importFrom stats sd quantile
 #' @importFrom picante randomizeMatrix
@@ -103,10 +115,13 @@ netfacs <- function(data,
                     use_parallel = TRUE,
                     n_cores = 2) {
   
-  if(any(is.na(data))) stop("Please remove all NAs from the data.")
+  if(any(is.na(data) | any(is.na(condition))) ){
+    stop("Please remove all NAs from the data and/or condition vector.", 
+         call. = FALSE)
+  } 
   # elements will later be split and combined using "_", and therefore element names must not contain "_"
   if(any(grepl(pattern = "_", colnames(data)))){
-    stop("Column names of data must not contain '_'.")
+    stop("Column names of data must not contain '_'.", call. = FALSE)
   }
   
   # fix column names of dataset to not include special characters or spaces
@@ -156,11 +171,18 @@ netfacs <- function(data,
   if (!is.null(condition)) {
     # Error messages in case test.condition is wrongly specified
     if (is.null(test.condition)) {
-      return(print("Error: specify test condition"))
+      stop("Specify test condition", call. = FALSE)
     }
     if (!test.condition %in% condition) {
-      return(print("Test condition not part of the condition vector"))
+      stop("Test condition is not part of the condition vector", 
+           call. = FALSE)
     }
+    if(!is.null(null.condition)){
+      if(!null.condition %in% condition){
+        stop("Null condition is not part of the condition vector", 
+             call. = FALSE)
+      }
+    } 
     
     # if random.level is not defined, each event/row is its own case, and all events are compared against each other. If random.level is defined, the randomization will select cases based on which level they belong to
     if (is.null(random.level)) {
@@ -314,7 +336,6 @@ netfacs <- function(data,
     
     if (use_parallel) {
       # run parallel loop
-      # which type of parallel depends on parallel_safe
       # if on Mac or Linux, mclapply should work
       if (!(Sys.info()[["sysname"]] == "Windows") &
           .Platform$OS.type == "unix") {
@@ -486,7 +507,6 @@ netfacs <- function(data,
     
     if (use_parallel) {
       # run parallel loop
-      # which type of parallel depends on parallel_safe
       # if on Mac or Linux, mclapply should work
       if (!Sys.info()[["sysname"]] == "Windows" &
           .Platform$OS.type == "unix") {
