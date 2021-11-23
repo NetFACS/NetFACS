@@ -1,77 +1,42 @@
-
-# dummy data
-m <- matrix(
-  c(0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1,
-    1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1), 
-  ncol = 5, 
-  dimnames = list(c("a", "a", "a", "a", "a", "b", "b", "b", "b", "b", "c", "c", "c", "c", "c", "d", "d", "d", "d", "d", "e", "e", "e", "e", "e", "a", "a", "a", "a", "a", "a", "a", "b", "b", "b", "b", "b", "b", "b", "c", "c", "c", "c", "c", "c", "c", "d", "d", "d", "d", "d", "d", "d", "e", "e", "e", "e", "e", "e", "e", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "b", "b", "b", "b", "b", "b", "b", "b", "b", "b", "c", "c", "c", "c", "c", "c", "c", "c", "c", "c", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "a", "a", "a", "a", "a", "a", "b", "b", "b", "b", "b", "b", "c", "c", "c", "c", "c", "c", "d", "d", "d", "d", "d", "d", "e", "e", "e", "e", "e", "e"), 
-                  1:5))
-
 test_that("single core, condition specified is correct",{
-  expect_snapshot_output(
-    {
-      set.seed(1)
-      netfacs(
-        data = m,
-        condition = rownames(m),
-        test.condition = "b",
-        ran.trials = 102,
-        combination.size = 4,
-        tail = "upper.tail",
-        use_parallel = FALSE,
-        n_cores = 1
-      )
-    }
-  )
+  expect_equal(netfacs(d.sim.with.context, 
+                       condition = rownames(d.sim.with.context), 
+                       test.condition = "a", 
+                       combination.size = 2,
+                       ran.trials = 500, 
+                       use_parallel = FALSE,
+                       n_cores = 1),
+               res.single.core.with.context, 
+               tolerance = 0.13)
 })
 test_that("multi-core, condition specified is correct",{
-  expect_snapshot_output(
-    {
-      set.seed(1)
-      netfacs(
-        data = m,
-        condition = rownames(m),
-        test.condition = "b",
-        ran.trials = 102, # need >100 for multicore
-        combination.size = 4,
-        tail = "upper.tail",
-        use_parallel = TRUE,
-        n_cores = 2
-      )
-    }
-  )
+  expect_equal(netfacs(d.sim.with.context, 
+                       condition = rownames(d.sim.with.context), 
+                       test.condition = "a", 
+                       combination.size = 2,
+                       ran.trials = 500, 
+                       use_parallel = TRUE,
+                       n_cores = 6),
+               res.multi.core.with.context, 
+               tolerance = 0.13)
 })
 test_that("single core, condition NOT specified is correct",{
-  expect_snapshot_output(
-    {
-      set.seed(1)
-      netfacs(
-        data = m,
-        condition = NULL,
-        ran.trials = 102,
-        combination.size = 4,
-        tail = "upper.tail",
-        use_parallel = FALSE,
-        n_cores = 1
-      )
-    }
-  )
+  expect_equal(netfacs(d.sim.no.context, 
+                       ran.trials = 500,
+                       combination.size = 2,
+                       use_parallel = FALSE,
+                       n_cores = 1),
+               res.single.core.no.context, 
+               tolerance = 0.11)
 })
 test_that("multi-core, condition NOT specified is correct",{
-  expect_snapshot_output(
-    {
-      set.seed(1)
-      netfacs(
-        data = m,
-        condition = NULL,
-        ran.trials = 102, # need >100 for multicore
-        combination.size = 4,
-        tail = "upper.tail",
-        use_parallel = TRUE,
-        n_cores = 2
-      )
-    }
-  )
+  expect_equal(netfacs(d.sim.no.context, 
+                       ran.trials = 500, 
+                       combination.size = 2,
+                       use_parallel = TRUE,
+                       n_cores = 6),
+               res.multi.core.no.context, 
+               tolerance = 0.11)
 })
 test_that("error message is given when data has NA",{
   expect_error(
