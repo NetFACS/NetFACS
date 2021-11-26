@@ -4,9 +4,13 @@
 #' while keeping the element positions etc constant. Uses \code{\link{ggraph}}
 #' function
 #'
-#' @param netfacs.graphs list of network objects resulting from
+#' @param netfacs.graphs List of network objects resulting from
 #'   \code{\link{netfacs.network}} function or
 #'   \code{\link{multiple.netfacs.networks}} function
+#' @param sig.level Numeric between 0 and 1. P value used to determine whether
+#'   nodes are significant. Default = 0.01.
+#' @param sig.nodes.only Logical. Should only nodes that were significant in _at
+#'   least_ one of the networks be included in the plots? Default = FALSE.
 #'
 #' @return Function returns a \code{\link{ggraph}} plot showing connections
 #'   between nodes in the different networks. Elements that are significantly
@@ -14,6 +18,7 @@
 #'   small, and absent elements are absent.
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
+#' @importFrom dplyr full_join
 #' @importFrom ggplot2 aes
 #' @importFrom ggplot2 labs
 #' @importFrom ggplot2 element_text
@@ -44,18 +49,50 @@
 #'
 #' emo.nets <- multiple.netfacs.network(emo.faces, min.count = 5)
 #' multiple.network.plot(emo.nets)
-multiple.network.plot <- function(netfacs.graphs) {
-  all.nodes <- sort(unique(unlist(lapply(netfacs.graphs, function(x) {
-    return(V(x)$name)
-  }))))
+multiple.network.plot <- function(netfacs.graphs,
+                                  sig.level = 0.01,
+                                  sig.nodes.only = FALSE) {
+  if (sig.level > 1 | sig.level < 0 | !is.numeric(sig.level)) {
+    stop("sig.level must be a number between 0 and 1.", call. = FALSE)
+  }
+  if (!is.logical(sig.nodes.only)) {
+    stop("sig.nodes.only must be a logical: TRUE or FALSE.", call. = FALSE)
+  }
+  
+  
+  if (sig.nodes.only) {
+    netfacs.graphs <-
+      netfacs.graphs %>%
+      lapply(function(x){
+        x %>%
+          activate(nodes) %>% 
+          filter(element.significance <= sig.level)
+      })
+    
+    plot.nodes <- sort(unique(unlist(lapply(netfacs.graphs, function(x) {
+      return(V(x)$name)
+    }))))
+    
+    netfacs.graphs <-
+      netfacs.graphs %>%
+      lapply(function(x){
+        x %>%
+          activate(nodes) %>% 
+          full_join(data.frame(name = plot.nodes), by = "name")
+      })
+  } else {
+    plot.nodes <- sort(unique(unlist(lapply(netfacs.graphs, function(x) {
+      return(V(x)$name)
+    }))))
+  }
   
   netfacs.graphs <- 
     netfacs.graphs %>% 
     lapply(function(x){
       x %>% 
         activate(nodes) %>% 
-        mutate(node.size = case_when(element.significance  > 0.01 ~ 50,
-                                     element.significance <= 0.01 ~ 150,
+        mutate(node.size = case_when(element.significance  > sig.level ~ 50,
+                                     element.significance <= sig.level ~ 150,
                                      is.na(element.significance) ~ 0)) %>% 
         activate(edges) %>% 
         mutate(edge.weight = observed.prob * 3,
@@ -65,7 +102,7 @@ multiple.network.plot <- function(netfacs.graphs) {
   plot_graphs <- function(g, node.order, node.color, .title) {
     g %>%
       ggraph(layout = "circle",
-             order = all.nodes) +
+             order = node.order) +
       geom_edge_link(aes(edge_width = edge.size),
                      color = "lightgrey",
                      show.legend = FALSE) +
@@ -88,7 +125,7 @@ multiple.network.plot <- function(netfacs.graphs) {
     
     p.list[[i]] <- 
       plot_graphs(netfacs.graphs[[i]], 
-                  node.order = all.nodes, 
+                  node.order = plot.nodes, 
                   node.color = colors()[i * 3], 
                   .title = plot.titles[i])
   }
