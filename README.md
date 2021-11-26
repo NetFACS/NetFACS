@@ -1069,13 +1069,13 @@ If we do the same for happy faces, we see a very different pattern
 | combination.size | observed.prob | expected.prob | effect.size | pvalue |
 |:----------------:|:-------------:|:-------------:|:-----------:|:------:|
 |        0         |     0.00      |     0.00      |    0.00     |  1.00  |
-|        1         |     0.03      |     0.03      |    -0.01    |  0.22  |
+|        1         |     0.03      |     0.04      |    -0.01    |  0.21  |
 |        2         |     0.76      |     0.08      |    0.69     |  0.00  |
 |        3         |     0.18      |     0.16      |    0.02     |  0.16  |
 |        4         |     0.03      |     0.46      |    -0.43    |  0.00  |
 |        5         |     0.00      |     0.18      |    -0.18    |  0.00  |
 |        6         |     0.00      |     0.07      |    -0.07    |  0.00  |
-|        7         |     0.00      |     0.00      |    0.00     |  0.34  |
+|        7         |     0.00      |     0.00      |    0.00     |  0.36  |
 |        8         |     0.00      |     0.01      |    -0.01    |  0.05  |
 
 Combination sizes of happy expressions in the angry condition
@@ -1138,3 +1138,24 @@ of mainly one expression, are very predictable. Fear, on the other hand,
 where no two expressions are exactly the same, is highly chaotic. With
 increasing sample size, this would probably change, but the difference
 between contexts is still quite robust.
+
+## Exporting networks
+
+While the NetFACS package provides convenience functions to visualize
+networks, some users may prefer to explore their networks using other
+software such as [gephi](https://gephi.org/). It is easy to convert
+networks into a matrix or table by using igraph’s conversion functions,
+which can then be saved as a CSV file and imported into other software.
+For example:
+
+``` r
+# create an edge table
+anger.tab <- igraph::as_data_frame(multi.net$anger)
+
+# create an adjacency matrix
+anger.adj.mat <- as.matrix(igraph::as_adjacency_matrix(multi.net$anger))
+
+# save as CSV file
+# write.csv(anger.tab, "anger_net_tab.csv")
+# write.csv(anger.adj.mat, "adj_net_mat.csv")
+```

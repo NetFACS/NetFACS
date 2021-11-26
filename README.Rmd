@@ -586,8 +586,6 @@ kable(
 
 In happy faces, combinations of 3 elements are by far the most likely, while all other combination sizes occur less than expected.
 
-
-
 ## Entropy
 
 There is surprisingly little work on the information contained in facial expressions, even though this would be a great way to measure complexity. One way to quantify the amount of information in a system is by looking at how informative each observed case is. The idea is that, if in a condition, all events are exactly the same, this condition is very easily predicted and adding cases will add little information. In contrast, if under the condition, all observed events are different, then each new case that is observed adds information about the condition. This is the underlying idea of entropy measures: Entropy is maximal in entirely random systems. Entropy is minimal in perfectly ordered systems. There is potentially an insane amount of information in FACS data: for example, 30 elements can be combined in around 8 billion different ways. We know this is not the case, so there is clearly order and rules in the system.
@@ -613,3 +611,21 @@ kable(
 ```
 
 Here, we see that the different emotions differ in terms of their entropy ratio (ratios close to 0 mean order, ratios close to 1 mean chaos). As we can see, happy and surprised faces, which are both made up of mainly one expression, are very predictable. Fear, on the other hand, where no two expressions are exactly the same, is highly chaotic. With increasing sample size, this would probably change, but the difference between contexts is still quite robust.
+
+
+## Exporting networks
+
+While the NetFACS package provides convenience functions to visualize networks, some users may prefer to explore their networks using other software such as [gephi](https://gephi.org/). It is easy to convert networks into a matrix or table by using igraph's conversion functions, which can then be saved as a CSV file and imported into other software. For example:
+
+```{r, eval = F}
+# create an edge table
+anger.tab <- igraph::as_data_frame(multi.net$anger)
+
+# create an adjacency matrix
+anger.adj.mat <- as.matrix(igraph::as_adjacency_matrix(multi.net$anger))
+
+# save as CSV file
+# write.csv(anger.tab, "anger_net_tab.csv")
+# write.csv(anger.adj.mat, "adj_net_mat.csv")
+```
+
