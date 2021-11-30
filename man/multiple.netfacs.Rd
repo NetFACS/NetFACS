@@ -2,7 +2,8 @@
 % Please edit documentation in R/multiple_netfacs.R
 \name{multiple.netfacs}
 \alias{multiple.netfacs}
-\title{Applies the netfacs function across multiple levels of the condition and puts them in a list}
+\title{Applies the netfacs function across multiple levels of the condition and puts
+them in a list}
 \usage{
 multiple.netfacs(
   data,
@@ -18,23 +19,41 @@ multiple.netfacs(
 )
 }
 \arguments{
-\item{data}{matrix with one column per element, and one row per event, consisting of 1 (element was active during that event) and 0 (element was not active)}
+\item{data}{matrix with one column per element, and one row per event,
+consisting of 1 (element was active during that event) and 0 (element was
+not active)}
 
-\item{condition}{character vector of same length as 'data' that contains information on the condition each event belongs to, so probabilities can be compare across conditions; if NULL, all events will be tested against random}
+\item{condition}{character vector of same length as 'data' that contains
+information on the condition each event belongs to, so probabilities can be
+compare across conditions; if NULL, all events will be tested against
+random}
 
-\item{duration}{numeric vector that contains information on the duration of each event; if NULL, all rows have the same value}
+\item{duration}{numeric vector that contains information on the duration of
+each event; if NULL, all rows have the same value}
 
-\item{ran.trials}{Number of randomisations that will be performed to find the null distribution}
+\item{ran.trials}{Number of randomisations that will be performed to find the
+null distribution}
 
-\item{control}{list of vectors that are used as control variables. During bootstraps, the ratio of events in each level will be adapted. So, for example, if in the test distribution, there are three angry participants for each happy participant, the null distribution will maintain that ratio}
+\item{control}{list of vectors that are used as control variables. During
+bootstraps, the ratio of events in each level will be adapted. So, for
+example, if in the test distribution, there are three angry participants
+for each happy participant, the null distribution will maintain that ratio}
 
-\item{random.level}{character vector of the level on which the randomization should take place. If NULL, the randomization takes place on the event level (i.e., every row can either be selected or not); if a vector is provided, the randomization takes place on the levels of that vector rather than individual events}
+\item{random.level}{character vector of the level on which the randomization
+should take place. If NULL, the randomization takes place on the event
+level (i.e., every row can either be selected or not); if a vector is
+provided, the randomization takes place on the levels of that vector rather
+than individual events}
 
-\item{combination.size}{if not all combinations of elements are of interest (e.g., if the question only concerns single elements or dyads of elements), this variable allows to reduce the results to those combinations, increasing speed}
+\item{combination.size}{if not all combinations of elements are of interest
+(e.g., if the question only concerns single elements or dyads of elements),
+this variable allows to reduce the results to those combinations,
+increasing speed}
 
-\item{tail}{either 'upper.tail' (proportion of null probabilities
-that are larger than observed probabilities), or 'lower.tail' (proportion of null
-probabilities that are smaller than observed probabilities); default is 'upper.tail'}
+\item{tail}{either 'upper.tail' (proportion of null probabilities that are
+larger than observed probabilities), or 'lower.tail' (proportion of null
+probabilities that are smaller than observed probabilities); default is
+'upper.tail'}
 
 \item{use_parallel}{logical, should the bootstrap be parallelized (default is
 \code{TRUE})}
@@ -43,12 +62,18 @@ probabilities that are smaller than observed probabilities); default is 'upper.t
 Default is the number of available cores minus 1.}
 }
 \value{
-Function returns for each level of the condition a list equivalent to the results of the netfacs function; can be used to create multiple networks and graphs at the same time
+Function returns for each level of the condition a list equivalent to
+  the results of the netfacs function; can be used to create multiple
+  networks and graphs at the same time
 }
 \description{
-Take dataset and report observed and expected likelihood that elements and combinations of elements occur in this dataset, and whether this differs from a null condition
-Expected values are based on bootstraps of null distribution, so the values represent distribution of element co-occurrence under null condition; or permutations of the observed distribution to test it against 'random'.
-The resulting object is the basis for most other functions in this package.
+Take dataset and report observed and expected likelihood that elements and
+combinations of elements occur in this dataset, and whether this differs from
+a null condition Expected values are based on bootstraps of null
+distribution, so the values represent distribution of element co-occurrence
+under null condition; or permutations of the observed distribution to test it
+against 'random'. The resulting object is the basis for most other functions
+in this package.
 }
 \examples{
 data(emotions_set)

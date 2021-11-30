@@ -5,15 +5,9 @@
 #' @param jp An optional list of matrices, the same length as nrow(m) with the joint probabilities of AUs
 #' @param n_obs Number of observations per context
 #'
-#' @return
-#'
-#' @examples
-#' m <- define_contexts(aus = as.character(1:5),
-#'                      contexts = letters[1:5], 
-#'                      n_active_aus = 1:5, 
-#'                      au_fidelity = 1)
-#' 
-#' sample_contexts(m, n_obs = 10)
+#' @importFrom stats rbinom
+#' @importFrom stats setNames
+
 sample_contexts <- function(m, n_obs = 10, jp = NULL) {
   if(is.vector(m)) m <- matrix(m, nrow = 1, dimnames = list(NULL, names(m)))
   # if(is.matrix(jp) & nrow(m) == 1) jp <- list(jp)

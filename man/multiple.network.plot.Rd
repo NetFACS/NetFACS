@@ -9,7 +9,7 @@ multiple.network.plot(netfacs.graphs, sig.level = 0.01, sig.nodes.only = FALSE)
 \arguments{
 \item{netfacs.graphs}{List of network objects resulting from
 \code{\link{netfacs.network}} function or
-\code{\link{multiple.netfacs.networks}} function}
+\code{\link{multiple.netfacs.network}} function}
 
 \item{sig.level}{Numeric between 0 and 1. P value used to determine whether
 nodes are significant. Default = 0.01.}

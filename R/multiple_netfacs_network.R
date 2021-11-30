@@ -1,16 +1,32 @@
 #' Creates network objects out of the netfacs data
 #'
-#' Takes the results of the nefacs object for combinations of 2 elements and turns them into a network object (igraph or sna/network) that can be used for further plotting and analyses
+#' Takes the results of the nefacs object for combinations of 2 elements and
+#' turns them into a network object (class \code{\link{igraph}} and
+#' \code{\link{tbl_graph}}) that can be used for further plotting and analyses
 #'
+#' @param netfacs.list list of multiple objects resulting from
+#'   \code{\link{netfacs}} function or the \code{\link{multiple.netfacs}}
+#'   function
+#' @param link determines how nodes/elements are connected. 'unweighted' gives a
+#'   1 to significant connections and 0 to all others; 'weighted' gives the
+#'   difference between observed and expected probability of co-occurrence;
+#'   'raw' just uses the observed probability of co-occurrence; 'SRI' uses the
+#'   simple ratio index/affinity (probability of co-occurrence/ (probabilities
+#'   of each element and the combination))
+#' @param min.count numeric value, suggesting how many times a combination
+#'   should at least occur to be displayed
+#' @param min.prob numeric value, suggesting the probability at which a
+#'   combination should at least occur to be displayed
+#' @param significance numeric value, determining the p-value below which
+#'   combinations are considered to be dissimilar enough from the null
+#'   distribution
+#' @param ignore.element vector of elements that will not be considered for the
+#'   network, e.g. because they are too common or too rare or their
+#'   interpretation is not relevant here
 #'
-#' @param netfacs.list list of multiple objects resulting from netfacs() function or the multiple.netfacs() function
-#' @param link determines how nodes/elements are connected. 'unweighted' gives a 1 to significant connections and 0 to all others; 'weighted' gives the difference between observed and expected probability of co-occurrence; 'raw' just uses the observed probability of co-occurrence; 'SRI' uses the simple ratio index/affinity (probability of co-occurrence/ (probabilities of each element and the combination))
-#' @param min.count numeric value, suggesting how many times a combination should at least occur to be displayed
-#' @param min.prob numeric value, suggesting the probability at which a combination should at least occur to be displayed
-#' @param significance numeric value, determining the p-value below which combinations are considered to be dissimilar enough from the null distribution
-#' @param ignore.element vector of elements that will not be considered for the network, e.g. because they are too common or too rare or their interpretation is not relevant here
-#'
-#' @return Function returns a network object where the nodes are the elements, edges represent their co-occurrence, and the vertex and edge attributes contain all additional information from the netfacs object
+#' @return Function returns a network object where the nodes are the elements,
+#'   edges represent their co-occurrence, and the vertex and edge attributes
+#'   contain all additional information from the netfacs object
 #'
 #' @importFrom igraph vertex.attributes
 #' @importFrom igraph vertex.attributes<-

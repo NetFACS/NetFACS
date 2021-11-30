@@ -6,7 +6,7 @@
 #'
 #' @param netfacs.graphs List of network objects resulting from
 #'   \code{\link{netfacs.network}} function or
-#'   \code{\link{multiple.netfacs.networks}} function
+#'   \code{\link{multiple.netfacs.network}} function
 #' @param sig.level Numeric between 0 and 1. P value used to determine whether
 #'   nodes are significant. Default = 0.01.
 #' @param sig.nodes.only Logical. Should only nodes that were significant in _at
@@ -52,6 +52,10 @@
 multiple.network.plot <- function(netfacs.graphs,
                                   sig.level = 0.01,
                                   sig.nodes.only = FALSE) {
+  nodes <- NULL # to avoid R CMD check when calling activate(nodes)
+  edges <- NULL # to avoid R CMD check when calling activate(edges)
+  
+  
   if (sig.level > 1 | sig.level < 0 | !is.numeric(sig.level)) {
     stop("sig.level must be a number between 0 and 1.", call. = FALSE)
   }
@@ -59,14 +63,13 @@ multiple.network.plot <- function(netfacs.graphs,
     stop("sig.nodes.only must be a logical: TRUE or FALSE.", call. = FALSE)
   }
   
-  
   if (sig.nodes.only) {
     netfacs.graphs <-
       netfacs.graphs %>%
       lapply(function(x){
         x %>%
           activate(nodes) %>% 
-          filter(element.significance <= sig.level)
+          filter(.data$element.significance <= sig.level)
       })
     
     plot.nodes <- sort(unique(unlist(lapply(netfacs.graphs, function(x) {
@@ -91,25 +94,26 @@ multiple.network.plot <- function(netfacs.graphs,
     lapply(function(x){
       x %>% 
         activate(nodes) %>% 
-        mutate(node.size = case_when(element.significance  > sig.level ~ 50,
-                                     element.significance <= sig.level ~ 150,
-                                     is.na(element.significance) ~ 0)) %>% 
+        mutate(
+          node.size = case_when(.data$element.significance  > sig.level ~ 50,
+                                .data$element.significance <= sig.level ~ 150,
+                                is.na(.data$element.significance) ~ 0)) %>% 
         activate(edges) %>% 
-        mutate(edge.weight = observed.prob * 3,
-               edge.size = edge.weight)
+        mutate(edge.weight = .data$observed.prob * 3,
+               edge.size = .data$edge.weight)
     })
   
   plot_graphs <- function(g, node.order, node.color, .title) {
     g %>%
       ggraph(layout = "circle",
              order = node.order) +
-      geom_edge_link(aes(edge_width = edge.size),
+      geom_edge_link(aes(edge_width = .data$edge.size),
                      color = "lightgrey",
                      show.legend = FALSE) +
-      geom_node_point(aes(size = node.size),
+      geom_node_point(aes(size = .data$node.size),
                       color = node.color,
                       show.legend = FALSE) +
-      geom_node_text(aes(label = name,
+      geom_node_text(aes(label = .data$name,
                          size = 20),
                      color = "black",
                      show.legend = FALSE) +

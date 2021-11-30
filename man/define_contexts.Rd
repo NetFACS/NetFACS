@@ -23,9 +23,3 @@ A matrix of probabilities with contexts in rows and AUs in columns
 \description{
 Define truth for AUs active in different contexts
 }
-\examples{
-define_contexts(aus = as.character(1:5),
-                contexts = letters[1:5],
-                n_active_aus = 1:5,
-                au_fidelity = 1)
-}

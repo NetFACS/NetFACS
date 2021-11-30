@@ -2,7 +2,8 @@
 % Please edit documentation in R/network_conditional.R
 \name{network.conditional}
 \alias{network.conditional}
-\title{Produce conditional probabilities of dyads of elements, and graph object based on conditional probabilities}
+\title{Produce conditional probabilities of dyads of elements, and graph object
+based on conditional probabilities}
 \usage{
 network.conditional(
   netfacs.data,
@@ -15,19 +16,28 @@ network.conditional(
 \arguments{
 \item{netfacs.data}{object resulting from netfacs() function}
 
-\item{min.prob}{minimum conditional probability that should be shown in the graph}
+\item{min.prob}{minimum conditional probability that should be shown in the
+graph}
 
-\item{min.count}{minimum number of times that a combination should occur before being included in the graph}
+\item{min.count}{minimum number of times that a combination should occur
+before being included in the graph}
 
-\item{ignore.element}{string vector, can be used to exclude certain elements when creating the plots}
+\item{ignore.element}{string vector, can be used to exclude certain elements
+when creating the plots}
 
-\item{plot.bubbles}{if TRUE, then the nodes in the network plots will be surrounded by bubbles; if FALSE, the edges connect the names directly}
+\item{plot.bubbles}{if TRUE, then the nodes in the network plots will be
+surrounded by bubbles; if FALSE, the edges connect the names directly}
 }
 \value{
-Function returns a dataframe that includes all dyadic combinations and their observed and conditional probabilities
+Function returns a dataframe that includes all dyadic combinations
+  and their observed and conditional probabilities
 }
 \description{
-For all dyadic combinations that appear in the test dataset, this function returns the probability of A occurring (P(A)), the probability of B occurring (P(B)), the probability of A and B occurring simultaneously (P(A+B)), and the probability of A occurring if B is given (P(A|B)). It also creates a graph object that can be plotted
+For all dyadic combinations that appear in the test dataset, this function
+returns the probability of A occurring (P(A)), the probability of B occurring
+(P(B)), the probability of A and B occurring simultaneously (P(A+B)), and the
+probability of A occurring if B is given (P(A|B)). It also creates a graph
+object that can be plotted
 }
 \examples{
 ### how do angry facial expressions differ from non-angry ones?

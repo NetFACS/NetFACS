@@ -8,12 +8,6 @@
 #'   that an AU is active in a context.
 #'
 #' @return A matrix of probabilities with contexts in rows and AUs in columns
-#'
-#' @examples
-#' define_contexts(aus = as.character(1:5),
-#'                 contexts = letters[1:5],
-#'                 n_active_aus = 1:5,
-#'                 au_fidelity = 1)
 define_contexts <- function(aus, n_active_aus, 
                             contexts = NULL, au_fidelity = 1) {
   

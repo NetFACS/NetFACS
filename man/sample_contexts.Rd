@@ -14,17 +14,6 @@ values => result of \code{\link{define_contexts}}.}
 
 \item{jp}{An optional list of matrices, the same length as nrow(m) with the joint probabilities of AUs}
 }
-\value{
-
-}
 \description{
 Sample observations of simulated FACS data
-}
-\examples{
-m <- define_contexts(aus = as.character(1:5),
-                     contexts = letters[1:5], 
-                     n_active_aus = 1:5, 
-                     au_fidelity = 1)
-
-sample_contexts(m, n_obs = 10)
 }

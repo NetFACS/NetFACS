@@ -13,12 +13,6 @@ define_joint_prob(aus, n_jp = 2, min_jp = 0.5)
 
 \item{min_jp}{Minimum joint probability. Must be between 0 and 1}
 }
-\value{
-
-}
 \description{
 Joint probability distribution of AUs
-}
-\examples{
-define_joint_prob(as.character(1:5), n_jp = 2)
 }

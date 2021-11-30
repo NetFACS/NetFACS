@@ -144,7 +144,6 @@ netfacs <- function(data,
     fixed = TRUE
   )
   
-  
   # determine number of cores for parallelization
   if (isTRUE(use_parallel) & is.null(n_cores)) {
     n_cores <- detectCores() - 1
@@ -165,21 +164,25 @@ netfacs <- function(data,
   }
   
   
-  # null condition is specified ---------------------------------------------
+  # condition is specified ---------------------------------------------
   
   # data preparation happens for two different cases: either 'condition' is set, in which case the 'test.condition' is tested against all other cases or against one specific 'null.condition'; alternatively, if no condition is set, the probabilities are compared with random probabilities
   if (!is.null(condition)) {
     # Error messages in case test.condition is wrongly specified
-    if (is.null(test.condition)) {
-      stop("Specify test condition", call. = FALSE)
-    }
-    if (!test.condition %in% condition) {
-      stop("Test condition is not part of the condition vector", 
+    if (length(condition) != nrow(data)){
+      stop("condition vector must be the same length as nrow(data).", 
            call. = FALSE)
     }
-    if(!is.null(null.condition)){
-      if(!null.condition %in% condition){
-        stop("Null condition is not part of the condition vector", 
+    if (is.null(test.condition)) {
+      stop("Specify test condition.", call. = FALSE)
+    }
+    if (!test.condition %in% condition) {
+      stop("Test condition is not part of the condition vector.", 
+           call. = FALSE)
+    }
+    if (!is.null(null.condition)){
+      if (!null.condition %in% condition){
+        stop("Null condition is not part of the condition vector.", 
              call. = FALSE)
       }
     } 
@@ -415,10 +418,17 @@ netfacs <- function(data,
   }
   
   
-  # null condition is not specified -----------------------------------------
+  # condition is not specified -----------------------------------------
   
   ###### the following calculations are done when there is no condition specified, meaning the observed probability across all cases is compared to a null model based on permutations maintaining the event size and element probability
   if (is.null(condition)) {
+    if (!is.null(test.condition)){
+      warning("test.condition was specified without a condition vector. Ignoring test.condition.", call. = FALSE)
+    }
+    if (!is.null(null.condition)){
+      warning("null.condition was specified without a condition vector. Ignoring null.condition.", call. = FALSE)
+    }
+    
     # same as above, account for added duration data
     if (is.null(duration)) {
       min.duration <- 1

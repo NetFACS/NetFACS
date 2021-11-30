@@ -1,7 +1,7 @@
 # NetFACS 0.2.0.9000
 
 - Networks created by the NetFACS package are now of class tbl_graph as well as igraph
-- netfacs() now gives more informative error messages
+- netfacs() function now gives more informative error messages
 - Now imports dplyr, ggraph, magrittr, tibble, tidygraph and tidyr
 
 # NetFACS 0.2.0
