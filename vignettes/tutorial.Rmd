@@ -15,7 +15,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -463,8 +462,8 @@ all.net <-
                   link = "unweighted")
 ```
 
-
 In this network, dyadic connections between Action Units mean that they occur more often together than would be expected given their own likelihood and the number of elements per event. When plotting this network, we can say 'clusters = TRUE'. In that case, 'igraph' has a community detection algorithm (groups of AUs that form clusters). 
+
 ```{r all.plot, fig.width=8, fig.height=8, fig.align='center', message=F}
 network.plot(
   netfacs.graph = all.net,
@@ -575,6 +574,7 @@ plot(size.plot)
 What the table and plot show us is that angry faces are actually quite complex, compared to the other emotions: events containing 0-3 Action Units are basically absent; combinations of 5, 6 and 8 Action Units are significantly more common than expected. Combinations of 4 Action Units are common (making up more than a third of cases), but this is within the range of combination sizes for all emotions.
 
 If we do the same for happy faces, we see a very different pattern
+
 ```{r happy, echo=F}
 happy.face <-
   netfacs(
@@ -596,9 +596,7 @@ kable(
 )
 ```
 
-In happy faces, combinations of 3 elements are by far the most likely, while all other combination sizes occur less than expected.
-
-
+In happy faces, combinations of 2 elements are by far the most likely, while all other combination sizes occur less than expected.
 
 ## Entropy
 
