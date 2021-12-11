@@ -1,4 +1,4 @@
-# NetFACS 0.2.0.9000
+# NetFACS 0.3.0
 
 - Networks created by the NetFACS package are now of class tbl_graph as well as igraph
 - netfacs() function now gives more informative error messages

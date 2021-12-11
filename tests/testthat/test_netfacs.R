@@ -1,13 +1,5 @@
 test_that("condition specified calculations are correct",{
-  expect_equal(netfacs(d.sim.with.context, 
-                       condition = rownames(d.sim.with.context), 
-                       test.condition = "a", 
-                       combination.size = 2,
-                       ran.trials = 500, 
-                       use_parallel = FALSE,
-                       n_cores = 1),
-               res.single.core.with.context, 
-               tolerance = 0.13)
+  skip_on_cran()
   expect_equal(netfacs(d.sim.with.context, 
                        condition = rownames(d.sim.with.context), 
                        test.condition = "a", 
@@ -17,23 +9,31 @@ test_that("condition specified calculations are correct",{
                        n_cores = 6),
                res.multi.core.with.context, 
                tolerance = 0.13)
-})
-test_that("condition NOT specified calculations are correct",{
-  # single core
-  expect_equal(netfacs(d.sim.no.context, 
-                       ran.trials = 500,
+  expect_equal(netfacs(d.sim.with.context, 
+                       condition = rownames(d.sim.with.context), 
+                       test.condition = "a", 
                        combination.size = 2,
+                       ran.trials = 500, 
                        use_parallel = FALSE,
                        n_cores = 1),
-               res.single.core.no.context, 
-               tolerance = 0.11)
-  # multi core
+               res.single.core.with.context, 
+               tolerance = 0.13)
+})
+test_that("condition NOT specified calculations are correct",{
+  skip_on_cran()
   expect_equal(netfacs(d.sim.no.context, 
                        ran.trials = 500, 
                        combination.size = 2,
                        use_parallel = TRUE,
                        n_cores = 6),
                res.multi.core.no.context, 
+               tolerance = 0.11)
+  expect_equal(netfacs(d.sim.no.context, 
+                       ran.trials = 500,
+                       combination.size = 2,
+                       use_parallel = FALSE,
+                       n_cores = 1),
+               res.single.core.no.context, 
                tolerance = 0.11)
 })
 test_that("error message is given when data has NAs",{
