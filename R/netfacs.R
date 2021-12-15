@@ -391,6 +391,9 @@ netfacs <- function(data,
                                           tail = tail, 
                                           duration = duration,
                                           min.duration = min.duration)
+    # order boot prob to match rs.test
+    boot.prob <-
+      boot.prob[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
     
     ### for specificity, divide how often the combination occurs in the test condition by the total count (test + null condition)
     null.count <- rs.null$count[match(rs.test$combination, rs.null$combination)]
@@ -565,6 +568,9 @@ netfacs <- function(data,
                                           boot.prob = boot.prob, 
                                           tail = tail, 
                                           duration = duration)
+    # order boot prob to match rs.test
+    boot.prob <-
+      boot.prob[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
     
     ##### combination size information per event; shuffle so that the number of time each element appears is kept constant, but number of elements per row differs
     event.prob <- do.call(cbind, lapply(1:ran.trials, function(x) {
@@ -729,8 +735,7 @@ calc_effect_pval_pincrease <- function(rs.test, boot.prob, tail, duration,
     "pvalue",
     "prob.increase"
   )]
-  boot.prob <-
-    boot.prob[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
+  
   rs.test <-
     rs.test[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
   rs.test <- rs.test[rs.test$combination!='NA' & !is.na(rs.test$combination),]
