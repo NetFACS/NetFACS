@@ -76,7 +76,7 @@
 #' @importFrom Rfast rowsums rowmeans Table
 #'
 #'
-#' @author Alex Mielke
+#' @author Alex Mielke, Alan V. Rincon
 #' @export
 #'
 #' @examples
@@ -386,14 +386,14 @@ netfacs <- function(data,
       x$boot.prob
     }))
     
-    rs.test <- calc_effect_pval_pincrease(rs.test = rs.test, 
-                                          boot.prob = boot.prob, 
-                                          tail = tail, 
-                                          duration = duration,
-                                          min.duration = min.duration)
-    # order boot prob to match rs.test
-    boot.prob <-
-      boot.prob[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
+    x.res <- calc_effect_pval_pincrease(rs.test = rs.test, 
+                                        boot.prob = boot.prob, 
+                                        tail = tail, 
+                                        duration = duration,
+                                        min.duration = min.duration)
+    
+    rs.test <- x.res$rs.test
+    boot.prob <- x.res$boot.prob
     
     ### for specificity, divide how often the combination occurs in the test condition by the total count (test + null condition)
     null.count <- rs.null$count[match(rs.test$combination, rs.null$combination)]
@@ -564,13 +564,12 @@ netfacs <- function(data,
       x$boot.prob
     }))
     
-    rs.test <- calc_effect_pval_pincrease(rs.test = rs.test, 
+    x.res <- calc_effect_pval_pincrease(rs.test = rs.test, 
                                           boot.prob = boot.prob, 
                                           tail = tail, 
                                           duration = duration)
-    # order boot prob to match rs.test
-    boot.prob <-
-      boot.prob[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
+    rs.test <- x.res$rs.test
+    boot.prob <- x.res$boot.prob
     
     ##### combination size information per event; shuffle so that the number of time each element appears is kept constant, but number of elements per row differs
     event.prob <- do.call(cbind, lapply(1:ran.trials, function(x) {
@@ -736,9 +735,18 @@ calc_effect_pval_pincrease <- function(rs.test, boot.prob, tail, duration,
     "prob.increase"
   )]
   
+  # order boot prob to match rs.test
+  boot.prob <-
+    boot.prob[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
+  
   rs.test <-
     rs.test[order(rs.test$combination.size, -1 * as.numeric(rs.test$count)), ]
   rs.test <- rs.test[rs.test$combination!='NA' & !is.na(rs.test$combination),]
   
-  rs.test
+              
+  return(
+    list(rs.test = rs.test,
+         boot.prob = boot.prob)  
+  )
+  
 }

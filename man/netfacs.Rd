@@ -122,5 +122,5 @@ angry.face$event.size.information
 }
 }
 \author{
-Alex Mielke
+Alex Mielke, Alan V. Rincon
 }

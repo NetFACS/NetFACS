@@ -1,3 +1,6 @@
+# NetFACS 0.3.1
+- Fix so that the order of elements in random probabilities matches the order of elements in the results of the netfacs() function 
+
 # NetFACS 0.3.0
 
 - Networks created by the NetFACS package are now of class tbl_graph as well as igraph
