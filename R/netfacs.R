@@ -575,7 +575,8 @@ netfacs <- function(data,
   # summarize results -------------------------------------------------------
   
   # order res and boot 
-  boot.prob <- boot.prob[order(res$combination.size, -res$count), ]
+  used.data$random.prob <- 
+    used.data$random.prob[order(res$combination.size, -res$count), ]
   res <- res[order(res$combination.size, -res$count), ]
   
   res <-
