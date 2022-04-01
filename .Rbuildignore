@@ -19,3 +19,4 @@ removed c++ functions/*
 cran-comments.md
 notes/
 data-raw/
+^CRAN-SUBMISSION$

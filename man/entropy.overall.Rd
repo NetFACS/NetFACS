@@ -17,7 +17,7 @@ Function returns the ratio of observed entropy/expected entropy.
   Ratios closer to 0 are more ordered; ratios closer to 1 are more random.
 }
 \description{
-Establishes how'ordered' the data is: values close to 0 indicate that
+Establishes how 'ordered' the data is: values close to 0 indicate that
 combinations are highly repetitive and predictable, while values close to 1
 indicate that combinations are equiprobable and prediction of future
 combinations is difficult
