@@ -11,7 +11,7 @@ get_active_elements(m)
 must contain the element names}
 }
 \value{
-
+A list of vectors
 }
 \description{
 Extract active elements from matrix

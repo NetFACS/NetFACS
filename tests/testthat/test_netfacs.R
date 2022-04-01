@@ -1,40 +1,55 @@
-test_that("condition specified calculations are correct",{
+test_that("joint and single element probabilities are calculated correctly", {
   skip_on_cran()
-  expect_equal(netfacs(d.sim.with.context, 
-                       condition = rownames(d.sim.with.context), 
-                       test.condition = "a", 
-                       combination.size = 2,
-                       ran.trials = 500, 
-                       use_parallel = TRUE,
-                       n_cores = 6),
-               res.multi.core.with.context, 
-               tolerance = 0.13)
-  expect_equal(netfacs(d.sim.with.context, 
-                       condition = rownames(d.sim.with.context), 
-                       test.condition = "a", 
-                       combination.size = 2,
-                       ran.trials = 500, 
-                       use_parallel = FALSE,
-                       n_cores = 1),
-               res.single.core.with.context, 
-               tolerance = 0.13)
-})
-test_that("condition NOT specified calculations are correct",{
-  skip_on_cran()
-  expect_equal(netfacs(d.sim.no.context, 
-                       ran.trials = 500, 
-                       combination.size = 2,
-                       use_parallel = TRUE,
-                       n_cores = 6),
-               res.multi.core.no.context, 
-               tolerance = 0.11)
-  expect_equal(netfacs(d.sim.no.context, 
-                       ran.trials = 500,
-                       combination.size = 2,
-                       use_parallel = FALSE,
-                       n_cores = 1),
-               res.single.core.no.context, 
-               tolerance = 0.11)
+  # condition is specified
+  res.boot <- netfacs(d.sim.with.context,
+                      condition = rownames(d.sim.with.context),
+                      test.condition = "a",
+                      combination.size = 2,
+                      ran.trials = 1000,
+                      use_parallel = TRUE,
+                      n_cores = detectCores()-1)
+  # condition is not specified
+  res.rand <- netfacs(d.sim.no.context,
+                      condition = NULL,
+                      test.condition = NULL,
+                      combination.size = 2,
+                      ran.trials = 1000,
+                      use_parallel = TRUE,
+                      n_cores = detectCores()-1)
+  p_tol <- 0.02
+  
+  p2 <- res.boot$result %>% filter(combination == "2") %>% pull(observed.prob)
+  p3and10 <- res.boot$result %>% filter(combination == "3_10") %>% pull(observed.prob)
+  p3and10.expected <- context.def["a", "3"]*context.def["a", "10"]
+  
+  res.cond.boot <- network.conditional(res.boot)
+  
+  p5given2 <- 
+    res.cond.boot$conditional.probalities %>% 
+    filter(elementA == "5" & elementB == "2") %>% 
+    pull(Probability_AgivenB)
+  
+  p4 <- res.rand$result %>% filter(combination == "4") %>% pull(observed.prob)
+  p8and9 <- res.rand$result %>% filter(combination == "8_9") %>% pull(observed.prob)
+  p8and9.expected <- p.no.context[["8"]]*p.no.context[["9"]]
+  
+  res.cond.rand <- network.conditional(res.rand)
+  
+  p1given6 <- 
+    res.cond.rand$conditional.probalities %>% 
+    filter(elementA == "1" & elementB == "6") %>% 
+    pull(Probability_AgivenB)
+  
+  # single element probability
+  expect_equal(p4, p.no.context[["4"]], tolerance = p_tol)
+  expect_equal(p2, context.def["a", "2"], tolerance = p_tol)
+  # joint probabilities
+  expect_equal(p8and9, p8and9.expected, tolerance = 0.3)
+  expect_equal(p3and10, p3and10.expected, tolerance = 0.3)
+  # conditional probabilities
+  expect_equal(p1given6, jp.no.context["6", "1"], tolerance = p_tol)
+  expect_equal(p5given2, joint.prob.matrix$a["2", "5"], tolerance = p_tol)
+  
 })
 test_that("error message is given when data has NAs",{
   expect_error({

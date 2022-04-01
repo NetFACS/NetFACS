@@ -317,7 +317,7 @@ possible_combinations <- function(elements, maxlen) {
 #' @param m A binary matrix where 1 indicates an element was active. colnames(m)
 #'   must contain the element names
 #'
-#' @return
+#' @return A list of vectors
 get_active_elements <- function(m) {
   elements <- lapply(1:nrow(m), function(x) {
     colnames(m)[m[x, ] == 1]
@@ -328,7 +328,7 @@ get_active_elements <- function(m) {
 #'
 #' @param x A character vector of AU combinations, sep by _
 #'
-#' @return
+#' @return A vector
 calculate_combination_size <- function(x) {
   unlist(
     lapply(
@@ -346,8 +346,6 @@ calculate_combination_size <- function(x) {
 #'
 #' @param d A dataframe, result of \code{\link{probability_of_combination}}
 #' @param single.units A character vector of single AUs
-#'
-#' @return
 add_inactive_single_units <- function(d, single.units) {
   innactive.single.units <-
     single.units[!single.units %in% d$combination]

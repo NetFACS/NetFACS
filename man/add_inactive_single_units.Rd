@@ -11,9 +11,6 @@ add_inactive_single_units(d, single.units)
 
 \item{single.units}{A character vector of single AUs}
 }
-\value{
-
-}
 \description{
 Add inactive (missing) single units
 }

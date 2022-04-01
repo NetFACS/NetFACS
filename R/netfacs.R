@@ -149,7 +149,6 @@ netfacs <- function(data,
     combination.size <- max(Rfast::rowsums(data))
   }
   
-  
   # condition is specified ---------------------------------------------
   
   # data preparation happens for two different cases: either 'condition' is set, in which case the 'test.condition' is tested against all other cases or against one specific 'null.condition'; alternatively, if no condition is set, the probabilities are compared with random probabilities
@@ -193,7 +192,6 @@ netfacs <- function(data,
       if (!all(lengths(control) == length(control[[1]]))) {
         stop("Control objects must be of equal lenghts.")
       }
-      
       control.obj <- apply(do.call(cbind, control), 1, function(k) {
         k2 <- gsub(k, pattern = "[^[:alnum:]]", replacement = "")
         paste(k2, collapse = "_")
@@ -270,7 +268,7 @@ netfacs <- function(data,
       # set sample weight of missing to 0
       rl.null.ratio$weight[is.na(rl.null.ratio$weight)] <- 0
       ignored <- paste0(unique(excluded$control), collapse = ", ")
-      warning("The following control values are present in null.condition but not test.condition: ", ignored, ". These observations will be ignored during the bootstrapping proceedure.")
+      warning("The following control values are present in null.condition but not test.condition: ", ignored, ". These observations will be ignored during the bootstrapping procedure.")
     }
     
     # create probabilities for null and test datasets

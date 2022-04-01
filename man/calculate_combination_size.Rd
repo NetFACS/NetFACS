@@ -10,7 +10,7 @@ calculate_combination_size(x)
 \item{x}{A character vector of AU combinations, sep by _}
 }
 \value{
-
+A vector
 }
 \description{
 Calculate combination size

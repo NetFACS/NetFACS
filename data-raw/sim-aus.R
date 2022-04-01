@@ -9,7 +9,7 @@
 aus <- as.character(1:10)
 p <- c(0.1, 0.1, 0.1, 0.9, 0.1, 0.51, 0.9, 0.1, 0.9, 0.0)
 p <- setNames(p, aus)
-n_obs <- 500
+n_obs <- 1000
 
 # joint probability matrix
 jp <- matrix(0, nrow = length(p), ncol = length(p), 
@@ -73,13 +73,13 @@ jpb <- jpa
 jpa["2", "5"] <- 0.9 # if 2 is active, 5 has 95% prob 
 jpb["8", "1"] <- 0.9 # if 8 is active, 1 has 95% prob
 
-jpab <- 
+joint.prob.matrix <- 
   list(a = jpa, 
        b = jpb)
 
 # sample
 d.sim.with.context <- sample_contexts(context.def, 
-                                      jp = jpab,
+                                      jp = joint.prob.matrix,
                                       n_obs = 500)
 
 head(d.sim.with.context)
@@ -89,41 +89,41 @@ head(d.sim.with.context)
 
 # these results will be used in unit tests
 
-res.multi.core.no.context <- 
-  netfacs(d.sim.no.context, 
-          ran.trials = 500, 
-          combination.size = 2,
-          use_parallel = TRUE,
-          n_cores = 6)
-res.single.core.no.context <- 
-  netfacs(d.sim.no.context, 
-          ran.trials = 500,
-          combination.size = 2,
-          use_parallel = FALSE,
-          n_cores = 1)
-
-
-res.multi.core.with.context <- 
-  netfacs(d.sim.with.context, 
-          condition = rownames(d.sim.with.context), 
-          test.condition = "a", 
-          combination.size = 2,
-          ran.trials = 500, 
-          use_parallel = TRUE,
-          n_cores = 6)
-res.single.core.with.context <- 
-  netfacs(d.sim.with.context, 
-          condition = rownames(d.sim.with.context), 
-          test.condition = "a", 
-          combination.size = 2,
-          ran.trials = 500, 
-          use_parallel = FALSE,
-          n_cores = 1)
+# res.multi.core.no.context <- 
+#   netfacs(d.sim.no.context, 
+#           ran.trials = 500, 
+#           combination.size = 2,
+#           use_parallel = TRUE,
+#           n_cores = 6)
+# res.single.core.no.context <- 
+#   netfacs(d.sim.no.context, 
+#           ran.trials = 500,
+#           combination.size = 2,
+#           use_parallel = FALSE,
+#           n_cores = 1)
+# 
+# 
+# res.multi.core.with.context <- 
+#   netfacs(d.sim.with.context, 
+#           condition = rownames(d.sim.with.context), 
+#           test.condition = "a", 
+#           combination.size = 2,
+#           ran.trials = 500, 
+#           use_parallel = TRUE,
+#           n_cores = 6)
+# res.single.core.with.context <- 
+#   netfacs(d.sim.with.context, 
+#           condition = rownames(d.sim.with.context), 
+#           test.condition = "a", 
+#           combination.size = 2,
+#           ran.trials = 500, 
+#           use_parallel = FALSE,
+#           n_cores = 1)
 
 
 # get conditional probabilities -------------------------------------------
 
-res.net.cond <- network.conditional(res.single.core.no.context)
+# res.net.cond <- network.conditional(res.single.core.no.context)
 
 # p
 # jp
@@ -131,16 +131,28 @@ res.net.cond <- network.conditional(res.single.core.no.context)
 
 # save --------------------------------------------------------------------
 
+p.no.context <- p
+jp.no.context <- jp
+
 # save for internal package data
-usethis::use_data(d.sim.no.context, 
-                  res.multi.core.no.context, 
-                  res.single.core.no.context,
+usethis::use_data(d.sim.no.context,
+                  p.no.context,
+                  jp.no.context,
                   d.sim.with.context, 
-                  res.multi.core.with.context, 
-                  res.single.core.with.context,
-                  res.net.cond,
+                  context.def, 
+                  joint.prob.matrix,
                   internal = TRUE, 
                   overwrite = TRUE)
+
+# usethis::use_data(d.sim.no.context, 
+#                   res.multi.core.no.context, 
+#                   res.single.core.no.context,
+#                   d.sim.with.context, 
+#                   res.multi.core.with.context, 
+#                   res.single.core.with.context,
+#                   res.net.cond,
+#                   internal = TRUE, 
+#                   overwrite = TRUE)
 
 
 # check results -----------------------------------------------------------
