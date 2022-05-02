@@ -607,5 +607,6 @@ netfacs <- function(data,
       event.size.information = event.size.summary
     )
   
+  class(out) <- "netfacs"
   return(out)
 }
