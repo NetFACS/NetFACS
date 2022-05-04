@@ -7,11 +7,16 @@
 #'
 #' @return Function returns a ggplot showing for each combination size the observed and expected probabilities of occurrance
 #'
+#' @importFrom dplyr across
+#' @importFrom dplyr filter
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
 #' @importFrom ggplot2 geom_point ylim xlab ylab theme_bw
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 annotate
 #' @importFrom ggplot2 aes
 #' @importFrom ggplot2 ggtitle
+#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 #'
@@ -32,10 +37,6 @@ event.size.plot <- function(netfacs.data) {
   plot.netfacs <-
     netfacs.data$event.size.information
 
-  plot.netfacs <-
-    plot.netfacs[plot.netfacs$observed.prob > 0 |
-      plot.netfacs$expected.prob > 0, ]
-
   # if comparison was with permutation, set conditions to 'all cases'
   if (is.null(netfacs.data$used.parameters$test.condition)) {
     netfacs.data$used.parameters$test.condition <- "all cases"
@@ -45,29 +46,26 @@ event.size.plot <- function(netfacs.data) {
   }
 
   # make a plot
-  plot.data <- data.frame(
-    combination.size = c(
-      plot.netfacs$combination.size,
-      plot.netfacs$combination.size
-    ),
-    prob = c(
-      plot.netfacs$expected.prob,
-      plot.netfacs$observed.prob
-    ),
-    type = c("expected probability", "observed probability")
-  )
-  plot.data$type <- sort(plot.data$type)
-  plot.data$combination.size <-
-    as.factor(plot.data$combination.size)
-
+  plot.data <-
+    plot.netfacs %>%
+    filter(.data$observed.prob > 0 | .data$expected.prob > 0) %>%
+    select(.data$combination.size, .data$observed.prob, .data$expected.prob) %>%
+    tidyr::pivot_longer(c("observed.prob", "expected.prob"),
+                        names_to = "type", values_to = "prob") %>%
+    mutate(
+      across(.data$type, 
+             ~ifelse(. == "expected.prob",
+                     "expected probability", "observed probability"))) %>% 
+    mutate(
+      across(.data$combination.size, 
+             ~factor(., 
+                     levels = sort(unique(as.numeric(.data$combination.size))))))
+  
   p <- ggplot(
     plot.data,
-    aes(
-      x = .data$combination.size,
-      y = .data$prob,
-      color = .data$type
-    )
-  ) +
+    aes(x = .data$combination.size,
+        y = .data$prob,
+        color = .data$type)) +
     xlab("element size") +
     ylab("event size probability") +
     ggtitle(paste(
@@ -77,8 +75,7 @@ event.size.plot <- function(netfacs.data) {
         " and ",
         netfacs.data$used.parameters$null.condition
       ),
-      collapse = ""
-    )) +
+      collapse = "")) +
     geom_point(size = 3, alpha = 0.7) +
     ylim(0, 1) +
     theme_bw()
