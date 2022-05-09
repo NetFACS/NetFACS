@@ -69,7 +69,7 @@ Function returns for each level of the condition a list equivalent to
 \description{
 Take dataset and report observed and expected likelihood that elements and
 combinations of elements occur in this dataset, and whether this differs from
-a null condition Expected values are based on bootstraps of null
+a null condition. Expected values are based on bootstraps of null
 distribution, so the values represent distribution of element co-occurrence
 under null condition; or permutations of the observed distribution to test it
 against 'random'. The resulting object is the basis for most other functions

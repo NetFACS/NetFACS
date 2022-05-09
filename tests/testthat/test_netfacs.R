@@ -69,7 +69,7 @@ test_that("error message is given when data has NAs",{
       ran.trials = 20)
   })
 })
-test_that("error message is given when condidions are not misspecified",{
+test_that("error message is given when condidions are misspecified",{
   expect_error({
     netfacs(
       data = emotions_set[[1]],
