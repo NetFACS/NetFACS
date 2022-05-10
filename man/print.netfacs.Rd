@@ -4,10 +4,12 @@
 \alias{print.netfacs}
 \title{Print method for objects of class \code{netfacs}}
 \usage{
-\method{print}{netfacs}(x)
+\method{print}{netfacs}(x, ...)
 }
 \arguments{
 \item{x}{An object of class \code{netfacs}}
+
+\item{...}{Additional arguments that would be passed to or from other methods}
 }
 \description{
 Print method for objects of class \code{netfacs}
