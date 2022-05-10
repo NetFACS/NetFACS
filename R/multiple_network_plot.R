@@ -5,7 +5,7 @@
 #' function
 #'
 #' @param netfacs.graphs List of network objects resulting from
-#'   \code{\link{netfacs.network}} function or
+#'   \code{\link{netfacs_multiple}} function or
 #'   \code{\link{multiple.netfacs.network}} function
 #' @param sig.level Numeric between 0 and 1. P value used to determine whether
 #'   nodes are significant. Default = 0.01.
@@ -37,7 +37,7 @@
 #'
 #' @examples
 #' data(emotions_set)
-#' emo.faces <- multiple.netfacs(
+#' emo.faces <- netfacs_multiple(
 #'   data = emotions_set[[1]],
 #'   condition = emotions_set[[2]]$emotion,
 #'   duration = NULL,

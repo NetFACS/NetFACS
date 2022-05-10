@@ -6,7 +6,7 @@
 #' element is present
 #'
 #' @param netfacs.list list of objects resulting from \code{\link{netfacs}} or
-#'   \code{\link{multiple.netfacs}}
+#'   \code{\link{netfacs_multiple}}
 #' @param min.prob minimum conditional probability that should be shown in the
 #'   graph
 #' @param min.count minimum number of times that a combination should occur
@@ -63,7 +63,7 @@
 #'
 #' @examples
 #' data(emotions_set)
-#' emo.faces <- multiple.netfacs(
+#' emo.faces <- netfacs_multiple(
 #'   data = emotions_set[[1]],
 #'   condition = emotions_set[[2]]$emotion,
 #'   ran.trials = 10,

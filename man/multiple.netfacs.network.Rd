@@ -15,7 +15,7 @@ multiple.netfacs.network(
 }
 \arguments{
 \item{netfacs.list}{list of multiple objects resulting from
-\code{\link{netfacs}} function or the \code{\link{multiple.netfacs}}
+\code{\link{netfacs}} function or the \code{\link{netfacs_multiple}}
 function}
 
 \item{link}{determines how nodes/elements are connected. 'unweighted' gives a
@@ -51,7 +51,7 @@ turns them into a network object (class \code{\link{igraph}} and
 }
 \examples{
 data(emotions_set)
-emo.faces <- multiple.netfacs(
+emo.faces <- netfacs_multiple(
   data = emotions_set[[1]],
   condition = emotions_set[[2]]$emotion,
   ran.trials = 10, # only for example

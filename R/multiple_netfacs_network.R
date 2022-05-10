@@ -5,7 +5,7 @@
 #' \code{\link{tbl_graph}}) that can be used for further plotting and analyses
 #'
 #' @param netfacs.list list of multiple objects resulting from
-#'   \code{\link{netfacs}} function or the \code{\link{multiple.netfacs}}
+#'   \code{\link{netfacs}} function or the \code{\link{netfacs_multiple}}
 #'   function
 #' @param link determines how nodes/elements are connected. 'unweighted' gives a
 #'   1 to significant connections and 0 to all others; 'weighted' gives the
@@ -43,7 +43,7 @@
 #'
 #' @examples
 #' data(emotions_set)
-#' emo.faces <- multiple.netfacs(
+#' emo.faces <- netfacs_multiple(
 #'   data = emotions_set[[1]],
 #'   condition = emotions_set[[2]]$emotion,
 #'   ran.trials = 10, # only for example

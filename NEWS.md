@@ -1,11 +1,15 @@
 # NetFACS 0.3.1.9003
 
-## Breaking changes
-- netfacs.extract() function argument "levels" changed to "combination.size" to be more consistent with arguments in other functions in the package. Default values of function arguments have also changed to become less strict.
+## Depricated functions and arguments
+- Several functions have been deprecated and replaced to avoid clashes when using method calls:
+  - multiple.netfacs() is replaced by netfacs_multiple()
+- netfacs.extract() function argument "levels" is deprecated. Instead a "combination.size" argument has been added to be more consistent with the arguments in other functions of this package. Default values of function arguments have also changed to become less strict.
 
 ## Other changes
 - Objects created using the netfacs() function are now of class "netfacs"
+- Objects created using the netfacs_multiple() function are now of class "netfacs_multiple"
 - Print method added for objects of class "netfacs"
+
 
 # NetFACS 0.3.1
 - Fix so that the order of elements in random probabilities matches the order of elements in the results of the netfacs() function 
