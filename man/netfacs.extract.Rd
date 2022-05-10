@@ -10,7 +10,8 @@ netfacs.extract(
   significance = 0.05,
   min.count = 0,
   min.prob = 0,
-  min.specificity = 0
+  min.specificity = 0,
+  level
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ which a combination should at least occur to be displayed.}
 \item{min.specificity}{numeric value between 0 and 1, suggesting the
 specificity a combination should at least have for the test condition to be
 displayed.}
+
+\item{level}{deprecated. Please use combination.size instead.}
 }
 \value{
 Function returns a dataframe that contains the results of the

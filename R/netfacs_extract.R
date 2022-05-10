@@ -15,6 +15,7 @@
 #' @param min.specificity numeric value between 0 and 1, suggesting the
 #'   specificity a combination should at least have for the test condition to be
 #'   displayed.
+#' @param level deprecated. Please use combination.size instead.
 #'
 #' @return Function returns a dataframe that contains the results of the
 #'   \code{\link{netfacs}} object. By default, returns all combinations
@@ -49,11 +50,18 @@ netfacs.extract <- function(netfacs.data,
                             significance = 0.05,
                             min.count = 0,
                             min.prob = 0,
-                            min.specificity = 0) {
+                            min.specificity = 0,
+                            level) {
 
   # set digits printed to 3, restore user state
   op <- options(digits = 3)         
   on.exit(options(op), add = TRUE) 
+  
+  if (!missing(level)) {
+    warning("argument level is deprecated; please use combination.size instead.", 
+            call. = FALSE)
+    combination.size <- level
+  }
 
   net.data <- netfacs.data$result 
   
