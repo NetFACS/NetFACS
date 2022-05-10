@@ -1,3 +1,12 @@
+# NetFACS 0.3.1.9003
+
+## Breaking changes
+- netfacs.extract() function argument "levels" changed to "combination.size" to be more consistent with arguments in other functions in the package. Default values of function arguments have also changed to become less strict.
+
+## Other changes
+- Objects created using the netfacs() function are now of class "netfacs"
+- Print method added for objects of class "netfacs"
+
 # NetFACS 0.3.1
 - Fix so that the order of elements in random probabilities matches the order of elements in the results of the netfacs() function 
 
