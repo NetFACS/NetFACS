@@ -103,14 +103,14 @@ head(d.sim.with.context)
 #           n_cores = 1)
 # 
 # 
-# res.multi.core.with.context <- 
-#   netfacs(d.sim.with.context, 
-#           condition = rownames(d.sim.with.context), 
-#           test.condition = "a", 
-#           combination.size = 2,
-#           ran.trials = 500, 
-#           use_parallel = TRUE,
-#           n_cores = 6)
+res.multi.core.with.context <-
+  netfacs(d.sim.with.context,
+          condition = rownames(d.sim.with.context),
+          test.condition = "a",
+          combination.size = 2,
+          ran.trials = 500,
+          use_parallel = TRUE,
+          n_cores = 7)
 # res.single.core.with.context <- 
 #   netfacs(d.sim.with.context, 
 #           condition = rownames(d.sim.with.context), 
@@ -141,6 +141,7 @@ usethis::use_data(d.sim.no.context,
                   d.sim.with.context, 
                   context.def, 
                   joint.prob.matrix,
+                  res.multi.core.with.context,
                   internal = TRUE, 
                   overwrite = TRUE)
 

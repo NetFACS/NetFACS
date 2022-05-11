@@ -77,7 +77,7 @@ netfacs.extract <- function(netfacs.data,
   
   net.data <- 
     net.data %>% 
-    filter(.data$combination.size %in% combination.size,
+    filter(.data$combination.size %in% {{combination.size}},
            .data$observed.prob >= min.prob,
            .data$count >= min.count,
            .data$specificity >= min.specificity,
