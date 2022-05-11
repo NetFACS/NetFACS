@@ -42,12 +42,9 @@ network.summary.graph <- function(netfacs.net) {
     data.frame(
       nr.elements = length(vertex.attributes(netfacs.net)$name),
       nr.edges = length(edge.attributes(netfacs.net)$weight),
-      density = edge_density(simplify(netfacs.net),
-        loops =
-          F
-      ),
+      density = edge_density(simplify(netfacs.net), loops = FALSE),
       transitivity = transitivity(simplify(netfacs.net), type = "global"),
-      diameter = diameter(simplify(netfacs.net), directed = F),
+      diameter = diameter(simplify(netfacs.net), directed = FALSE),
       degree_centralization = centr_degree(simplify(netfacs.net))$centralization,
       mean_distance = mean_distance(simplify(netfacs.net))
     )

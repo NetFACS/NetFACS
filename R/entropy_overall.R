@@ -35,37 +35,25 @@ entropy.overall <- function(netfacs.data) {
     netfacs.data$used.data$condition <-
       rep("all", times = nrow(netfacs.data$used.data$data))
   }
-  data <-
+  m <-
     as.matrix(netfacs.data$used.data$data[netfacs.data$used.data$condition ==
-      netfacs.data$used.parameters$test.condition, ])
-
-  # create all observed combinations as combinations of 0 and 1
-  data_mat <- unlist(lapply(1:nrow(data), function(x) {
-    return(paste(data[x, ], collapse = ""))
-  }))
-
-  # Count the number of occurrences for each unique combination
-  t <- table(data_mat) / length(data_mat)
-
-  # Calculate the information content of the observed data
-  data.entropy <- round(-sum(t * log2(t)), 2)
-
+                                            netfacs.data$used.parameters$test.condition, ])
+  
+  data.entropy <- information_entropy(m)
+  
   # create random entropy by shuffling which elements are observed in each row while keeping the number of elements the same
   ran.entropy <- lapply(1:100, function(b) {
-    ran.data <-
-      randomizeMatrix(samp = as.matrix(data), null.model = "richness") # select outcome of shuffle
-    ran_mat <- unlist(lapply(1:nrow(ran.data), function(x) {
-      # reduce to combinations
-      return(paste(ran.data[x, ], collapse = ""))
-    }))
-    t <- table(ran_mat) / length(ran_mat)
-    return(round(-sum(t * log2(t)), 2)) # calculate random entropy
+    # select outcome of shuffle
+    ran.data <- randomizeMatrix(samp = as.matrix(m), null.model = "richness") 
+    # calculate random entropy
+    return(information_entropy(ran.data)) 
   })
-
-  ran.entropy <-
-    round(mean(unlist(ran.entropy)), 2) # use mean of randomised entropy values to create 'expected' entropy
-  entropy.ratio <-
-    round(data.entropy / ran.entropy, 2) # create entropy ratio
+  
+  # use mean of randomized entropy values to create 'expected' entropy
+  ran.entropy <-round(mean(unlist(ran.entropy)), 2) 
+  # create entropy ratio
+  entropy.ratio <- round(data.entropy / ran.entropy, 2) 
+  
   return(
     data.frame(
       observed.entropy = data.entropy,
@@ -74,3 +62,20 @@ entropy.overall <- function(netfacs.data) {
     )
   )
 }
+
+# helper ------------------------------------------------------------------
+
+information_entropy <- function(m) {
+  # m: binary matrix
+  # create all observed combinations as combinations of 0 and 1
+  mcombs <- unlist(lapply(1:nrow(m), function(x) {
+    return(paste(m[x, ], collapse = ""))
+  }))
+  
+  # Probability for each unique combination
+  p <- table(mcombs) / length(mcombs)
+  
+  # Calculate the information content of the observed data
+  round(-sum(p * log2(p)), 2)
+}
+
