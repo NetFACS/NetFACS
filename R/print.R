@@ -12,11 +12,11 @@ print.netfacs <- function(x, ...) {
   n_ran_trials <- ncol(x$used.data$random.prob)
   cat(
     "A netfacs object: \n",
-    elements, "elements \n",
-    n_combinations, "element combinations \n",
+    "Number of elements:", elements, "\n",
+    "Number of element combinations:", n_combinations, "\n",
     "Maximum combination size:", max_comb_size, "\n",
-    n_events, "observations \n",
+    "Number of observations:", n_events, "\n",
     "Method:", method, "\n", 
-    n_ran_trials, "random trials"
+    "Random trials:", n_ran_trials
   )
 }
