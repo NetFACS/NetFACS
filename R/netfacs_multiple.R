@@ -65,7 +65,15 @@ netfacs_multiple <- function(data,
     return(xx)
   })
   names(out) <- conditions
-  class(out) <- "netfacs_multiple"
+  
+  # set class and attributes
+  out <- structure(
+    out, 
+    class = "netfacs_multiple",
+    stat_method = "Bootstrap",
+    random_trials = ran.trials
+  )
+  
   return(out)
 }
 

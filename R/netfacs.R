@@ -290,11 +290,13 @@ netfacs <- function(data,
     rs.test$combination.size <- calculate_combination_size(rs.test$combination)
     
     # for single units that are not active during this specific condition, add them anyways with the information that they did not show up
-    rs.null <- add_inactive_single_units(rs.null,
-                                         single.units = colnames(d.null$data)
+    rs.null <- add_inactive_single_units(
+      rs.null,
+      single.units = colnames(d.null$data)
     )
-    rs.test <- add_inactive_single_units(rs.test,
-                                         single.units = colnames(d.test$data)
+    rs.test <- add_inactive_single_units(
+      rs.test,
+      single.units = colnames(d.test$data)
     )
     
     # create an object with the observed event sizes
@@ -599,6 +601,8 @@ netfacs <- function(data,
     null.condition = null.condition
   )
   
+  stat_method <- ifelse(is.null(used.data$condition), "Permutation", "Bootstrap")
+  
   out <-
     list(
       result = res,
@@ -607,6 +611,14 @@ netfacs <- function(data,
       event.size.information = event.size.summary
     )
   
-  class(out) <- "netfacs"
+  # set class and attributes
+  out <-
+    structure(
+      out,
+      class = "netfacs",
+      stat_method = stat_method,
+      random_trials = ran.trials
+    )
+  
   return(out)
 }
