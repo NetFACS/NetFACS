@@ -10,13 +10,25 @@ netfacs.reciprocity(netfacs.data)
 \item{netfacs.data}{object resulting from netfacs() function}
 }
 \value{
-Function returns a data frame with each combination, the reciprocity of conditional occurrence from -1 (one element entirely depends on the other, but not vice versa) to 1 (both elements always occur together)
+Function returns a data frame with each combination, the reciprocity
+  of conditional occurrence from -1 (one element entirely depends on the
+  other, but not vice versa) to 1 (both elements always occur together)
 
-The directions and conditional probabilities of both elements are also returned
+The directions and conditional probabilities of both elements are
+  also returned
 }
 \description{
-For all dyadic combinations that ever appear, this function calculates how reciprocal the conditional probabilities (i.e. probability of A given B, and B given A) of the two elements are. Combinations that are highly reciprocal indicate that the two elements always occur together and might represent a fixed combination, while low reciprocity might indicate that one element is an extension of the other. Values approaching -1 indicate that one element is strongly dependent on the other, but this is not reciprocated; values around 0 indicate that neither is conditional on the other; and values approaching 1 indicate that both values are conditional on each other.
-If P[A|B] is the larger conditional probability, the reciprocity is calculated as reciprocity = ((P[B|A]/P[A|B]) - (P[A|B] - P[B|A])) * P[A|B].
+For all dyadic combinations that ever appear, this function calculates how
+reciprocal the conditional probabilities (i.e. probability of A given B, and
+B given A) of the two elements are. Combinations that are highly reciprocal
+indicate that the two elements always occur together and might represent a
+fixed combination, while low reciprocity might indicate that one element is
+an extension of the other. Values approaching -1 indicate that one element is
+strongly dependent on the other, but this is not reciprocated; values around
+0 indicate that neither is conditional on the other; and values approaching 1
+indicate that both values are conditional on each other. If P[A|B] is the
+larger conditional probability, the reciprocity is calculated as reciprocity
+= ((P[B|A]/P[A|B]) - (P[A|B] - P[B|A])) * P[A|B].
 }
 \examples{
 ### how do angry facial expressions differ from non-angry ones?
