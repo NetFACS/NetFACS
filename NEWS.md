@@ -1,7 +1,7 @@
-# NetFACS 0.3.1.9007
+# NetFACS 0.4.0
 
 ## Depricated functions and arguments
-- Several functions have been deprecated and replaced to avoid clashes when using method calls:
+- The following functions have been deprecated and replaced to avoid clashes when using method calls:
   - multiple.netfacs() is replaced by netfacs_multiple()
   - netfacs.extract() is replaced by netfacs_extract()
 - netfacs.extract() function argument "levels" is also deprecated. Instead a "combination.size" argument has been added to be more consistent with the arguments in other functions of this package. Default values of function arguments have changed to return all results, without filtering.
