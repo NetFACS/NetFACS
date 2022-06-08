@@ -212,10 +212,9 @@ As this table is very large in many instances, we can extract results more easil
 
 ```{r extract.anger, cache=T}
 # extract angry face information for the first level (single elements)
-
-anger.aus <- netfacs.extract(
+anger.aus <- netfacs_extract(
   netfacs.data = angry.face,
-  level = 1, # only looking at combinations with 1 element (here, Action Units)
+  combination.size = 1, # only looking at combinations with 1 element (here, Action Units)
   min.count = 1, # minimum number of times that the combination should occur
   min.prob = 0, # minimum observed probability of the combination
   min.specificity = 0, # minimum specificity of the combination
@@ -227,7 +226,7 @@ anger.aus <- netfacs.extract(
 kable(anger.aus[order(-1 * anger.aus$effect.size),],
       align = "c",
       row.names = FALSE,
-      caption = "Result of netfacs.extract for single elements")
+      caption = "Result of netfacs_extract for single elements")
 ```
 
 The results show that in angry faces, the Action Units 4, 7, 14, 17, 18, 23, and 24 are significantly more common than would be expected given the information we have from the other emotions. AU23, for example, occurs 36 times, which is 80% of all 'angry' faces. Expected would be 2.5%, so we have an increase in probability of 32 times. When we see AU 23, we can be 84% sure that this is an angry face (specificity).
@@ -254,9 +253,9 @@ This already gives us an important insight into the structure of facial expressi
 ```{r third.level.anger}
 # extract information for three-element-combinations in angry faces
 
-anger.aus3 <- netfacs.extract(
+anger.aus3 <- netfacs_extract(
   netfacs.data = angry.face,
-  level = 3, # only looking at combinations with 3 elements (here, Action Units)
+  combination.size = 3, # only looking at combinations with 3 elements (here, Action Units)
   min.count = 5, # minimum number of times that the combination should occur
   min.prob = 0, # minimum observed probability of the combination
   min.specificity = 0, # minimum specificity of the combination
@@ -268,7 +267,7 @@ anger.aus3 <- netfacs.extract(
 kable(head(anger.aus3[order(-1 * anger.aus3$effect.size),]),
       align = "c",
       row.names = FALSE,
-      caption = "Results of netfacs.extract function for combinations of three elements")
+      caption = "Results of netfacs_extract function for combinations of three elements")
 ```
 
 Here, we see that for example combination AU4_17_23 appears 28 times (62% of all angry faces), which is 44 times more than we would have expected. Many of the combinations only occur in the angry condition, and they get assigned an 'increased probability' value of NA. That many of these higher-order combinations contain very similar combinations (e.g. AU4_17_23 and AU4_17_24) can mean two things: either, they are significant because all these elements declare anger and they are combined randomly; or they are all part of one standard higher-order combination (e.g. AU4_17_23_24) that occurs over and over again. By looking at the different levels (3rd order, 4th order etc), we can resolve this question.
@@ -332,10 +331,10 @@ Now that we have our information about the probabilities of different elements a
 
 ## Overlap networks
 
-Let's start with the bipartite overlap network: we can visualise which conditions (in our case, emotions), share Action Units. To make the process easier, there is a 'multiple.netfacs' function that runs the netfacs function for all levels of a condition against all others.
+Let's start with the bipartite overlap network: we can visualise which conditions (in our case, emotions), share Action Units. To make the process easier, there is a 'netfacs_multiple' function that runs the netfacs function for all levels of a condition against all others.
 
 ```{r multi.facs}
-multi.facs <- multiple.netfacs(
+multi.facs <- netfacs_multiple(
   data = au.data,
   condition = au.info$emotion,
   ran.trials = 1000,
