@@ -20,7 +20,9 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%", 
+  message = FALSE, 
+  warning = FALSE
 )
 ```
 
@@ -29,7 +31,6 @@ library(NetFACS)
 library(ggplot2)
 library(knitr)
 ```
-
 
 # Introduction
 
@@ -43,8 +44,7 @@ In this tutorial, we will mainly talk about FACS and emotions, simply because th
 
 As the name indicates, NetFACS is based on the use of networks for FACS data. Not all analyses require an understanding of networks: at its most basic, NetFACS can simply represent the probabilities that Action Units occur in a context or not, or contrast AU use between two conditions. Networks become interesting once we talk about the connections between Action Units, or the connections between AUs and contexts that goes past the pure occurrence. All analyses are based on different concepts of probability, which are explained below. Probabilities are used to quantify the strength of connection between AUs, and between AUs and contexts. The third pillar of the package, next to networks and probabilities, are two different resampling methods: permutations and bootstrapping. These are used to determine what occurrence of AUs would be expected under random circumstances or if the data were taken from a different population. We will explain their use further down, but it's important to understand the distinction. In permutations, existing data are shuffled to create the 'random' probability that two AUs co-occur, for example. In bootstraps, subsets of data from a different context are selected over and over again for the same purpose.
 
-NetFACS is based mainly on different probabilities: unconditional probability	is the simply the proportion of occurrence; $P(A \cap B) = \frac{number of occurrences A+B}{number of possible occurrences A+B}$). The unconditional probability of a combination AB is not directional, i.e. it is the same for AB as it is for BA: ($P(A \cap B)$ == $P(B \cap A)$). We use the unconditional probability mainly to express how often an AU or a combination of AUs occurs at all, either in the whole data set or in a specific context. Conditional probability, on the other hand, is	the probability of an event A given an event B; $P(A \mid B) = \frac{P(A \cap B)}{P(B)}$). Thus, it tells us not how often A occurs at all, but how often A occurs in the subset of cases where we know that B is present. Therefore, the conditional probabilities can differ depending on which direction we are looking at ($P(A \mid B)$ != $P(B \mid A)$). For example, in the English language, the letter 'h' is often accompanied by the letter 's', but the reverse is not true: most cases of 's' do not involve 'h'. We can explore the conditional probability between two elements, or between an element/combination and a context. Probabilities are used as they are intuitive for most people, in contrast to many more opaque association indices that are often used in social network analysis. It also means that we can tie in other analytical tools that are very directly based on probabilities, such as Bayesian models and Markov Chains.
-
+NetFACS is based mainly on different probabilities: unconditional probability is the simply the proportion of occurrence; $P(A \cap B) = \frac{number of occurrences A+B}{number of possible occurrences A+B}$). The unconditional probability of a combination AB is not directional, i.e. it is the same for AB as it is for BA: ($P(A \cap B)$ == $P(B \cap A)$). We use the unconditional probability mainly to express how often an AU or a combination of AUs occurs at all, either in the whole data set or in a specific context. Conditional probability, on the other hand, is the probability of an event A given an event B; $P(A \mid B) = \frac{P(A \cap B)}{P(B)}$). Thus, it tells us not how often A occurs at all, but how often A occurs in the subset of cases where we know that B is present. Therefore, the conditional probabilities can differ depending on which direction we are looking at ($P(A \mid B)$ != $P(B \mid A)$). For example, in the English language, the letter 'h' is often accompanied by the letter 's', but the reverse is not true: most cases of 's' do not involve 'h'. We can explore the conditional probability between two elements, or between an element/combination and a context. Probabilities are used as they are intuitive for most people, in contrast to many more opaque association indices that are often used in social network analysis. It also means that we can tie in other analytical tools that are very directly based on probabilities, such as Bayesian models and Markov Chains.
 
 ### Install the package
 
@@ -81,7 +81,6 @@ kable(head(letternet[[1]]), row.names = FALSE, caption = "Letter data for words 
 kable(head(letternet[[2]]), row.names = FALSE, caption = "Additional information for Communist Manifesto")
 ```
 
-
 ### Prepare the data
 
 Users who code FACS data will often have them stored in a different format, where they have the Action Unit together with its start and end time or duration in a specific video. The package has a function that can deal with these data and transform them into the right format, as long as they contain information about the video from which they were taken.
@@ -102,7 +101,8 @@ odd.photo <- data.frame(
 )
 kable(odd.photo, row.names = FALSE, caption = "Photo Data")
 ```
-Videos, on the other hand, will sometimes look this: 
+
+Videos, on the other hand, will sometimes look this:
 
 ```{r odd.video, echo=TRUE}
 odd.video <- data.frame(
@@ -119,6 +119,7 @@ odd.video <- data.frame(
 )
 kable(odd.video, row.names = FALSE, caption = "Video Data")
 ```
+
 The prepare.netfacs() function can take either of these inputs and turn them into the right format. This will look something like this:
 
 ```{r prepare.net, echo=TRUE}
@@ -138,33 +139,33 @@ kable(head(au.prepared$video.info),
       caption = "Video Info of prepare.netfacs")
 ```
 
-
 # The 'netfacs' function
 
 The basis for the whole package so far is the 'netfacs' function. The function creates a list for all possible combination of elements that has the information on their observed probability of occurrence in the chosen data set. It also tests whether this observed probability is significantly different from an expected or null distribution, and gives information about the shape of that null distribution. The user defines whether this null distribution is the expected random distribution of elements (e.g., do AU1 and AU2 occur together more than expected by chance) based on permutations of the raw data that control for the overall probability of single elements occurring and the number of elements per event, or whether we are comparing two conditions (e.g., do AU1 and AU2 occur together more in sad than in angry faces) with one condition providing the null condition. In the latter case, bootstraps of the null condition are used to establish the null distribution. Bootstraps can be done by randomly selecting events, or by randomly selecting on a higher-level variable, e.g. subject, by including that variable in the 'random.level' parameter of the function call. For direct comparisons, one can include 'control variables' into the bootstrap: for example, if individual sex is included, then the bootstrap will select the null condition on the same ratio as the test condition, so if 1/3 of participants in the test condition are males, then 1/3 of cases in each random selection will also be male. This prevents biases due to sampling differences between test and null condition.
 
-It is important to note that  combination of elements here does not mean that ONLY those elements were active, but that they were among the active elements. So, the combination of AU1 + 2 is counted when the overall facial expression shows AU1+2, but also AU1+2+5, AU1+2+5+10, etc. Conditional probabilities will be based on the number of times either of the two elements were present.
+It is important to note that combination of elements here does not mean that ONLY those elements were active, but that they were among the active elements. So, the combination of AU1 + 2 is counted when the overall facial expression shows AU1+2, but also AU1+2+5, AU1+2+5+10, etc. Conditional probabilities will be based on the number of times either of the two elements were present.
 
 ### NetFACS parameters
 
 These are the function parameters and what they do:
 
-* data: this is the data matrix that contains each event as a row and each element as a column, with 0 and 1 denoting whether an element was active at all
-* condition: this denotes the condition (e.g., the emotion, language, gender ...) that we want to find out about. The input should be a vector of the same length as *data* with the condition each event belongs to, to allow the algorithm to assign each  event. If no condition is set, then all data points are compared against random distribution. If a condition is set, the user has to define a *test condition*: one of the levels of the *condition* vector that we are interested in.
-* test.condition: marks the condition that we want to find out about.
-* null.condition: marks the comparison level. If NULL, then the test condition is compared with all other data points (e.g. anger against all other emotions). If it is set to a value (e.g., 'happy'), then only the test and null condition are compared with each other (e.g., happy and angry faces).
-* duration: when analysing videos with FACS, each event could differ in duration; for example, some events contain 5 frames, while another contains 10 frames. If this information is available, FACS will weight the results accordingly. Here, you should enter a vector of the same length as the data set that defines the duration of each event. It doesn't matter if you put seconds or frames as duration, the function will determine the smallest value and compare all other values to this.
-* ran.trials: determines how many permutations or bootstraps are performed. The larger, the better and more accurate, but things take longer. 1000 iterations is usually good.
-* control: Here, you would enter a list of control variables. So, for example, to control for gender and place of origin, you would enter 'list(gender, place.of.origin)'; if these were available. This way, in the bootstraps, he algorithm will approximate the distribution of these control parameters in the test and null condition. So, if there are 10 males and 20 females in the angry faces, the null condition will select a ratio of 1 to 2 as well, to prevent difference to be driven by differences in the data set. Note that you need enough data to include control variables: if there are no female faces in one of the conditions, the algorithm will fail at adjusting the distribution. 
-* random.level: Should be a vector of the same length as the data matrix that assigns each event a higher-level identifier, such as individual or video. For the bootstraps, this works similar to a random effect in that it controls for the fact that some data points belong to the same hierachical level. So, if an individual provides several data points, or data points come from the same video, noting this in the *random.level* parameter means that random selection occurs on the level of the video or individual rather than each event separately. Thus, the probability space of the null distribution is not biased by one individual or video.
-* combination.size: If null, the algorithm will pop out all possible combinations. If we don't care for the higher-order combinations (e.g. combinations of 5 elements), we can speed the analysis up by limiting this to 2 or 3.
-* tail: Should p-values be *upper.tail* (the observed value is larger than the expected values) or *left.tail* (the observed value is smaller than the expected values)?
-* use_parallel: Should processing be done in parallel?
-* n_cores: How many cores should be used for parallel processing?
+-   data: this is the data matrix that contains each event as a row and each element as a column, with 0 and 1 denoting whether an element was active at all
+-   condition: this denotes the condition (e.g., the emotion, language, gender ...) that we want to find out about. The input should be a vector of the same length as *data* with the condition each event belongs to, to allow the algorithm to assign each event. If no condition is set, then all data points are compared against random distribution. If a condition is set, the user has to define a *test condition*: one of the levels of the *condition* vector that we are interested in.
+-   test.condition: marks the condition that we want to find out about.
+-   null.condition: marks the comparison level. If NULL, then the test condition is compared with all other data points (e.g. anger against all other emotions). If it is set to a value (e.g., 'happy'), then only the test and null condition are compared with each other (e.g., happy and angry faces).
+-   duration: when analysing videos with FACS, each event could differ in duration; for example, some events contain 5 frames, while another contains 10 frames. If this information is available, FACS will weight the results accordingly. Here, you should enter a vector of the same length as the data set that defines the duration of each event. It doesn't matter if you put seconds or frames as duration, the function will determine the smallest value and compare all other values to this.
+-   ran.trials: determines how many permutations or bootstraps are performed. The larger, the better and more accurate, but things take longer. 1000 iterations is usually good.
+-   control: Here, you would enter a list of control variables. So, for example, to control for gender and place of origin, you would enter 'list(gender, place.of.origin)'; if these were available. This way, in the bootstraps, he algorithm will approximate the distribution of these control parameters in the test and null condition. So, if there are 10 males and 20 females in the angry faces, the null condition will select a ratio of 1 to 2 as well, to prevent difference to be driven by differences in the data set. Note that you need enough data to include control variables: if there are no female faces in one of the conditions, the algorithm will fail at adjusting the distribution.
+-   random.level: Should be a vector of the same length as the data matrix that assigns each event a higher-level identifier, such as individual or video. For the bootstraps, this works similar to a random effect in that it controls for the fact that some data points belong to the same hierachical level. So, if an individual provides several data points, or data points come from the same video, noting this in the *random.level* parameter means that random selection occurs on the level of the video or individual rather than each event separately. Thus, the probability space of the null distribution is not biased by one individual or video.
+-   combination.size: If null, the algorithm will pop out all possible combinations. If we don't care for the higher-order combinations (e.g. combinations of 5 elements), we can speed the analysis up by limiting this to 2 or 3.
+-   tail: Should p-values be *upper.tail* (the observed value is larger than the expected values) or *left.tail* (the observed value is smaller than the expected values)?
+-   use_parallel: Should processing be done in parallel?
+-   n_cores: How many cores should be used for parallel processing?
 
 Here, I will give an example where we compare the facial expression of anger against all other facial expression. We assume that every individual provided one case and there is no information about gender etc, so we do not use any controls:
 
 ### Comparison of conditions
+
 ```{r netfacs, cache=T}
 # here, we test whether any Action Units and combinations appear more frequently than expected under one condition than under another.
 # load data
@@ -206,27 +207,25 @@ kable(
 
 Now we have the angry.face object that contains all the information we need to make networks and claims about which Action Units make up a facial expression.
 
+As we can see in the last table already, there is a lot of information in this object:
 
-As we can see in the last table already, there is a lot of information in this object: 
-
-* combination: the name of the combination 
-* combination.size: how many elements make up the combination
-* count: how often it occurs in the test condition
-* observed.prob: Probability that the combination occurs in a frame of that condition
-* expected.prob: Expected probability of the combination if the data set was drawn from the null condition; mean of all randomisations.
-* effect.size: Difference between the observed probability and the mean expected probability.
-* pvalue: how many random probabilities were more extreme than the observed probability (larger for *right.tail*, smaller for *left.tail*)
-* specificity: probability that the condition is 'anger' when the combination is observed. e.g, 0.8 means that 80% of all occurrences of the Action Unit are in 'anger'
-* probability.increase: how many times more likely is the combination in this condition than the null condition? 
+-   combination: the name of the combination
+-   combination.size: how many elements make up the combination
+-   count: how often it occurs in the test condition
+-   observed.prob: Probability that the combination occurs in a frame of that condition
+-   expected.prob: Expected probability of the combination if the data set was drawn from the null condition; mean of all randomisations.
+-   effect.size: Difference between the observed probability and the mean expected probability.
+-   pvalue: how many random probabilities were more extreme than the observed probability (larger for *right.tail*, smaller for *left.tail*)
+-   specificity: probability that the condition is 'anger' when the combination is observed. e.g, 0.8 means that 80% of all occurrences of the Action Unit are in 'anger'
+-   probability.increase: how many times more likely is the combination in this condition than the null condition?
 
 As this table is very large in many instances, we can extract results more easily while already cleaning the table a bit using the 'extract.netfacs' function:
 
 ```{r extract.anger, cache=T}
 # extract angry face information for the first level (single elements)
-
-anger.aus <- netfacs.extract(
+anger.aus <- netfacs_extract(
   netfacs.data = angry.face,
-  level = 1, # only looking at combinations with 1 element (here, Action Units)
+  combination.size = 1, # only looking at combinations with 1 element (here, Action Units)
   min.count = 1, # minimum number of times that the combination should occur
   min.prob = 0, # minimum observed probability of the combination
   min.specificity = 0, # minimum specificity of the combination
@@ -238,20 +237,18 @@ anger.aus <- netfacs.extract(
 kable(anger.aus[order(-1 * anger.aus$effect.size),],
       align = "c",
       row.names = FALSE,
-      caption = "Result of netfacs.extract for single elements")
+      caption = "Result of netfacs_extract for single elements")
 ```
 
-The results show that in angry faces, the Action Units 4, 7, 14, 17, 18, 23, and 24 are significantly more common than would be expected given the information we have from the other emotions. AU23, for example, occurs 36 times, which is 80% of all 'angry' faces. Expected would be 2.5%, so we have an increase in probability of 32 times. When we see AU 23, we can be 84% sure that this is an angry face (specificity). 
+The results show that in angry faces, the Action Units 4, 7, 14, 17, 18, 23, and 24 are significantly more common than would be expected given the information we have from the other emotions. AU23, for example, occurs 36 times, which is 80% of all 'angry' faces. Expected would be 2.5%, so we have an increase in probability of 32 times. When we see AU 23, we can be 84% sure that this is an angry face (specificity).
 
 We can also plot this. In element.plot, the y-axis is based on the log-transformed change in probability between the observed and all randomised distributions, and the x-axis contains each element. Almost all plots that are included in the package at this point are ggplot based, so the user can subsequently change most parameters to their own liking.
-
 
 ```{r element.plot, fig.width=6, fig.height=4, fig.align='center', message=F}
 # create plot showing the importance of each AU for the angry faces
 
 element.plot(netfacs.data = angry.face)
 ```
-
 
 In the distribution.plot function, we see the distribution of the null probabilities and where the observed values fall in comparison. It does this independently for each element. Here, we look at AU4 (which occurs more than expected) and AU9 (which occurs less than expected).
 
@@ -262,16 +259,14 @@ distribution.plot(netfacs.data = angry.face)$"4"
 distribution.plot(netfacs.data = angry.face)$"9"
 ```
 
-
-This already gives us an important insight into the structure of facial expressions, by clarifying how strongly certain facial muscles are connected to specific contexts. What we can do now is look at higher-order combinations of Action Units. Let's look at combinations of 3 Action Units. As there are many combinations that only occur once or twice, and these are probably not very important, let's set the minimum count that we consider meaningful to 5.
-It is important to note that, given the large number of possible higher-order combinations (e.g., 20 elements create over 1100 combinations of 3, almost 5000 combinations of 4 etc), most of these will not have meaningful information unless the data set is quite large. 
+This already gives us an important insight into the structure of facial expressions, by clarifying how strongly certain facial muscles are connected to specific contexts. What we can do now is look at higher-order combinations of Action Units. Let's look at combinations of 3 Action Units. As there are many combinations that only occur once or twice, and these are probably not very important, let's set the minimum count that we consider meaningful to 5. It is important to note that, given the large number of possible higher-order combinations (e.g., 20 elements create over 1100 combinations of 3, almost 5000 combinations of 4 etc), most of these will not have meaningful information unless the data set is quite large.
 
 ```{r third.level.anger}
 # extract information for three-element-combinations in angry faces
 
-anger.aus3 <- netfacs.extract(
+anger.aus3 <- netfacs_extract(
   netfacs.data = angry.face,
-  level = 3, # only looking at combinations with 3 elements (here, Action Units)
+  combination.size = 3, # only looking at combinations with 3 elements (here, Action Units)
   min.count = 5, # minimum number of times that the combination should occur
   min.prob = 0, # minimum observed probability of the combination
   min.specificity = 0, # minimum specificity of the combination
@@ -283,11 +278,10 @@ anger.aus3 <- netfacs.extract(
 kable(head(anger.aus3[order(-1 * anger.aus3$effect.size),]),
       align = "c",
       row.names = FALSE,
-      caption = "Results of netfacs.extract function for combinations of three elements")
+      caption = "Results of netfacs_extract function for combinations of three elements")
 ```
 
 Here, we see that for example combination AU4_17_23 appears 28 times (62% of all angry faces), which is 44 times more than we would have expected. Many of the combinations only occur in the angry condition, and they get assigned an 'increased probability' value of NA. That many of these higher-order combinations contain very similar combinations (e.g. AU4_17_23 and AU4_17_24) can mean two things: either, they are significant because all these elements declare anger and they are combined randomly; or they are all part of one standard higher-order combination (e.g. AU4_17_23_24) that occurs over and over again. By looking at the different levels (3rd order, 4th order etc), we can resolve this question.
-
 
 ### Element specificity
 
@@ -311,9 +305,7 @@ kable(
 )
 ```
 
-
 To understand the importance of any element in our communication system, we should look for the ones that combine two aspects: they should be common in the context (i.e., high probability), but they should also be limited to that context (i.e., high specificity). We will come back to that idea when talking about the overlap networks below.
-
 
 ## Conditional probability between elements
 
@@ -342,18 +334,18 @@ kable(
 
 The above table shows us the two elements (e.g., 5 an 23), how often they occur together ('count'), the probability of each of them to occur across events P(A) and P(B); their unconditional probability to occur together P(A+B), and the probability of A occurring when B is also present. So for the AU 5 and 23, AU23 is much more common in angry faces (80% of videos) than AU5 (13% of videos). They also occur both together in 13% of cases, which means that in all cases where AU5 was observed, AU23 was also observed, but only 17% of events that have AU23 also have AU5 present. In this case, it appears as if AU5 is an 'addition' to AU23 or facial expressions including AU23. If we look at AU17 and AU23, they appear to be part of a fixed expression: their conditional probabilities are around 80% each way, indicating that they both occur together most of the time. Below, we will also show what the network visualisation of this function looks like.
 
+\\newpage
 
-\newpage
 # Networks
 
 Now that we have our information about the probabilities of different elements and conditions extracted, we can start looking at different networks that potentially contain information about our Action Units that we rarely consider. There are different networks here that are of interest: first, we can make a bipartite network that shows us how different conditions are linked and which Action Units are specific to certain context. To a have high information value, we would expect an Action Unit to have high specificity in one context and that context only. Second, we can use networks to visualise the connections between Action Units. Third, we can use network metrics to identify central Action Units in a condition, and understand the network as a whole better.
 
 ## Overlap networks
 
-Let's start with the bipartite overlap network: we can visualise which conditions (in our case, emotions), share Action Units. To make the process easier, there is a 'multiple.netfacs' function that runs the netfacs function for all levels of a condition against all others.
+Let's start with the bipartite overlap network: we can visualise which conditions (in our case, emotions), share Action Units. To make the process easier, there is a 'netfacs_multiple' function that runs the netfacs function for all levels of a condition against all others.
 
 ```{r multi.facs}
-multi.facs <- multiple.netfacs(
+multi.facs <- netfacs_multiple(
   data = au.data,
   condition = au.info$emotion,
   ran.trials = 1000,
@@ -462,7 +454,7 @@ all.net <-
                   link = "unweighted")
 ```
 
-In this network, dyadic connections between Action Units mean that they occur more often together than would be expected given their own likelihood and the number of elements per event. When plotting this network, we can say 'clusters = TRUE'. In that case, 'igraph' has a community detection algorithm (groups of AUs that form clusters). 
+In this network, dyadic connections between Action Units mean that they occur more often together than would be expected given their own likelihood and the number of elements per event. When plotting this network, we can say 'clusters = TRUE'. In that case, 'igraph' has a community detection algorithm (groups of AUs that form clusters).
 
 ```{r all.plot, fig.width=8, fig.height=8, fig.align='center', message=F}
 network.plot(
@@ -473,7 +465,7 @@ network.plot(
 )
 ```
 
-Modularity is high (0.50; above 0.3 is high). This means that there are clear clusters (AUs that are connected with each other, but not others). First, some AUs just drop out because they do not connect with any of the others (AU10, 14, 16, 18, 26). Then we have a 'happy' network (AU6 and AU12), a 'surprise' and 'fear' network (AU1, 2, 5, 20, 27). Anger, Sadness, and Disgust all overlap in their use of AU4 and 17, which are also the most central AUs of the remaining cluster. AU14, which is the most common  AU in contempt, does not fall into either of these clusters. Given the small size of this data set, even without previous knowledge of where the emotions fall, we could assume that there are at least three distinct clusters in the data.
+Modularity is high (0.50; above 0.3 is high). This means that there are clear clusters (AUs that are connected with each other, but not others). First, some AUs just drop out because they do not connect with any of the others (AU10, 14, 16, 18, 26). Then we have a 'happy' network (AU6 and AU12), a 'surprise' and 'fear' network (AU1, 2, 5, 20, 27). Anger, Sadness, and Disgust all overlap in their use of AU4 and 17, which are also the most central AUs of the remaining cluster. AU14, which is the most common AU in contempt, does not fall into either of these clusters. Given the small size of this data set, even without previous knowledge of where the emotions fall, we could assume that there are at least three distinct clusters in the data.
 
 ## Network parameters
 
@@ -494,17 +486,17 @@ kable(
 )
 ```
 
-The different network measures capture different aspects of centrality. 
+The different network measures capture different aspects of centrality.
 
-* strength: how many connections does the AU have
-* eigenvector: high if AU is connected with a lot of AUs that also have a lot of connections
-* betweenness: number of shortest connections that go through the AU; does it connect otherwise unconnected elements?
-* transitivity: how many triads is the element in (triad == all three elements are connected)
-* hub_score: similar to eigenvector
-* page_rank: calculates the influence an element has over all it's neighbours
-* modularity: if modularity is high, the element clearly clusters with other elements
-* community membership: elements that have the same membership cluster with each other
-* community.value: if this is above 0.3, then there are clearly distinct clusters in this data set
+-   strength: how many connections does the AU have
+-   eigenvector: high if AU is connected with a lot of AUs that also have a lot of connections
+-   betweenness: number of shortest connections that go through the AU; does it connect otherwise unconnected elements?
+-   transitivity: how many triads is the element in (triad == all three elements are connected)
+-   hub_score: similar to eigenvector
+-   page_rank: calculates the influence an element has over all it's neighbours
+-   modularity: if modularity is high, the element clearly clusters with other elements
+-   community membership: elements that have the same membership cluster with each other
+-   community.value: if this is above 0.3, then there are clearly distinct clusters in this data set
 
 While these centrality measures concern the elements within a network, we can also calculate information flow etc within across a network.
 
@@ -544,13 +536,11 @@ kable(
 )
 ```
 
-We see that the density of the different emotion networks differs considerably, but they all have pretty low density (mainly because they all rely on a small set of AUs). Fear and Anger seem to involve more AUs than the others. Some (Anger, Surprise, Disgust) are pretty transitive (AUs all usually appear together), while some (Fear, Happy) are less transitive (indicating that they have different configurations). 
-
+We see that the density of the different emotion networks differs considerably, but they all have pretty low density (mainly because they all rely on a small set of AUs). Fear and Anger seem to involve more AUs than the others. Some (Anger, Surprise, Disgust) are pretty transitive (AUs all usually appear together), while some (Fear, Happy) are less transitive (indicating that they have different configurations).
 
 ## Combination sizes
 
 One question that might be of interest when we talk about complexity could be whether the number of elements is larger than expected in a context: for example, it might be that happy faces usually use fewer elements than angry faces because there is less information necessary to transmit the message. The 'netfacs' function also pops out the observed probabilities that events consist of 1, 2, 3 ... elements, and this is tested against the null distribution.
-
 
 ```{r event.size.angry}
 event.size.angry <- angry.face$event.size.information
@@ -623,3 +613,19 @@ kable(
 ```
 
 Here, we see that the different emotions differ in terms of their entropy ratio (ratios close to 0 mean order, ratios close to 1 mean chaos). As we can see, happy and surprised faces, which are both made up of mainly one expression, are very predictable. Fear, on the other hand, where no two expressions are exactly the same, is highly chaotic. With increasing sample size, this would probably change, but the difference between contexts is still quite robust.
+
+## Exporting networks
+
+While the NetFACS package provides convenience functions to visualize networks, some users may prefer to explore their networks using other software such as [gephi](https://gephi.org/). It is easy to convert networks into a matrix or table by using igraph's conversion functions, which can then be saved as a CSV file and imported into other software. For example:
+
+```{r, eval = F}
+# create an edge table
+anger.tab <- igraph::as_data_frame(multi.net$anger)
+
+# create an adjacency matrix
+anger.adj.mat <- as.matrix(igraph::as_adjacency_matrix(multi.net$anger))
+
+# save as CSV file
+# write.csv(anger.tab, "anger_net_tab.csv")
+# write.csv(anger.adj.mat, "adj_net_mat.csv")
+```
