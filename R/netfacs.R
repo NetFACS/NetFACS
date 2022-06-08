@@ -601,7 +601,7 @@ netfacs <- function(data,
     null.condition = null.condition
   )
   
-  stat_method <- ifelse(is.null(used.data$condition), "Permutation", "Bootstrap")
+  stat_method <- ifelse(is.null(used.data$condition), "permutation", "bootstrap")
   
   out <-
     list(

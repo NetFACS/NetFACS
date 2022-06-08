@@ -183,14 +183,14 @@ summarise_combination <- function(combination,
     )
   
   # specificity is calculated only when a condition vector was specified
-  # specificit: divide how often the combination occurs in the test condition by
+  # specificity: divide how often the combination occurs in the test condition by
   # the total count (test + null condition)
   if (!is.null(null.count)) {
     if (!equal_observations(test.count, null.count)) {
       stop("test.count and null.count arguments must have the same number of observations.")
     }
     out$specificity <- test.count / (test.count + null.count)
-  }
+  } 
   return(out)
 }
 

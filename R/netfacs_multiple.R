@@ -70,7 +70,7 @@ netfacs_multiple <- function(data,
   out <- structure(
     out, 
     class = "netfacs_multiple",
-    stat_method = "Bootstrap",
+    stat_method = "bootstrap",
     random_trials = ran.trials
   )
   
