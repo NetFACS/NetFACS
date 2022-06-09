@@ -13,4 +13,11 @@ test_that("error message is given when 'condidion' is misspecified",{
     )},
     "Please remove all NAs from the data and/or condition vector."
   )
+  expect_error({
+    netfacs_multiple(
+      data = emotions_set[[1]],
+      condition = NULL
+    )},
+    "Argument 'condition' must be the same length as nrow 'data'."
+  )
 })

@@ -42,7 +42,7 @@ netfacs_multiple <- function(data,
                              n_cores = 2) {
   
   if (length(condition) != nrow(data)) {
-    stop("condition vector must be the same length as nrow(data).",
+    stop("Argument 'condition' must be the same length as nrow 'data'.",
          call. = FALSE
     )
   }
