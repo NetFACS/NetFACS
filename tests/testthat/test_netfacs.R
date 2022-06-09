@@ -16,6 +16,7 @@ test_that("joint and single element probabilities are calculated correctly", {
                       ran.trials = 1000,
                       use_parallel = TRUE,
                       n_cores = detectCores()-1)
+  # how much deviation from true value to tolerate?
   p_tol <- 0.02
   
   p2 <- res.boot$result %>% filter(combination == "2") %>% pull(observed.prob)
@@ -61,12 +62,27 @@ test_that("error message is given when data has NAs",{
       ran.trials = 20)
   })
   expect_error({
-    netfacs(
-      data = emotions_set[[1]],
-      condition = NA,
-      test.condition = "anger",
-      null.condition = NULL,
-      ran.trials = 20)
+    netfacs(data = emotions_set[[1]],
+            condition = NA,
+            test.condition = "anger",
+            null.condition = NULL,
+            ran.trials = 20)
+  })
+})
+test_that("error message is given when data is misspecified",{
+  expect_error({
+    netfacs(data = matrix())
+  })
+  expect_error({
+    netfacs(data = data.frame())
+  })
+  expect_error({
+    netfacs(data = list())
+  })
+  expect_error({
+    netfacs(data = data.frame(a = rep(c("0", "1"), times = 3),
+                              b = rep(c("o", "1"), times = 3)))
+      
   })
 })
 test_that("error message is given when condidions are misspecified",{
@@ -76,24 +92,30 @@ test_that("error message is given when condidions are misspecified",{
       condition = emotions_set[[2]]$emotion,
       test.condition = "AAA",
       null.condition = "anger",
-      ran.trials = 20)
-  })
+      ran.trials = 20
+    )},
+    "Argument 'test.condition' is not part of the 'condition' vector."
+  )
   expect_error({
     netfacs(
       data = emotions_set[[1]],
       condition = emotions_set[[2]]$emotion,
       test.condition = "anger",
       null.condition = "AAA",
-      ran.trials = 20)
-  })
+      ran.trials = 20
+    )},
+    "Argument 'null.condition' is not part of the 'condition' vector."
+  )
   expect_error({
     netfacs(
       data = emotions_set[[1]],
       condition = "b",
       test.condition = "b",
       null.condition = NULL,
-      ran.trials = 10)
-  })
+      ran.trials = 10
+    )},
+    "Argument 'condition' must be the same length as nrow 'data'."
+  )
 })
 test_that("warning message is given when test or null conditions are specified with a NULL condition vector",{
   expect_warning({
