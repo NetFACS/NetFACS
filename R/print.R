@@ -17,7 +17,8 @@ print.netfacs <- function(x, ...) {
     "Maximum combination size:", max_comb_size, "\n",
     "Number of observations:", n_events, "\n",
     "Stat method:", method, "\n", 
-    "Random trials:", n_ran_trials
+    "Random trials:", n_ran_trials,
+    "\n"
   )
 }
 
@@ -34,6 +35,7 @@ print.netfacs_multiple <- function(x, ...) {
     "A netfacs_multiple object: \n",
     "Number of conditions:", n.conditions, "\n",
     "Stat method:", method, "\n", 
-    "Random trials:", n_ran_trials
+    "Random trials:", n_ran_trials,
+    "\n"
   )
 }
