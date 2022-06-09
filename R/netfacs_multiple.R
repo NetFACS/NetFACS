@@ -46,6 +46,11 @@ netfacs_multiple <- function(data,
          call. = FALSE
     )
   }
+  if (length(unique(condition)) < 2) {
+    stop("Argument 'condition' must have more than one unique value", 
+         call. = FALSE)
+  }
+  
   conditions <- sort(unique(condition))
   
   out <- lapply(conditions, function(x) {

@@ -101,21 +101,6 @@ Expected values are based on bootstraps of null distribution, so the
 \examples{
 ### how do angry facial expressions differ from non-angry ones?
 \donttest{
-data(emotions_set)
-angry.face <- netfacs(
-  data = emotions_set[[1]],
-  condition = emotions_set[[2]]$emotion,
-  test.condition = "anger",
-  null.condition = NULL,
-  duration = NULL,
-  ran.trials = 100,
-  control = NULL,
-  random.level = NULL,
-  combination.size = 5,
-  tail = "upper.tail",
-  use_parallel = TRUE,
-  n_cores = 2
-)
 
 head(angry.face$result, 20)
 angry.face$event.size.information

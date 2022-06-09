@@ -81,21 +81,21 @@
 #' @examples
 #' ### how do angry facial expressions differ from non-angry ones?
 #' \donttest{
-#' data(emotions_set)
-#' angry.face <- netfacs(
-#'   data = emotions_set[[1]],
-#'   condition = emotions_set[[2]]$emotion,
-#'   test.condition = "anger",
-#'   null.condition = NULL,
-#'   duration = NULL,
-#'   ran.trials = 100,
-#'   control = NULL,
-#'   random.level = NULL,
-#'   combination.size = 5,
-#'   tail = "upper.tail",
-#'   use_parallel = TRUE,
-#'   n_cores = 2
-#' )
+# data(emotions_set)
+# angry.face <- netfacs(
+#   data = emotions_set[[1]],
+#   condition = emotions_set[[2]]$emotion,
+#   test.condition = "anger",
+#   null.condition = NULL,
+#   duration = NULL,
+#   ran.trials = 100,
+#   control = NULL,
+#   random.level = NULL,
+#   combination.size = 5,
+#   tail = "upper.tail",
+#   use_parallel = TRUE,
+#   n_cores = 2
+# )
 #'
 #' head(angry.face$result, 20)
 #' angry.face$event.size.information
@@ -113,16 +113,18 @@ netfacs <- function(data,
                     tail = "upper.tail",
                     use_parallel = TRUE,
                     n_cores = 2) {
+  
+  # validate data passed by user
   if (any(is.na(data) | any(is.na(condition)))) {
     stop("Please remove all NAs from the data and/or condition vector.",
          call. = FALSE
     )
   }
-  # elements will later be split and combined using "_", and therefore element names must not contain "_"
-  if (any(grepl(pattern = "_", colnames(data)))) {
-    stop("Column names of data must not contain '_'.", call. = FALSE)
-  }
+  data <- validate_data(data)
+  validate_condition(data, condition, test.condition, null.condition)
   
+  # format data
+  data <- apply(data, 2, as.numeric)
   # clean names of dataset to not include special characters or spaces
   colnames(data) <- gsub(
     colnames(data),
@@ -153,27 +155,6 @@ netfacs <- function(data,
   
   # data preparation happens for two different cases: either 'condition' is set, in which case the 'test.condition' is tested against all other cases or against one specific 'null.condition'; alternatively, if no condition is set, the probabilities are compared with random probabilities
   if (!is.null(condition)) {
-    # Error messages in case test.condition is wrongly specified
-    if (length(condition) != nrow(data)) {
-      stop("condition vector must be the same length as nrow(data).",
-           call. = FALSE
-      )
-    }
-    if (is.null(test.condition)) {
-      stop("Specify test condition.", call. = FALSE)
-    }
-    if (!test.condition %in% condition) {
-      stop("Test condition is not part of the condition vector.",
-           call. = FALSE
-      )
-    }
-    if (!is.null(null.condition)) {
-      if (!null.condition %in% condition) {
-        stop("Null condition is not part of the condition vector.",
-             call. = FALSE
-        )
-      }
-    }
     
     # if random.level is not defined, each event/row is its own case, and all events are compared against each other. If random.level is defined, the randomization will select cases based on which level they belong to
     if (is.null(random.level)) {
@@ -428,24 +409,16 @@ netfacs <- function(data,
   
   ###### the following calculations are done when there is no condition specified, meaning the observed probability across all cases is compared to a null model based on permutations maintaining the event size and element probability
   if (is.null(condition)) {
-    if (!is.null(test.condition)) {
-      warning("test.condition was specified without a condition vector. Ignoring test.condition.", call. = FALSE)
-    }
-    if (!is.null(null.condition)) {
-      warning("null.condition was specified without a condition vector. Ignoring null.condition.", call. = FALSE)
-    }
     
-    # same as above, account for added duration data
-    if (is.null(duration)) {
-      min.duration <- 1
-    }
+    # account for added duration data
     if (!is.null(duration)) {
       min.duration <- min(duration)
       duration <- round(duration / min.duration, 0)
       data <- data[rep(1:nrow(data), times = duration), , drop = FALSE]
     }
     
-    d <- apply(data, 2, as.numeric)
+    # d <- apply(data, 2, as.numeric)
+    d <- data
     
     # remove empty rows
     comb.size <- Rfast::rowsums(d)

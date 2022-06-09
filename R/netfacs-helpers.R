@@ -377,3 +377,91 @@ equal_observations <- function(x, ...) {
     )
   )
 }
+
+# validate function arguments ---------------------------------------------
+
+#' Check that 'data' argument is formatted correctly
+#'
+#' @param data data passed by the user
+#'
+#' @return data as a matrix
+validate_data <- function(data) {
+  if (missing(data)) {
+    stop("Data must be specified using the 'data' argument.", call. = FALSE)
+  }
+  if (!isTRUE(nrow(data) > 0L)) {
+    stop("Argument 'data' does not contain observations.", call. = FALSE)
+  }
+  
+  # elements will later be split and combined using "_", and therefore element names must not contain "_"
+  if (any(grepl(pattern = "_", colnames(data)))) {
+    stop("Column names of 'data' must not contain '_'.", call. = FALSE)
+  }
+  
+  # data must be coercible to a binary matrix
+  data <- try(as.matrix(data), silent = TRUE)
+  if (is(data, "try-error")) {
+    stop("Argument 'data' must be coercible to a matrix.", call. = FALSE)
+  }
+  # checking for character "0","1" ensures that the common mistake of having "o" (or other characters) in the matrix is not coerced to NA unintentionally
+  if (isFALSE(all(data %in% c(0,1), na.rm = TRUE) | 
+              all(data %in% c("0","1"), na.rm = TRUE))) {
+    stop("Argument 'data' must a binary matrix (containing only 0 or 1) or be coercible to one.", call. = FALSE)
+  }
+  
+  # apply(data, 2, as.numeric)
+  data
+}
+
+#' Check that condition arguments are formatted correctly
+#'
+#' @param data data passed by the user
+#' @param condition condition passed by the user
+#' @param test.condition condition passed by the user
+#' @param null.condition condition passed by the user
+validate_condition <- function(data,
+                               condition,
+                               test.condition,
+                               null.condition) {
+  # ********* validation when "condition" IS specified
+  # ********* i.e. when doing bootstraps 
+  if (!is.null(condition)) {
+    if (any(is.na(condition))) {
+      stop("Argument 'condition' must not contain NA.",
+           call. = FALSE
+      )
+    }
+    # Error messages in case test.condition is wrongly specified
+    if (length(condition) != nrow(data)) {
+      stop("Argument 'condition' must be the same length as nrow 'data'.",
+           call. = FALSE
+      )
+    }
+    if (is.null(test.condition)) {
+      stop("Argument 'condition' has been specified without a 'test.condition'. Specify 'test.condition'.", call. = FALSE)
+    }
+    if (!test.condition %in% condition) {
+      stop("Argument 'test.condition' is not part of the 'condition' vector.",
+           call. = FALSE
+      )
+    }
+    if (!is.null(null.condition)) {
+      if (!null.condition %in% condition) {
+        stop("Argument 'null.condition' is not part of the 'condition' vector.",
+             call. = FALSE
+        )
+      }
+    }
+  }
+  
+  # ********* validation when "condition" is NOT specified
+  # ********* i.e. when doing permutations
+  if (is.null(condition)) {
+    if (!is.null(test.condition)) {
+      warning("test.condition was specified without a condition vector. Ignoring test.condition.", call. = FALSE)
+    }
+    if (!is.null(null.condition)) {
+      warning("null.condition was specified without a condition vector. Ignoring null.condition.", call. = FALSE)
+    }
+  }
+}
