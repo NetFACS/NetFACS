@@ -404,12 +404,12 @@ validate_data <- function(data) {
     stop("Argument 'data' must be coercible to a matrix.", call. = FALSE)
   }
   # checking for character "0","1" ensures that the common mistake of having "o" (or other characters) in the matrix is not coerced to NA unintentionally
-  if (isFALSE(all(data %in% c(0,1), na.rm = TRUE) | 
-              all(data %in% c("0","1"), na.rm = TRUE))) {
+  if (isFALSE(all(data %in% c(0,1) | data %in% c("0", "1", " 0", " 1", "NA", NA), 
+                  na.rm = TRUE) )) {
     stop("Argument 'data' must a binary matrix (containing only 0 or 1) or be coercible to one.", call. = FALSE)
   }
   
-  # apply(data, 2, as.numeric)
+  # suppressWarnings(apply(data, 2, as.numeric))
   data
 }
 
