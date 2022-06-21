@@ -4,10 +4,10 @@
 
 # define the "truth"; ie data generating process
 # 10 total AUs, 
-# four common ones: 4, 7, 9 and to a lesser extent 6
+# four common ones: 4, 7, and to a lesser extent 6
 # Other AUs are rare, 10 is never active
 aus <- as.character(1:10)
-p <- c(0.1, 0.1, 0.1, 0.9, 0.1, 0.51, 0.9, 0.1, 0.9, 0.0)
+p <- c(0.1, 0.1, 0.1, 0.9, 0.1, 0.51, 0.9, 0.1, 0.1, 0.0)
 p <- setNames(p, aus)
 n_obs <- 5000
 
@@ -16,6 +16,8 @@ jp <- matrix(0, nrow = length(p), ncol = length(p),
              dimnames = list(aus, aus))
 jp["4", "2"] <- 0.9 # if 4 is active, 2 has 90% prob 
 jp["6", "1"] <- 0.95 # if 6 is active, 1 has 95% prob
+jp["9", "10"] <- 1 # if 9 is active, 10 has 100% prob
+jp["3", "8"] <- 1 # if 3 is active, 8 has 100% prob
 diag(jp) <- NA
 
 
@@ -51,10 +53,11 @@ for(i in seq_len(nrow(d))){
 }
 
 head(d)
+colSums(d)
 
 # for when there are multiple joint probabilities
 d.sim.no.context <- apply(d, 2, function(x) ifelse(x>1, 1, x))
-
+# any(d>1)
 
 # sim with context --------------------------------------------------------
 
