@@ -63,6 +63,17 @@
 #'   expected size of combination or elements per event based on the
 #'   randomisations
 #'
+#' @author Alex Mielke, Alan V. Rincon
+#'
+#' @references 
+#' Mielke, A., Waller, B. M., Perez, C., Rincon, A. V., Duboscq, J.,
+#' & Micheletta, J. (2021). NetFACS: Using network science to understand facial
+#' communication systems. \emph{Behavior Research Methods}.
+#' \code{https://doi.org/10.3758/s13428-021-01692-5}
+#'
+#' @seealso \code{\link{netfacs_multiple}}, \code{\link{netfacs_extract}},
+#'   \code{\link{summarise_pairs}}
+#'
 #' @importFrom picante randomizeMatrix
 #' @importFrom arrangements combinations
 #' @importFrom parallel parLapply
@@ -73,34 +84,32 @@
 #' @importFrom parallel stopCluster
 #' @importFrom doParallel registerDoParallel
 #' @importFrom Rfast rowsums rowmeans Table
-#'
-#'
-#' @author Alex Mielke, Alan V. Rincon
 #' @export
+#'
 #'
 #' @examples
 #' ### how do angry facial expressions differ from non-angry ones?
 #' \donttest{
-# data(emotions_set)
-# angry.face <- netfacs(
-#   data = emotions_set[[1]],
-#   condition = emotions_set[[2]]$emotion,
-#   test.condition = "anger",
-#   null.condition = NULL,
-#   duration = NULL,
-#   ran.trials = 100,
-#   control = NULL,
-#   random.level = NULL,
-#   combination.size = 5,
-#   tail = "upper.tail",
-#   use_parallel = TRUE,
-#   n_cores = 2
-# )
+#' data(emotions_set)
+#' angry.face <- netfacs(
+#'   data = emotions_set[[1]],
+#'   condition = emotions_set[[2]]$emotion,
+#'   test.condition = "anger",
+#'   null.condition = NULL,
+#'   duration = NULL,
+#'   ran.trials = 100,
+#'   control = NULL,
+#'   random.level = NULL,
+#'   combination.size = 5,
+#'   tail = "upper.tail",
+#'   use_parallel = TRUE,
+#'   n_cores = 2
+#' )
 #'
 #' head(angry.face$result, 20)
 #' angry.face$event.size.information
 #' }
-#'
+#' 
 netfacs <- function(data,
                     condition = NULL,
                     test.condition = NULL,
