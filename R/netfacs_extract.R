@@ -2,26 +2,23 @@
 #'
 #' Extract results from a \code{\link{netfacs}} object.
 #'
-#' @param netfacs.data object resulting from \code{\link{netfacs}} function.
-#' @param combination.size numeric, denoting the combination size(s) that should
-#'   be extracted. If NULL (default), all combination sizes are returned.
-#' @param significance numeric value between 0 and 1, determining the p-value
+#' @param netfacs.data An object of class \code{\link{netfacs}}.
+#' @param combination.size Numeric, denoting the combination size(s) that should
+#'   be extracted. If \code{NULL} (default), all combination sizes are returned.
+#' @param significance Numeric value between 0 and 1, determining the p-value
 #'   below which combinations are considered to be dissimilar enough from the
 #'   null distribution.
-#' @param min.count numeric value, suggesting how many times a combination
-#'   should at least occur to be displayed.
-#' @param min.prob numeric value between 0 and 1, suggesting the probability at
-#'   which a combination should at least occur to be displayed.
-#' @param min.specificity numeric value between 0 and 1, suggesting the
-#'   specificity a combination should at least have for the test condition to be
-#'   displayed.
+#' @param min.count Numeric, denoting the minimum number of times an element
+#'   combination occurred.
+#' @param min.prob Numeric value between 0 and 1, denoting the minimum
+#'   probability an element combination occurred to be displayed.
+#' @param min.specificity Numeric value between 0 and 1, denoting the minimum
+#'   specificity an element combination and the test condition.
 #'
-#' @return Function returns a dataframe that contains the results of the
-#'   \code{\link{netfacs}} object. By default, returns all results for all
-#'   observed combinations
-#'
-#' @importFrom dplyr filter
-#' @importFrom dplyr mutate
+#' @return Function returns a \code{\link[tibble:tibble]{tibble}} data.frame
+#'   that contains the results of the \code{\link{netfacs}} object. By default,
+#'   returns all results for all observed combinations, but can optionally
+#'   pre-filter results.
 #'
 #' @export
 #'
@@ -49,7 +46,18 @@ netfacs_extract <- function(netfacs.data,
                             min.count = 0,
                             min.prob = 0,
                             min.specificity = 0) {
-  d <- netfacs.data$result 
+  
+  if (isFALSE(is.netfacs(netfacs.data) | is.netfacs_multiple(netfacs.data))) {
+    stop("'Argument 'netfacs.data' must be of class 'netfacs' or 'netfacs_multiple'.")
+  }
+   
+  if (is.netfacs_multiple(netfacs.data)) {
+    d <- 
+      lapply(netfacs.data, function(x) x[[1]]) %>% 
+      dplyr::bind_rows(.id = "condition") 
+  } else {
+    d <- netfacs.data$result 
+  }
   
   if (is.null(combination.size)) {
     combination.size <- unique(d$combination.size)
@@ -57,16 +65,19 @@ netfacs_extract <- function(netfacs.data,
   
   d <- 
     d %>% 
-    filter(.data$combination.size %in% {{combination.size}},
-           .data$observed.prob >= min.prob,
-           .data$count >= min.count,
-           .data$pvalue <= significance)
+    dplyr::filter(
+      .data$combination.size %in% {{combination.size}},
+      .data$observed.prob >= min.prob,
+      .data$count >= min.count,
+      .data$pvalue <= significance
+      ) %>% 
+    tibble::as_tibble()
   
   # specificity is only relevant for bootstrap results
   if (attr(netfacs.data, "stat_method") == "bootstrap") {
     d <- 
       d %>% 
-      filter(.data$specificity >= min.specificity)
+      dplyr::filter(.data$specificity >= min.specificity)
   }
   
   return(d)

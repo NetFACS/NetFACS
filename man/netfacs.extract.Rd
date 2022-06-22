@@ -15,24 +15,23 @@ netfacs.extract(
 )
 }
 \arguments{
-\item{netfacs.data}{object resulting from \code{\link{netfacs}} function.}
+\item{netfacs.data}{An object of class \code{\link{netfacs}}.}
 
-\item{combination.size}{numeric, denoting the combination size(s) that should
-be extracted. If NULL (default), all combination sizes are returned.}
+\item{combination.size}{Numeric, denoting the combination size(s) that should
+be extracted. If \code{NULL} (default), all combination sizes are returned.}
 
-\item{significance}{numeric value between 0 and 1, determining the p-value
+\item{significance}{Numeric value between 0 and 1, determining the p-value
 below which combinations are considered to be dissimilar enough from the
 null distribution.}
 
-\item{min.count}{numeric value, suggesting how many times a combination
-should at least occur to be displayed.}
+\item{min.count}{Numeric, denoting the minimum number of times an element
+combination occurred.}
 
-\item{min.prob}{numeric value between 0 and 1, suggesting the probability at
-which a combination should at least occur to be displayed.}
+\item{min.prob}{Numeric value between 0 and 1, denoting the minimum
+probability an element combination occurred to be displayed.}
 
-\item{min.specificity}{numeric value between 0 and 1, suggesting the
-specificity a combination should at least have for the test condition to be
-displayed.}
+\item{min.specificity}{Numeric value between 0 and 1, denoting the minimum
+specificity an element combination and the test condition.}
 
 \item{level}{deprecated. Please use combination.size instead.}
 }
