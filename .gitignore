@@ -6,7 +6,7 @@
 *.Rproj
 inst/doc
 README_cache
-tutorial_cache
+netfacs_tutorial_cache
 CRAN-RELEASE
 cran-comments.md
 notes/

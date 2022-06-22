@@ -1,16 +1,12 @@
 ---
 title: "NetFACS Tutorial"
 subtitle: 'Analysing communication data using network analysis'
-author:
-  - Alex Mielke, Alan Rincon, Claire Perez, Julie Duboscq, Bridget Waller, Jerome Micheletta
 output: rmarkdown::html_vignette
-# output:
-#   pdf_document: default
 geometry: "left=1cm,right=1cm,top=2cm,bottom=2cm"
-date: "2021-10-25"
+date: "`r Sys.Date()`"
 linestretch: 1.5
 vignette: >
-  %\VignetteIndexEntry{my-vignette}
+  %\VignetteIndexEntry{netfacs_tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
