@@ -2,23 +2,17 @@
 #'
 #' For all dyadic combinations that appear in the test dataset, this function
 #' returns the probability of A occurring (P(A)), the probability of B occurring
-#' (P(B)), the probability of A and B occurring simultaneously (P(AandB)), the
-#' probability of A given B (P(A|B)), pointwise mutual information (pmi) and
-#' normalized pointwise mutual information (norm_pmi). The normalized pmi ranges
-#' between -1 and 1; -1 for never occurring together, 0 for independence, and +1
-#' for complete co-occurrence.
+#' (P(B)), the probability of A and B occurring simultaneously (P(AandB)) and, the
+#' probability of A given B (P(A|B)).
 #'
-#' @param netfacs.data An object of class \code{\link{netfacs}}
+#' @param netfacs.data An object of class \code{\link{netfacs}} or
+#'   \code{\link{netfacs_multiple}}
 #'
-#' @return A summary data.frame
-#' @importFrom dplyr arrange
-#' @importFrom dplyr desc
-#' @importFrom dplyr filter
-#' @importFrom dplyr left_join
-#' @importFrom dplyr mutate
-#' @importFrom dplyr relocate
+#' @return A summary \code{\link[tibble:tibble]{tibble}}
 #' @export
 #'
+#' @seealso \code{\link{network_conditional}}
+#' 
 #' @examples
 #' data(emotions_set)
 #' angry.face <- netfacs(
@@ -28,13 +22,17 @@
 #'   ran.trials = 100,
 #'   combination.size = 2
 #' )
-#' 
+#'
 #' conditional_probabilities(angry.face)
 conditional_probabilities <- function(netfacs.data) {
-  
-  if (class(netfacs.data) != "netfacs") {
-    stop("Argument 'netfacs.data' must be of class 'netfacs'.")
+  if (isFALSE(is.netfacs(netfacs.data) | is.netfacs_multiple(netfacs.data))) {
+    stop("'Argument 'netfacs.data' must be of class 'netfacs' or 'netfacs_multiple'.")
   }
+  UseMethod("conditional_probabilities")
+}
+
+#' @export
+conditional_probabilities.netfacs <- function(netfacs.data) {
   
   if (attr(netfacs.data, "stat_method") == "bootstrap") {
     m <- netfacs.data$used.data$data[netfacs.data$used.data$condition == netfacs.data$used.parameters$test.condition, ]  
@@ -42,106 +40,72 @@ conditional_probabilities <- function(netfacs.data) {
     m <- netfacs.data$used.data$data
   }
   
-  # single elements
-  elements <- colnames(m)
-  # Total number of events will be different for each element if there are NAs
-  N.events <- colSums(!is.na(m))
-  N.obs <- colSums(m, na.rm = TRUE)
-  p.elements <- N.obs / N.events
-
-
-  # get dyadic combination of elements
-  d <-
-    tidyr::expand_grid(elementA = elements,
-                       elementB = elements)%>%
-    dplyr::filter(.data$elementA != .data$elementB)
+  epairs <- arrangements::combinations(colnames(m), 2)
+  epairs2 <- rbind(epairs, epairs[, 2:1])
   
-  pA <-
-    data.frame(
-      elementA = elements,
-      n_events_A = N.events,
-      p_A = p.elements
-    )
-  pB <-
-    data.frame(
-      elementB = elements,
-      n_events_B = N.events,
-      p_B = p.elements
-    )
+  # pA and pB
+  pA_pB <- 
+    apply(epairs2, 2, function(x) {
+      colSums(m[, x], na.rm = TRUE) / colSums(!is.na(m[, x]))
+    })
   
-  d2 <-
-    d %>%
-    dplyr::left_join(pA, by = "elementA") %>%
-    dplyr::left_join(pB, by = "elementB")
+  # nAandB
+  n_AandB <- 
+    apply(epairs2, 1, function(x) {
+      sum(rowSums(m[, x], na.rm = TRUE) == 2)
+    })
   
-  d3 <-
-    d2 %>%
-    dplyr::mutate(combination = paste(.data$elementA, .data$elementB, sep = "_"))
+  # pAandB = n_AandB / n_events
+  p_AandB <-
+    apply(epairs2, 1, function(x) {
+      mAB <- m[complete.cases(m[, x]), x]
+      sum(rowSums(mAB[, x]) == 2) / nrow(mAB)
+    }) 
   
-  # conditional probabilities/pmi must be calculated separately from complete cases of both elements
-  res <- 
-    lapply(1:nrow(d), function(x) {
-      conditional_probs(m, d$elementA[x], d$elementB[x])
-    }) %>% 
-    dplyr::bind_rows()
+  # PA|B = p_AandB / pB
+  p_AgivenB <-
+    apply(epairs2, 1, function(x) {
+      mAB <- m[complete.cases(m[, x]), x]
+      sum(rowSums(mAB[, x]) == 2) / sum(mAB[, x[2]])
+    })
   
-  d4 <- 
-    d3 %>% 
-    dplyr::left_join(res, by = c("elementA", "elementB"))
+  # PB|A = p_AandB / pA
+  p_BgivenA <-
+    apply(epairs2, 1, function(x) {
+      mAB <- m[complete.cases(m[, x]), x]
+      sum(rowSums(mAB[, x]) == 2) / sum(mAB[, x[1]])
+    })
   
-  # tidy
   out <- 
-    d4 %>% 
-    dplyr::filter(.data$n_AandB > 0) %>% 
-    dplyr::mutate_if(is.double, round, 3) %>% 
-    dplyr::arrange(dplyr::desc(.data$n_AandB), .data$combination) %>%
-    dplyr::select(
-      "elementA", "elementB", "combination", "n_AandB", "p_A", "p_B", "p_AandB",
-      "p_AgivenB","p_BgivenA", "pmi", "norm_pmi"
-    )
+    tibble::tibble(
+      elementA    = epairs2[, 1],
+      elementB    = epairs2[, 2],
+      combination = paste(epairs2[, 1], epairs2[, 2], sep = "_"),
+      count       = n_AandB,
+      p_A         = pA_pB[, 1],
+      p_B         = pA_pB[, 2],
+      p_AandB     = p_AandB,
+      p_AgivenB   = p_AgivenB,
+      p_BgivenA   = p_BgivenA
+    ) %>% 
+    dplyr::arrange(dplyr::desc(count)) %>% 
+    dplyr::mutate_if(is.double, round, 2) %>% 
+    dplyr::filter(.data$count > 0) 
   
+  class(out) <- c("netfacs_conditional", class(out))
+  return(out)
+}
+
+#' @export
+conditional_probabilities.netfacs_multiple <- function(netfacs.data) {
+  out <- 
+    lapply(netfacs.data, function(x) {
+      conditional_probabilities.netfacs(x)
+    }) %>% 
+    dplyr::bind_rows(.id = "condition")
+  
+  class(out) <- c("netfacs_conditional", class(out))
   return(out)
 }
 
 
-# helpers -----------------------------------------------------------------
-
-# Pointwise Mutual Information: 
-pmi <- function(pAandB, pA, pB) {
-  log2(pAandB / (pA * pB))
-}
-
-# normalized pmi; ranges between -1 and 1
-# -1 for never occurring together, 0 for independence, and +1 for complete co-occurrence.
-npmi <- function(pmiAB, pAandB) {
-  pmiAB / (-log2(pAandB))
-}
-
-conditional_probs <- function(m, A, B) {
-  mAB <- m[complete.cases(m[, c(A, B)]), c(A, B)]
-  
-  n_events <- nrow(mAB)
-  n_obs <- colSums(mAB)
-  p <- n_obs / n_events
-  pA <- as.numeric(p[A])
-  pB <- as.numeric(p[B])
-  
-  n_AandB <- sum(rowSums(mAB) == 2)
-  p_AandB <- n_AandB / n_events
-  
-  p_AgivenB <- p_AandB / pB
-  p_BgivenA <- p_AandB / pA
-  pmi_AandB <- pmi(p_AandB, pA, pB)
-  norm_pmi_AandB <- npmi(pmi_AandB, p_AandB)
-  
-  tibble::tibble(
-    elementA  = A,
-    elementB  = B,
-    n_AandB   = n_AandB,
-    p_AandB   = p_AandB,
-    p_AgivenB = p_AgivenB,
-    p_BgivenA = p_BgivenA,
-    pmi       = pmi_AandB,
-    norm_pmi  = norm_pmi_AandB
-  )
-} 

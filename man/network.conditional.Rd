@@ -2,8 +2,8 @@
 % Please edit documentation in R/network_conditional.R
 \name{network.conditional}
 \alias{network.conditional}
-\title{Produce conditional probabilities of dyads of elements, and graph object
-based on conditional probabilities}
+\title{(Deprecated) Produce conditional probabilities of dyads of elements, and
+graph object based on conditional probabilities}
 \usage{
 network.conditional(
   netfacs.data,
@@ -14,7 +14,8 @@ network.conditional(
 )
 }
 \arguments{
-\item{netfacs.data}{object resulting from netfacs() function}
+\item{netfacs.data}{object resulting from \code{\link{netfacs}} or
+\code{\link{conditional_probabilities}} functions.}
 
 \item{min.prob}{minimum conditional probability that should be shown in the
 graph}
@@ -25,38 +26,15 @@ before being included in the graph}
 \item{ignore.element}{string vector, can be used to exclude certain elements
 when creating the plots}
 
-\item{plot.bubbles}{if TRUE, then the nodes in the network plots will be
-surrounded by bubbles; if FALSE, the edges connect the names directly}
+\item{plot.bubbles}{if TRUE (default), then the nodes in the network plots
+will be surrounded by bubbles; if FALSE, the edges connect the names
+directly}
 }
 \value{
 Function returns a dataframe that includes all dyadic combinations
   and their observed and conditional probabilities
 }
 \description{
-For all dyadic combinations that appear in the test dataset, this function
-returns the probability of A occurring (P(A)), the probability of B occurring
-(P(B)), the probability of A and B occurring simultaneously (P(A+B)), and the
-probability of A occurring if B is given (P(A|B)). It also creates a graph
-object that can be plotted
-}
-\examples{
-### how do angry facial expressions differ from non-angry ones?
-data(emotions_set)
-angry.face <- netfacs(
-  data = emotions_set[[1]],
-  condition = emotions_set[[2]]$emotion,
-  test.condition = "anger",
-  ran.trials = 100,
-  combination.size = 2
-)
-
-conditional.net <- network.conditional(
-  netfacs.data = angry.face,
-  min.prob = 0.01,
-  min.count = 3,
-  ignore.element = "25",
-  plot.bubbles = FALSE
-)
-
-conditional.net$conditional.probalities
+This function is deprecated. Please see \code{\link{network_conditional}}
+instead
 }

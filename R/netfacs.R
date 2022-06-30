@@ -63,7 +63,7 @@
 #'   \code{https://doi.org/10.3758/s13428-021-01692-5}
 #'
 #' @seealso \code{\link{netfacs_multiple}}, \code{\link{netfacs_extract}},
-#'   \code{\link{summarise_pairs}}
+#'   \code{\link{conditional_probabilities}}
 #'
 #' @importFrom picante randomizeMatrix
 #' @importFrom arrangements combinations

@@ -121,7 +121,7 @@ Mielke, A., Waller, B. M., Perez, C., Rincon, A. V., Duboscq, J.,
 }
 \seealso{
 \code{\link{netfacs_multiple}}, \code{\link{netfacs_extract}},
-  \code{\link{summarise_pairs}}
+  \code{\link{conditional_probabilities}}
 }
 \author{
 Alex Mielke, Alan V. Rincon

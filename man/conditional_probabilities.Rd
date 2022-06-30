@@ -7,19 +7,17 @@
 conditional_probabilities(netfacs.data)
 }
 \arguments{
-\item{netfacs.data}{An object of class \code{\link{netfacs}}}
+\item{netfacs.data}{An object of class \code{\link{netfacs}} or
+\code{\link{netfacs_multiple}}}
 }
 \value{
-A summary data.frame
+A summary \code{\link[tibble:tibble]{tibble}}
 }
 \description{
 For all dyadic combinations that appear in the test dataset, this function
 returns the probability of A occurring (P(A)), the probability of B occurring
-(P(B)), the probability of A and B occurring simultaneously (P(AandB)), the
-probability of A given B (P(A|B)), pointwise mutual information (pmi) and
-normalized pointwise mutual information (norm_pmi). The normalized pmi ranges
-between -1 and 1; -1 for never occurring together, 0 for independence, and +1
-for complete co-occurrence.
+(P(B)), the probability of A and B occurring simultaneously (P(AandB)) and, the
+probability of A given B (P(A|B)).
 }
 \examples{
 data(emotions_set)
@@ -32,4 +30,7 @@ angry.face <- netfacs(
 )
 
 conditional_probabilities(angry.face)
+}
+\seealso{
+\code{\link{network_conditional}}
 }
