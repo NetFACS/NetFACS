@@ -2,36 +2,17 @@
 % Please edit documentation in R/entropy_overall.R
 \name{entropy.overall}
 \alias{entropy.overall}
-\title{Compares the observed and expected information content of the dataset}
+\title{(Deprecated) Calculate information content of the dataset}
 \usage{
-entropy.overall(netfacs.data)
+entropy.overall(x, netfacs.data)
 }
 \arguments{
-\item{netfacs.data}{object resulting from netfacs() function}
-}
-\value{
-Function returns the ratio of observed entropy/expected entropy.
-  Expected entropy is based on randomization (shuffling the observed elements
-  while maintaining the number of elements per row) and represents the
-  maximum entropy a dataset with the same properties as this one can reach.
-  Ratios closer to 0 are more ordered; ratios closer to 1 are more random.
+\item{x}{An object of class \code{\link{netfacs}} or simply a binary matrix
+of 0s and 1s, with elements in columns and events in rows.}
+
+\item{netfacs.data}{deprecated. Please use x instead.}
 }
 \description{
-Establishes how 'ordered' the data is: values close to 0 indicate that
-combinations are highly repetitive and predictable, while values close to 1
-indicate that combinations are equiprobable and prediction of future
-combinations is difficult
-}
-\examples{
-### how do angry facial expressions differ from non-angry ones?
-data(emotions_set)
-angry.face <- netfacs(
-  data = emotions_set[[1]],
-  condition = emotions_set[[2]]$emotion,
-  test.condition = "anger",
-  ran.trials = 100,
-  combination.size = 2
-)
-
-entropy.overall(angry.face)
+This function is deprecated. Please see \code{\link{entropy_overall}}
+instead
 }

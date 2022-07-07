@@ -1,18 +1,24 @@
-#' Compares the observed and expected information content of the dataset
+#' Calculate information content of the dataset
 #'
-#' Establishes how 'ordered' the data is: values close to 0 indicate that
-#' combinations are highly repetitive and predictable, while values close to 1
-#' indicate that combinations are equiprobable and prediction of future
-#' combinations is difficult
+#' Compares the observed and expected information content of the dataset.
 #'
+#' @param x An object of class \code{\link{netfacs}} or simply a binary matrix
+#'   of 0s and 1s, with elements in columns and events in rows.
 #'
-#' @param netfacs.data object resulting from netfacs() function
+#' @return Function returns a summary \code{\link[tibble:tibble]{tibble}}
+#'   containing the observed entropy, expected entropy and entropy ratio
+#'   (observed / expected) of the dataset. Observed entropy is calculated using
+#'   Shannon's information entropy formula \eqn{- \sum_{i = 1}^n p_i \log
+#'   (p_i)}. Expected entropy is based on randomization (shuffling the observed
+#'   elements while maintaining the number of elements per row) and represents
+#'   the maximum entropy that a dataset with the same properties as this one can
+#'   reach. Ratios closer to 0 are more ordered; ratios closer to 1 are more
+#'   random.
 #'
-#' @return Function returns the ratio of observed entropy/expected entropy.
-#'   Expected entropy is based on randomization (shuffling the observed elements
-#'   while maintaining the number of elements per row) and represents the
-#'   maximum entropy a dataset with the same properties as this one can reach.
-#'   Ratios closer to 0 are more ordered; ratios closer to 1 are more random.
+#' @references Shannon, C. E. (1948). A Mathematical Theory of Communication.
+#'   \emph{Bell System Technical Journal}.
+#'   \code{https://doi.org/10.1002/j.1538-7305.1948.tb01338.x}
+#'
 #' @importFrom picante randomizeMatrix
 #' @export
 #'
@@ -27,25 +33,25 @@
 #'   combination.size = 2
 #' )
 #'
-#' entropy.overall(angry.face)
-entropy.overall <- function(netfacs.data) {
-  # take data for the test condition only
-  if (is.null(netfacs.data$used.parameters$test.condition)) {
-    netfacs.data$used.parameters$test.condition <- "all"
-    netfacs.data$used.data$condition <-
-      rep("all", times = nrow(netfacs.data$used.data$data))
+#' entropy_overall(angry.face)
+entropy_overall <- function(x) {
+  UseMethod("entropy_overall")
+}
+
+#' @export
+entropy_overall.default <- function(x) {
+  
+  m <- as.matrix(x)
+  
+  if (!all(m %in% c(0,1))) {
+    stop("Argument 'x' must a matrix of 0s, 1s")
   }
-  m <-
-    as.matrix(netfacs.data$used.data$data[netfacs.data$used.data$condition ==
-                                            netfacs.data$used.parameters$test.condition, ])
   
   data.entropy <- information_entropy(m)
   
   # create random entropy by shuffling which elements are observed in each row while keeping the number of elements the same
   ran.entropy <- lapply(1:100, function(b) {
-    # select outcome of shuffle
-    ran.data <- randomizeMatrix(samp = as.matrix(m), null.model = "richness") 
-    # calculate random entropy
+    ran.data <- randomizeMatrix(samp = m, null.model = "richness") 
     return(information_entropy(ran.data)) 
   })
   
@@ -55,12 +61,45 @@ entropy.overall <- function(netfacs.data) {
   entropy.ratio <- round(data.entropy / ran.entropy, 2) 
   
   return(
-    data.frame(
+    tibble::tibble(
       observed.entropy = data.entropy,
       expected.entropy = ran.entropy,
       entropy.ratio = entropy.ratio
     )
   )
+}
+
+#' @export
+entropy_overall.netfacs <- function(x) {
+  m <- get_data(x, condition = "test")
+  m <- as.matrix(m)
+  entropy_overall.default(m)
+}
+
+#' @export
+entropy_overall.netfacs_multiple <- function(x) {
+  lapply(x, function(d) {
+    entropy_overall.netfacs(d)  
+  }) %>% 
+    dplyr::bind_rows(.id = "condition")
+}
+
+
+#' (Deprecated) Calculate information content of the dataset
+#' 
+#' This function is deprecated. Please see \code{\link{entropy_overall}}
+#' instead
+#' 
+#' @inheritParams entropy_overall
+#' @param netfacs.data deprecated. Please use x instead.
+#' @export
+entropy.overall <- function(x, netfacs.data) {
+  .Deprecated("netfacs_extract")
+  
+  if (!missing(netfacs.data)) {
+    x <- netfacs.data
+  }
+  entropy_overall(x)
 }
 
 # helper ------------------------------------------------------------------
