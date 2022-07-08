@@ -34,11 +34,13 @@ conditional_probabilities <- function(netfacs.data) {
 #' @export
 conditional_probabilities.netfacs <- function(netfacs.data) {
   
-  if (attr(netfacs.data, "stat_method") == "bootstrap") {
-    m <- netfacs.data$used.data$data[netfacs.data$used.data$condition == netfacs.data$used.parameters$test.condition, ]  
-  } else {
-    m <- netfacs.data$used.data$data
-  }
+  # if (attr(netfacs.data, "stat_method") == "bootstrap") {
+  #   m <- netfacs.data$used.data$data[netfacs.data$used.data$condition == netfacs.data$used.parameters$test.condition, ]  
+  # } else {
+  #   m <- netfacs.data$used.data$data
+  # }
+  
+  m <- get_data(netfacs.data)
   
   epairs <- arrangements::combinations(colnames(m), 2)
   epairs2 <- rbind(epairs, epairs[, 2:1])
