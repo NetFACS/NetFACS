@@ -2,7 +2,10 @@
 #'
 #' @param netfacs.data object resulting from netfacs() function
 #'
-#' @return Function returns a dataframe that includes all combinations, their occurrence counts and probabilities, and the pointwise mutual information (standardised between -1 and 1). 1 means seeing one necessitates seeing the other, -1 means one precludes the other
+#' @return Function returns a dataframe that includes all combinations, their
+#'   occurrence counts and probabilities, and the pointwise mutual information
+#'   (standardised between -1 and 1). 1 means seeing one necessitates seeing the
+#'   other, -1 means one precludes the other
 #'
 #' @export
 #'
@@ -18,8 +21,7 @@
 #'   combination.size = 4
 #' )
 #'
-#' mutual.information(angry.face
-#' )
+#' mutual.information(angry.face)
 #' }
 
 mutual.information <- function(netfacs.data){

@@ -1,11 +1,22 @@
-#' Tests how much each element increases the specificity of all combinations it is in
+#' Tests how much each element increases the specificity of all combinations it
+#' is in
 #'
-#' The function takes all elements and dyadic combinations of elements in a netfacs object, goes through all combinations these elements are in, and compares the specificity (strength with which the combination identifies the test condition) of all combinations with the element and the same combinations without the element, to test how much specificity the element adds when added to a signal. Only works for netfacs objects based on comparison between conditions.
+#' The function takes all elements and dyadic combinations of elements in a
+#' netfacs object, goes through all combinations these elements are in, and
+#' compares the specificity (strength with which the combination identifies the
+#' test condition) of all combinations with the element and the same
+#' combinations without the element, to test how much specificity the element
+#' adds when added to a signal. Only works for netfacs objects based on
+#' comparison between conditions.
 #'
 #'
 #' @param netfacs.data object resulting from netfacs() function
 #'
-#' @return Function returns a list with two data frames that include all elements and first-order combinations that occur at all, the number of combinations that each element/combination is part of, and how much adding this element to a combination adds on average to its specificity, and how often it occurs
+#' @return Function returns a list with two data frames that include all
+#'   elements and first-order combinations that occur at all, the number of
+#'   combinations that each element/combination is part of, and how much adding
+#'   this element to a combination adds on average to its specificity, and how
+#'   often it occurs
 #'
 #' @importFrom Rfast rowmeans
 #' @export
@@ -31,28 +42,31 @@ mutual.information.condition <- function(netfacs.data){
   used.data <- netfacs.data$used.data$data
   condition <- netfacs.data$used.data$condition
   combinations <- netfacs.data$result$combination
-  combinations.unlist <- unlist(lapply(netfacs.data$result$combination, strsplit, split = '_'), recursive = F)
+  combinations.unlist <- unlist(lapply(netfacs.data$result$combination, 
+                                       strsplit, split = '_'), recursive = F)
   
   condition.probs <- do.call(rbind, lapply(unique(condition), function(z){
     
     Aall <- mean(condition == z)
-    combination.probs <- do.call(rbind, lapply(1:length(combinations), function(x){
-      
-      if(length(combinations.unlist[[x]]) == 1){
-        Ball <- mean(used.data[,combinations.unlist[[x]]] == 1)
-        AandB <- sum(used.data[condition == z,combinations.unlist[[x]]] == 1)/nrow(used.data)
-        BgivenA <- mean(used.data[condition == z,combinations.unlist[[x]]] == 1)
-        count <- sum(used.data[condition == z,combinations.unlist[[x]]] == 1)
-      }
-      if(length(combinations.unlist[[x]]) > 1){
-        Ball <- mean(rowmeans(used.data[,combinations.unlist[[x]]]) == 1)
-        AandB <- sum(rowmeans(used.data[condition == z,combinations.unlist[[x]]]) == 1)/nrow(used.data)
-        BgivenA <- mean(rowmeans(used.data[condition == z,combinations.unlist[[x]]]) == 1)
-        count <- sum(rowmeans(used.data[condition == z,combinations.unlist[[x]]]) == 1)
-      }
-      
-      
-      mi <- round(log(
+    combination.probs <- do.call(
+      rbind, lapply(1:length(combinations), function(x){
+        
+        if(length(combinations.unlist[[x]]) == 1){
+          Ball <- mean(used.data[,combinations.unlist[[x]]] == 1)
+          AandB <- sum(used.data[condition == z,combinations.unlist[[x]]] == 1)/nrow(used.data)
+          BgivenA <- mean(used.data[condition == z,combinations.unlist[[x]]] == 1)
+          count <- sum(used.data[condition == z,combinations.unlist[[x]]] == 1)
+        }
+        if(length(combinations.unlist[[x]]) > 1){
+          Ball <- mean(rowmeans(used.data[,combinations.unlist[[x]]]) == 1)
+          AandB <- sum(rowmeans(used.data[condition == z,combinations.unlist[[x]]]) == 1)/nrow(used.data)
+          BgivenA <- mean(rowmeans(used.data[condition == z,combinations.unlist[[x]]]) == 1)
+          count <- sum(rowmeans(used.data[condition == z,combinations.unlist[[x]]]) == 1)
+        }
+        
+        
+        mi <- round(
+          log(
         (AandB)/
           (Aall * Ball))/
           (-1 * log(AandB)), 3)

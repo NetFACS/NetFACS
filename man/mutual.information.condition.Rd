@@ -2,7 +2,8 @@
 % Please edit documentation in R/mutual_information_condition.R
 \name{mutual.information.condition}
 \alias{mutual.information.condition}
-\title{Tests how much each element increases the specificity of all combinations it is in}
+\title{Tests how much each element increases the specificity of all combinations it
+is in}
 \usage{
 mutual.information.condition(netfacs.data)
 }
@@ -10,10 +11,20 @@ mutual.information.condition(netfacs.data)
 \item{netfacs.data}{object resulting from netfacs() function}
 }
 \value{
-Function returns a list with two data frames that include all elements and first-order combinations that occur at all, the number of combinations that each element/combination is part of, and how much adding this element to a combination adds on average to its specificity, and how often it occurs
+Function returns a list with two data frames that include all
+  elements and first-order combinations that occur at all, the number of
+  combinations that each element/combination is part of, and how much adding
+  this element to a combination adds on average to its specificity, and how
+  often it occurs
 }
 \description{
-The function takes all elements and dyadic combinations of elements in a netfacs object, goes through all combinations these elements are in, and compares the specificity (strength with which the combination identifies the test condition) of all combinations with the element and the same combinations without the element, to test how much specificity the element adds when added to a signal. Only works for netfacs objects based on comparison between conditions.
+The function takes all elements and dyadic combinations of elements in a
+netfacs object, goes through all combinations these elements are in, and
+compares the specificity (strength with which the combination identifies the
+test condition) of all combinations with the element and the same
+combinations without the element, to test how much specificity the element
+adds when added to a signal. Only works for netfacs objects based on
+comparison between conditions.
 }
 \examples{
 ### how do angry facial expressions differ from non-angry ones?
