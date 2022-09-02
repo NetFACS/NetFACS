@@ -35,12 +35,12 @@ conditional_probabilities <- function(netfacs.data) {
 conditional_probabilities.netfacs <- function(netfacs.data) {
   
   # if (attr(netfacs.data, "stat_method") == "bootstrap") {
-  #   m <- netfacs.data$used.data$data[netfacs.data$used.data$condition == netfacs.data$used.parameters$test.condition, ]  
+  #   m <- netfacs.data$used.data$data[netfacs.data$used.data$condition == netfacs.data$used.parameters$test.condition, ]
   # } else {
   #   m <- netfacs.data$used.data$data
   # }
   
-  m <- get_data(netfacs.data)
+  m <- get_data(netfacs.data, condition = "test")
   
   epairs <- arrangements::combinations(colnames(m), 2)
   epairs2 <- rbind(epairs, epairs[, 2:1])
