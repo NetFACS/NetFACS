@@ -54,28 +54,28 @@ conditional_probabilities.netfacs <- function(netfacs.data) {
   # nAandB
   n_AandB <- 
     apply(epairs2, 1, function(x) {
-      sum(rowSums(m[, x], na.rm = TRUE) == 2)
+      sum(rowSums(m[, x, drop = FALSE], na.rm = TRUE) == 2)
     })
   
   # pAandB = n_AandB / n_events
   p_AandB <-
     apply(epairs2, 1, function(x) {
-      mAB <- m[complete.cases(m[, x]), x]
-      sum(rowSums(mAB[, x]) == 2) / nrow(mAB)
+      mAB <- m[complete.cases(m[, x]), x, drop = FALSE]
+      sum(rowSums(mAB[, x, drop = FALSE]) == 2) / nrow(mAB)
     }) 
   
   # PA|B = p_AandB / pB
   p_AgivenB <-
     apply(epairs2, 1, function(x) {
-      mAB <- m[complete.cases(m[, x]), x]
-      sum(rowSums(mAB[, x]) == 2) / sum(mAB[, x[2]])
+      mAB <- m[complete.cases(m[, x]), x, drop = FALSE]
+      sum(rowSums(mAB[, x, drop = FALSE]) == 2) / sum(mAB[, x[2]])
     })
   
   # PB|A = p_AandB / pA
   p_BgivenA <-
     apply(epairs2, 1, function(x) {
-      mAB <- m[complete.cases(m[, x]), x]
-      sum(rowSums(mAB[, x]) == 2) / sum(mAB[, x[1]])
+      mAB <- m[complete.cases(m[, x]), x, drop = FALSE]
+      sum(rowSums(mAB[, x, drop = FALSE]) == 2) / sum(mAB[, x[1]])
     })
   
   out <- 

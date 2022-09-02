@@ -74,7 +74,8 @@ get_data <- function(x,
   
   if (condition == "test") {
     if (attr(x, "stat_method") == "bootstrap") {
-      out <- m[x$used.data$condition == x$used.parameters$test.condition, ]
+      out <- m[x$used.data$condition == x$used.parameters$test.condition, , 
+               drop = FALSE]
       return(out)
     } else {
       # if the method is permutation the whole matrix is the test data
