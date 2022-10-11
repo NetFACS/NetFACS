@@ -85,12 +85,19 @@ Function returns a Result data frame that includes the combination
   randomisations
 }
 \description{
+*EXPERIMENTAL*
+}
+\details{
+This is an experimental function that is capable of handling NAs in the data.
+However, the resulting object may not work with other functions in the
+NetFACS package. Please use \code{\link{netfacs}} instead for the most
+reliable results.
+
 The \code{\link{netfacs}} function underlies most other functions in this
 package. \cr It takes the data set and reports the observed and expected
 probabilities that elements and combinations of elements occur in this data
 set, and whether this differs from a null condition.
-}
-\details{
+
 Expected values are based on bootstraps of null distribution, so the
   values represent distribution of element co-occurrence under null
   condition; or permutations of the observed distribution to test it against

@@ -1,5 +1,12 @@
 #' Create probability distribution of combinations of elements in the data
 #'
+#' *EXPERIMENTAL*
+#'
+#' This is an experimental function that is capable of handling NAs in the data.
+#' However, the resulting object may not work with other functions in the
+#' NetFACS package. Please use \code{\link{netfacs}} instead for the most
+#' reliable results.
+#'
 #' The \code{\link{netfacs}} function underlies most other functions in this
 #' package. \cr It takes the data set and reports the observed and expected
 #' probabilities that elements and combinations of elements occur in this data
@@ -64,7 +71,7 @@
 #' head(angry.face$result, 20)
 #' angry.face$event.size.information
 #' }
-#'
+#' 
 netfacs_na <- function(data,
                        condition = NULL,
                        test.condition = NULL,
@@ -77,6 +84,8 @@ netfacs_na <- function(data,
                        tail = "upper.tail",
                        use_parallel = TRUE,
                        n_cores = 2) {
+  
+  warning("This is an experimental function that handles NAs in the data. The resulting object may not work with other functions in the NetFACS package. Please use the function 'netfacs()' for the most reliable results.", call. = FALSE, immediate. = TRUE)
   
   # validate data passed by user
   data <- validate_data(data)
