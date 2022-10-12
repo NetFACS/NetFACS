@@ -42,11 +42,14 @@ netfacs_bootstrap_na <- function(subject,
   
   ################## If there are NAs in the data, the following function re-calculates the number of possible events that combinations could have occurred in
   if (any(is.na(null.data))) {
+    
     max_possible_count_boot <- 
-      count_complete_cases(rs.boot$combination, null.data)
+      count_complete_cases(
+        rs.boot$combination, 
+        null.data[null.subjects %in% unique(subj.boot), ]
+      )
     
     rs.boot$observed.prob <- rs.boot$count/max_possible_count_boot
-    
   }
   
   # order to match real data
