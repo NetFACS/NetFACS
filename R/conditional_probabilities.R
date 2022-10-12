@@ -80,15 +80,15 @@ conditional_probabilities.netfacs <- function(netfacs.data) {
   
   out <- 
     tibble::tibble(
-      elementA    = epairs2[, 1],
-      elementB    = epairs2[, 2],
-      combination = paste(epairs2[, 1], epairs2[, 2], sep = "_"),
-      count       = n_AandB,
-      p_A         = pA_pB[, 1],
-      p_B         = pA_pB[, 2],
-      p_AandB     = p_AandB,
-      p_AgivenB   = p_AgivenB,
-      p_BgivenA   = p_BgivenA
+      element_A           = epairs2[, 1],
+      element_B           = epairs2[, 2],
+      combination         = paste(epairs2[, 1], epairs2[, 2], sep = "_"),
+      count               = n_AandB,
+      probability_A       = pA_pB[, 1],
+      probability_B       = pA_pB[, 2],
+      probability_AandB   = p_AandB,
+      probability_AgivenB = p_AgivenB,
+      probability_BgivenA = p_BgivenA
     ) %>% 
     dplyr::arrange(dplyr::desc(count)) %>% 
     dplyr::mutate_if(is.double, round, 2) %>% 
