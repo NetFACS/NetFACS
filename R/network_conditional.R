@@ -215,17 +215,17 @@ conditional_graph <- function(cp,
   
   rs.1 <- 
     cp %>% 
-    dplyr::select(.data$elementA, .data$p_A) %>% 
+    dplyr::select(.data$element_A, .data$probability_A) %>% 
     dplyr::distinct() %>% 
-    dplyr::rename(name = .data$elementA,
-                  element.prob = .data$p_A)
+    dplyr::rename(name = .data$element_A,
+                  element.prob = .data$probability_A)
   
   cp2 <- 
     cp %>% 
-    dplyr::filter(.data$p_AgivenB >= min.prob,
+    dplyr::filter(.data$probability_AgivenB >= min.prob,
                   .data$count >= min.count,
-                  !.data$elementA %in% ignore.element,
-                  !.data$elementB %in% ignore.element)
+                  !.data$element_A %in% ignore.element,
+                  !.data$element_B %in% ignore.element)
   
   g <-
     cp2 %>% 
@@ -241,7 +241,7 @@ conditional_plot <- function(g,
     g %>% 
     ggraph::ggraph(layout = "igraph", algorithm = "kk") +
     ggraph::geom_edge_link(
-      ggplot2::aes(label = .data$p_AgivenB),
+      ggplot2::aes(label = .data$probability_AgivenB),
       label_size = 3,
       arrow = ggplot2::arrow(type = "closed",
                              angle = 15,

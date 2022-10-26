@@ -1,6 +1,6 @@
 Package: NetFACS
 Title: Network Applications to Facial Communication Data
-Version: 0.4.0.9030
+Version: 0.4.0.9031
 Date: 2022-09-02
 Authors@R: c(
     person(given = "Alex",
