@@ -13,6 +13,7 @@
 #'   combination size considered in the bootstrap
 #' @param max.event.size A positive integer indicating the maximum event size to
 #'   be considered
+#' @param null.data A matrix with data from the null condition 
 #'
 #' @return A list of bootstrapped probabilities for combinations and event sizes
 #'

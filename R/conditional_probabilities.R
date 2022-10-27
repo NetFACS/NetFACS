@@ -90,7 +90,7 @@ conditional_probabilities.netfacs <- function(netfacs.data) {
       probability_AgivenB = p_AgivenB,
       probability_BgivenA = p_BgivenA
     ) %>% 
-    dplyr::arrange(dplyr::desc(count)) %>% 
+    dplyr::arrange(dplyr::desc(.data$count)) %>% 
     dplyr::mutate_if(is.double, round, 2) %>% 
     dplyr::filter(.data$count > 0) 
   

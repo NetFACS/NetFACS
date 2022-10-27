@@ -41,7 +41,7 @@ netfacs.reciprocity <- function(netfacs.data) {
   conditional_foo <- function(indata) {
     # indata is the raw data matrix (either all events or only test condition)
     # pairs of units
-    xpairs <- combn(colnames(indata), 2)
+    xpairs <- utils::combn(colnames(indata), 2)
     # PA and PB
     pa_and_pb <-
       apply(xpairs, 2, function(x) {

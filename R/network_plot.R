@@ -107,7 +107,7 @@ network.plot <- function(netfacs.graph,
           color = "lightblue",
           show.legend = FALSE
         ) +
-        coord_fixed() +
+        ggplot2::coord_fixed() +
         geom_node_text(
           aes(label = .data$name,
               size = .data$element.prob,
@@ -161,7 +161,7 @@ network.plot <- function(netfacs.graph,
                         color = color[net.com$community],
                         shape = shape[net.com$community],
                         show.legend = F) +
-        coord_fixed() +
+        ggplot2::coord_fixed() +
         geom_node_text(aes(label = .data$name,
                            size = .data$element.prob,
                            fontface = "bold"),

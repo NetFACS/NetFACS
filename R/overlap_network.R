@@ -148,9 +148,12 @@ overlap.network <- function(netfacs.list,
       g.cluster %>% 
       activate(nodes) %>%
       mutate(
-        community = cluster_fast_greedy(g.cluster,
-                                        weights = E(g.cluster)$probability)$membership,
-        color = as.character(.data$community))
+        community = cluster_fast_greedy(
+          g.cluster,
+          weights = E(g.cluster)$probability
+        )$membership,
+        color = as.character(.data$community)
+      )
     
     # determine modularity
     modularity.net <-
@@ -173,7 +176,10 @@ overlap.network <- function(netfacs.list,
         activate(nodes) %>%
         select(-"color") %>% 
         # colors if there are clusters
-        left_join(g.cluster2 %>% activate(nodes) %>% as_tibble(), by = "name")  
+        dplyr::left_join(
+          g.cluster2 %>% activate(nodes) %>% as_tibble(), 
+          by = "name"
+        )  
     }
     
     g.occurrence <- set_cluster_colors(g.occurrence)

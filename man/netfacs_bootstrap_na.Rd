@@ -33,6 +33,8 @@ combination size considered in the bootstrap}
 
 \item{max.event.size}{A positive integer indicating the maximum event size to
 be considered}
+
+\item{null.data}{A matrix with data from the null condition}
 }
 \value{
 A list of bootstrapped probabilities for combinations and event sizes

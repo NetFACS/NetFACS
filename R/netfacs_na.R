@@ -476,7 +476,7 @@ netfacs_na <- function(data,
     ### create probabilities for test dataset
     elements.test <- get_active_elements(d)
     ######## remove NAs
-    elements.test <- lapply(lapply(elements.test, na.omit), as.character)
+    elements.test <- lapply(lapply(elements.test, stats::na.omit), as.character)
     
     rs.test <- probability_of_combination(
       elements = elements.test,
