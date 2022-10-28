@@ -10,14 +10,16 @@
 #' comparison between conditions.
 #'
 #'
-#' @param netfacs.data object resulting from netfacs() function
+#' @param netfacs.data object resulting from \code{\link{netfacs}} function
 #'
 #' @return Function returns a list with two data frames that include all
 #'   elements and first-order combinations that occur at all, the number of
 #'   combinations that each element/combination is part of, and how much adding
 #'   this element to a combination adds on average to its specificity, and how
 #'   often it occurs
-#'
+#'   
+#' @importFrom magrittr %>%
+#' 
 #' @export
 #'
 #' @examples
@@ -38,92 +40,95 @@
 #' 
 
 element.specificity <- function(netfacs.data) {
-  # create dataset
-  data <- netfacs.data$result
-
-  # if no specificity exists (i.e. the test data was compared against random), show error message
-  if (!"specificity" %in% colnames(data)) {
+  # if test data was compared against random, specificity is meaningless
+  if (attr(netfacs.data, "stat_method") == "permutation") {
     return(
       print(
         "Results are not part of comparison and do not reveal anything about specificity."
       )
     )
   }
-
-  # select only elements and first order combinations
-  xx <-
-    data$combination[data$combination.size %in% c(1, 2) &
-      data$observed.prob > 0]
-
-  # create new dataframe only for those elements
-  element.specificity <-
-    data.frame(
-      element = xx,
-      number.combinations = 0,
-      specificity.increase = 0
-    )
-  rownames(element.specificity) <- xx
-
+  
+  d <- netfacs_extract(netfacs.data)
+  ed <- 
+    netfacs.data %>% 
+    netfacs_extract(combination.size = 1:2, 
+                    min.count = 1)
+  
   # make list of all possible
   all.combinations <-
-    lapply(data$combination, function(x) {
-      unlist(strsplit(as.character(x), split = "_", fixed = T))
+    lapply(d$combination, function(x) {
+      unlist(strsplit(as.character(x), split = "_", fixed = TRUE))
     })
-
-  # for each element and first order combination, count how many combinations this one is part of
-  ii <- lapply(rownames(element.specificity), function(i) {
-    x.i <- unlist(strsplit(as.character(i), split = "_", fixed = T))
-    elements.with <-
-      data[unlist(lapply(all.combinations, function(z) {
-        length(intersect(x.i, unlist(z))) == length(x.i)
-      })), ]
-    combinations.with <-
-      all.combinations[unlist(lapply(all.combinations, function(z) {
-        length(intersect(x.i, unlist(z))) == length(x.i)
-      }))]
-    return(length(combinations.with))
-  })
-  element.specificity$number.combinations <- unlist(ii)
-
-  # calculate for each element/combination the specificity of all combinations that have this element/combination, and those which are composed of all the same other elements minus the one in question
-  ii <- lapply(rownames(element.specificity), function(i) {
-    x.i <- unlist(strsplit(as.character(i), split = "_", fixed = T))
-    elements.with <-
-      data[unlist(lapply(all.combinations, function(z) {
-        length(intersect(x.i, unlist(z))) == length(x.i)
-      })), ]
-    combinations.with <-
-      all.combinations[unlist(lapply(all.combinations, function(z) {
-        length(intersect(x.i, unlist(z))) == length(x.i)
-      }))]
-    specificity.with <- elements.with$specificity
-    combinations.without <- sapply(combinations.with, function(x) {
-      xx <- x[!x %in% x.i]
-      if (length(xx) > 1) {
-        xx <- paste(xx, collapse = "_")
-      }
-      return(xx)
+  ed.combinations <- 
+    lapply(ed$combination, function(x) {
+      unlist(strsplit(as.character(x), split = "_", fixed = TRUE))
     })
-    specificity.without <-
-      data$specificity[data$combination %in% unlist(combinations.without)]
-    return(mean(specificity.with, na.rm = T) - mean(specificity.without, na.rm = T))
-  })
-  element.specificity$specificity.increase <- unlist(ii)
-
-  # order by increase in specificity
-  element.specificity <-
-    element.specificity[order(-1 * element.specificity$specificity.increase), ]
-  element.specificity$count <-
-    data$count[match(element.specificity$element, data$combination)]
-
-  combinations <-
-    grepl(element.specificity$element,
-      pattern = "_",
-      fixed = T
-    ) # this is used to differentiate between single elements and combinations
-
-  element.specificity <-
-    list(element = element.specificity[!combinations, ], dyad = element.specificity[combinations, ])
-
-  return(element.specificity)
+  
+  # helpers
+  combination_in_vector <- function(comb, vec) {
+    length(intersect(comb, vec)) == length(comb)
+  }
+  combination_in_list <- function(comb, l) {
+    unlist(
+      lapply(l, function(l.comb){
+        combination_in_vector(comb, l.comb)
+      })
+    )
+  }
+  
+  number.combinations <- 
+    lapply(ed.combinations, function(t.comb) {
+      combinations.i <- combination_in_list(t.comb, all.combinations)
+      combinations.with <- all.combinations[combinations.i]
+      length(combinations.with)
+    })
+  
+  specificity.increase <- 
+    lapply(ed.combinations, function(t.comb) {
+      
+      combinations.i <- combination_in_list(t.comb, all.combinations)
+      elements.with <- d[combinations.i, ]
+      combinations.with <- all.combinations[combinations.i]
+      
+      specificity.with <- elements.with$specificity
+      
+      combinations.without <-
+        lapply(combinations.with, function(x) {
+          xx <- x[!x %in% t.comb] 
+          if (length(xx) > 1) {
+            xx <- paste(xx, collapse = "_")
+          }
+          return(xx)
+        })
+      
+      specificity.without <-
+        d$specificity[d$combination %in% unlist(combinations.without)]
+      
+      spec.increase <- 
+        mean(specificity.with, na.rm = T) - mean(specificity.without, na.rm = T)
+      
+      return(spec.increase)
+    })
+  
+  # create new dataframe only for those elements
+  es <-
+    tibble::tibble(
+      element = ed$combination,
+      number.combinations = unlist(number.combinations),
+      specificity.increase = unlist(specificity.increase)
+    ) %>% 
+    dplyr::arrange(dplyr::desc(specificity.increase))
+  
+  es2 <- 
+    es %>% 
+    dplyr::left_join(d %>% dplyr::select(combination, count, combination.size), 
+                     by = c("element" = "combination"))
+  
+  esl <- 
+    es2 %>% 
+    split(.$combination.size) %>% 
+    stats::setNames(c("element", "dyad"))
+  
+  return(esl)
 }
