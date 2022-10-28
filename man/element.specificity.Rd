@@ -8,7 +8,7 @@ is in}
 element.specificity(netfacs.data)
 }
 \arguments{
-\item{netfacs.data}{object resulting from netfacs() function}
+\item{netfacs.data}{object resulting from \code{\link{netfacs}} function}
 }
 \value{
 Function returns a list with two data frames that include all
