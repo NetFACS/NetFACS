@@ -97,39 +97,34 @@ overlap.network <- function(netfacs.list,
   }
   
   # from the different netfacs objects in the list, reduce them all to single elements that meet the criteria specified by the user
-  net.data <- 
-    netfacs.list %>% 
-    lapply(function(x) {
-      x$result %>% 
-        filter(.data$combination.size == 1,
-               .data$pvalue <= significance, # select significance level
-               .data$observed.prob > .data$expected.prob, # have to be MORE likely than expected
-               .data$count >= min.count, # have to occur at least this many times
-               !.data$combination %in% ignore.element, # remove the 'ignore.element' elements
-               .data$observed.prob >= min.prob # minimum probability of occurrence
-        )
-    })
-  
-  # create a dataframe that connects the condition with the elements
   multi.net <- 
-    net.data %>% 
-    bind_rows(.id = "condition") %>% 
+    netfacs.list %>% 
+    netfacs_extract(
+      combination.size = 1,
+      significance = significance,
+      min.count = min.count, 
+      min.prob = min.prob
+    ) %>% 
+    dplyr::filter(
+      .data$observed.prob > .data$expected.prob,
+      !.data$combination %in% ignore.element
+    ) %>% 
     select("condition", "combination", "observed.prob", "specificity")
   
   # create two conditional probability objects: one for the probability that the condition is present given the element, and one the opposite
   condition.element <-
     multi.net %>% 
-    rename(A = .data$condition,
-           B = .data$combination,
-           probability = .data$specificity) %>% 
+    rename(A = "condition",
+           B = "combination",
+           probability = "specificity") %>% 
     select("A", "B", "probability", -"observed.prob") %>% 
     mutate(type = "Context Specificity (P[Condition|Element])")
   
   element.condition <-
     multi.net %>% 
-    rename(A = .data$combination,
-           B = .data$condition,
-           probability = .data$observed.prob) %>% 
+    rename(A = "combination",
+           B = "condition",
+           probability = "observed.prob") %>% 
     select("A", "B", "probability", -"specificity") %>% 
     mutate(type = "Occurrence Probability (P[Element|Condition])")
   
@@ -265,7 +260,7 @@ basic_net <- function(d, .occurrence = FALSE) {
     g2 <-
       g2 %>%
       activate(nodes) %>%
-      mutate(across(.data$color, ~ifelse(!.data$type, "lightblue", "salmon")))
+      mutate(across("color", ~ifelse(!.data$type, "lightblue", "salmon")))
   }
   return(g2)
 }
