@@ -122,12 +122,14 @@ element.specificity <- function(netfacs.data) {
   
   es2 <- 
     es %>% 
-    dplyr::left_join(d %>% dplyr::select(combination, count, combination.size), 
-                     by = c("element" = "combination"))
+    dplyr::left_join(
+      d %>% dplyr::select("combination", "count", "combination.size"), 
+      by = c("element" = "combination")
+    )
   
   esl <- 
     es2 %>% 
-    split(.$combination.size) %>% 
+    split(es2$combination.size) %>% 
     stats::setNames(c("element", "dyad"))
   
   return(esl)

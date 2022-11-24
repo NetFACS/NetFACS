@@ -1,6 +1,9 @@
 # NetFACS 0.4.0.9010
 
+- New functions: specificity(), upsample()
 - Added further validation checks for the arguments of netfacs() and netfacs_multiple()
+
+
 
 # NetFACS 0.4.0
 
