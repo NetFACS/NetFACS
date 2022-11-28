@@ -162,10 +162,10 @@ netfacs <- function(data,
     }
     
     # if the null condition is not determined, all cases that are not part of the test dataset are classed as null condition
-    condition <- as.character(condition)
+    condition.vec <- as.character(condition)
     if (is.null(null.condition)) {
       null.condition <- "all"
-      condition[condition != test.condition] <- null.condition
+      condition.vec[condition.vec != test.condition] <- null.condition
     }
     
     # the control argument, which is entered as a list (to allow for multiple control variables) is turned into a combination of those variables. E.g., if you control for sex and social group, then each individual or is classed as sex_group
@@ -193,7 +193,7 @@ netfacs <- function(data,
     d <-
       list(
         data = data,
-        condition = condition,
+        condition = condition.vec,
         random.level = random.level,
         control = control.obj
       )
@@ -398,7 +398,7 @@ netfacs <- function(data,
     rownames(boot.prob) <- rs.test$combination
     used.data <- list(
       data = d$data,
-      condition = d$condition,
+      condition = condition,
       random.level = d$random.level,
       control = d$control,
       random.prob = boot.prob

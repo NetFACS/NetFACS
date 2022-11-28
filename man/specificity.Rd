@@ -22,6 +22,9 @@ specificity(
 \item{null_condition}{A string, denoting the null condition. If \code{NULL}
 (default) all observations not part of the test_condition will be
 considered part of the null.}
+
+\item{balance_conditions}{Logical. Should minority condition(s) be
+\link{upsample}d?}
 }
 \value{
 Tibble

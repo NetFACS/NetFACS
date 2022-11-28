@@ -8,10 +8,12 @@
 #' @param null_condition A string, denoting the null condition. If \code{NULL}
 #'   (default) all observations not part of the test_condition will be
 #'   considered part of the null.
+#' @param balance_conditions Logical. Should minority condition(s) be
+#'   \link{upsample}d?
 #'
 #' @return Tibble
 #' @export
-#'
+#' 
 #' @importFrom magrittr `%>%`
 #'
 #' @examples
@@ -25,6 +27,15 @@ specificity <- function(x,
                         test_condition = NULL,
                         null_condition = NULL,
                         balance_conditions = TRUE) {
+  UseMethod("specificity")
+}
+
+#' @export
+specificity.matrix <- function(x,
+                               condition,
+                               test_condition = NULL,
+                               null_condition = NULL,
+                               balance_conditions = TRUE) {
   stopifnot(vctrs::vec_size(x) == vctrs::vec_size(condition))
   
   # upsample minority condition(s) to have same number of observations as majority condition
@@ -48,6 +59,60 @@ specificity <- function(x,
   }
   return(res)
 }
+
+
+#' @export
+specificity.netfacs <- function(x, 
+                                balance_conditions = TRUE) {
+  # if test data was compared against random, specificity is meaningless
+  if (attr(x, "stat_method") == "permutation") {
+    return(
+      print(
+        "Specificity can only be calculated when a null condition is specified."
+      )
+    )
+  }
+  m <- get_data(x, condition = "all")
+  condition <- x$used.data$condition
+  test_condition <- x$used.parameters$test.condition
+  null_condition <- x$used.parameters$null.condition
+  if (null_condition == "all") {
+    null_condition <- NULL
+  }
+  
+ if (balance_conditions) {
+    d <- upsample(m, condition)  
+    x <- d[colnames(m)]
+    condition <- d$condition
+  }
+  
+  specificity_single(
+    x,
+    condition,
+    test_condition,
+    null_condition
+  )
+}
+
+#' @export
+specificity.netfacs_multiple <- function(x, 
+                                         balance_conditions = TRUE) {
+  # if test data was compared against random, specificity is meaningless
+  if (attr(x, "stat_method") == "permutation") {
+    return(
+      print(
+        "Specificity can only be calculated when a null condition is specified."
+      )
+    )
+  }
+  
+  out <- lapply(x, function(nf) {
+    specificity.netfacs(nf, balance_conditions)
+  })
+  
+  dplyr::bind_rows(out)
+}
+
 
 # helpers -----------------------------------------------------------------
 
