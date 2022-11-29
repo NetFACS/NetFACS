@@ -7,35 +7,49 @@
 specificity(
   x,
   condition,
-  test_condition = NULL,
-  null_condition = NULL,
-  balance_conditions = TRUE
+  test.condition = NULL,
+  null.condition = NULL,
+  combination.size = NULL,
+  .upsample = TRUE
 )
 }
 \arguments{
-\item{x}{A binary matrix, with AUs as \code{colnames()}}
+\item{x}{A binary matrix, with AUs as \code{colnames}, or an object of class
+\link{netfacs}}
 
 \item{condition}{A character condition vector}
 
-\item{test_condition}{A string, denoting the test condition}
+\item{test.condition}{A string, denoting the test condition}
 
-\item{null_condition}{A string, denoting the null condition. If \code{NULL}
-(default) all observations not part of the test_condition will be
+\item{null.condition}{A string, denoting the null condition. If \code{NULL}
+(default) all observations not part of the test.condition will be
 considered part of the null.}
 
-\item{balance_conditions}{Logical. Should minority condition(s) be
-\link{upsample}d?}
+\item{combination.size}{A positive integer, indicating the maximum
+combination size of element combinations. If \code{NULL} (default), the
+maximum combination size observed in the x is used.}
+
+\item{.upsample}{Logical. Should minority condition(s) be \link{upsample}d?
+\code{TRUE} by default.}
 }
 \value{
-Tibble
+A data frame
 }
 \description{
 Calculate specificity of element combinations to a given condition
+}
+\details{
+Specificity values are biased when the number of observations per
+  condition is highly imbalanced. When \code{.upsample} = \code{TRUE}
+  (recommended), the condition(s) with fewer observations are randomly
+  \link{upsample}d to match the number of observations in the most common
+  condition prior to the specificity calculation. This procedure minimizes
+  the bias in the specificity results.
 }
 \examples{
 specificity(
   x = emotions_set[[1]],
   condition = emotions_set[[2]]$emotion,
-  test_condition = "anger"
+  test.condition = "anger"
 )
 }

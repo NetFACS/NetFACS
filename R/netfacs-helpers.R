@@ -267,27 +267,35 @@ probability_of_event_size <- function(elements,
 
 
 #' Calculate probabilities of single elements and combinations occurring
-#' @param elements list with vectors for all elements observed together at each
-#'   event
+#' @param elements A vector with all elements observed together at an event. Or
+#'   a list of vectors or a binary matrix with elements as \code{colnames()}
 #' @param maxlen maximum size of combinations to be considered
+#' @param sep String. Separator used for showing combinations of elements
 #'
 #' @return Function returns a dataframe with observed probabilities for each
 #'   combination in the dataset
 #'
 #' @importFrom Rfast Table
-#' @importFrom arrangements combinations
-probability_of_combination <- function(elements, maxlen) {
-  # calculate all combinations per observation
-  combs <- unlist(
-    lapply(elements, function(x) {
-      possible_combinations(x, maxlen)
-    })
-  )
+probability_of_combination <- function(elements, maxlen, sep = "_") {
+  if (is.matrix(elements)) {
+    elements <- get_active_elements(elements)
+  }
   
+  # calculate all combinations per observation
+  if (is.list(elements)) {
+    combs <- unlist(
+      lapply(elements, function(x) {
+        possible_combinations(x, maxlen, sep)
+      })
+    )  
+  } else if (is.vector(elements)) {
+    combs <- possible_combinations(elements, maxlen, sep)
+  }
+
   # count how many times each AU combination occurred
   n.combs <- Table(combs)
   observed.prob <- n.combs / length(elements)
-  
+
   # put results in a data frame
   data.frame(
     combination = names(observed.prob),
@@ -297,7 +305,19 @@ probability_of_combination <- function(elements, maxlen) {
   )
 }
 
-possible_combinations <- function(elements, maxlen) {
+#' Calculate all possible combinations of elements
+#' 
+#' Takes a vector of elements and returns a vector with all possible
+#' combinations
+#' 
+#' @param elements A vector of elements
+#' @param maxlen maximum size of combinations to be considered
+#' @param sep String. Separator used for showing combinations of elements
+#'
+#' @return A vector with all element combinations
+#'
+#' @importFrom arrangements combinations
+possible_combinations <- function(elements, maxlen, sep = "_") {
   unlist(
     lapply(
       1:min(length(elements), maxlen),
@@ -305,7 +325,7 @@ possible_combinations <- function(elements, maxlen) {
         apply(
           combinations(x = elements, k = comb_len),
           MARGIN = 1,
-          FUN = paste, collapse = "_"
+          FUN = paste, collapse = sep
         )
       }
     )
