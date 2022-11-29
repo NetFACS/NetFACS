@@ -1,17 +1,17 @@
 #' Create probability distribution of combinations of elements in the data
 #'
-#' *EXPERIMENTAL*
+#' @description *EXPERIMENTAL*
 #'
-#' This is an experimental function that is capable of handling NAs in the data.
-#' However, the resulting object may not work with other functions in the
-#' NetFACS package. Please use \code{\link{netfacs}} instead for the most
-#' reliable results.
+#'   This is an experimental function that is capable of handling NAs in the
+#'   data. However, the resulting object may not work with other functions in
+#'   the NetFACS package. Please use \code{\link{netfacs}} instead for the most
+#'   reliable results.
 #'
-#' The \code{\link{netfacs}} function underlies most other functions in this
-#' package. \cr It takes the data set and reports the observed and expected
-#' probabilities that elements and combinations of elements occur in this data
-#' set, and whether this differs from a null condition.
-#'
+#'   The \code{\link{netfacs}} function underlies most other functions in this
+#'   package. \cr It takes the data set and reports the observed and expected
+#'   probabilities that elements and combinations of elements occur in this data
+#'   set, and whether this differs from a null condition.
+#'   
 #' @inheritParams netfacs
 #' @details Expected values are based on bootstraps of null distribution, so the
 #'   values represent distribution of element co-occurrence under null
