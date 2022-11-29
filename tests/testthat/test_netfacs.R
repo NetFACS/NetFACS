@@ -5,22 +5,22 @@ test_that("single element probabilities are calculated correctly", {
                       condition = rownames(d.sim.with.context),
                       test.condition = "a",
                       combination.size = 2,
-                      ran.trials = 101,
-                      use_parallel = TRUE,
-                      n_cores = detectCores()-1)
+                      ran.trials = 3)
   # condition is not specified
   res.rand <- netfacs(d.sim.no.context,
                       condition = NULL,
                       test.condition = NULL,
                       combination.size = 2,
-                      ran.trials = 101,
-                      use_parallel = TRUE,
-                      n_cores = detectCores()-1)
+                      ran.trials = 3)
   # how much deviation from true value to tolerate?
   p_tol <- 0.02
   
-  p2 <- res.boot$result %>% filter(combination == "2") %>% pull(observed.prob)
-  p3and10 <- res.boot$result %>% filter(combination == "3_10") %>% pull(observed.prob)
+  p2 <- res.boot$result %>% 
+    dplyr::filter(combination == "2") %>% 
+    dplyr::pull(observed.prob)
+  p3and10 <- res.boot$result %>% 
+    dplyr::filter(combination == "3_10") %>% 
+    dplyr::pull(observed.prob)
   p3and10.expected <- context.def["a", "3"]*context.def["a", "10"]
   
   # res.cond.boot <- network.conditional(res.boot)
@@ -30,8 +30,12 @@ test_that("single element probabilities are calculated correctly", {
   #   filter(elementA == "5" & elementB == "2") %>% 
   #   pull(Probability_AgivenB)
   
-  p4 <- res.rand$result %>% filter(combination == "4") %>% pull(observed.prob)
-  p8and9 <- res.rand$result %>% filter(combination == "8_9") %>% pull(observed.prob)
+  p4 <- res.rand$result %>% 
+    dplyr::filter(combination == "4") %>% 
+    dplyr::pull(observed.prob)
+  p8and9 <- res.rand$result %>% 
+    dplyr::filter(combination == "8_9") %>% 
+    dplyr::pull(observed.prob)
   p8and9.expected <- p.no.context[["8"]]*p.no.context[["9"]]
   
   # res.cond.rand <- network.conditional(res.rand)
@@ -59,14 +63,14 @@ test_that("error message is given when data has NAs",{
       condition = emotions_set[[2]]$emotion,
       test.condition = "anger",
       null.condition = NULL,
-      ran.trials = 20)
+      ran.trials = 3)
   })
   expect_error({
     netfacs(data = emotions_set[[1]],
             condition = NA,
             test.condition = "anger",
             null.condition = NULL,
-            ran.trials = 20)
+            ran.trials = 3)
   })
 })
 test_that("error message is given when data is misspecified",{
@@ -92,7 +96,7 @@ test_that("error message is given when condidions are misspecified",{
       condition = emotions_set[[2]]$emotion,
       test.condition = "AAA",
       null.condition = "anger",
-      ran.trials = 20
+      ran.trials = 3
     )},
     "Argument 'test.condition' is not part of the 'condition' vector."
   )
@@ -102,7 +106,7 @@ test_that("error message is given when condidions are misspecified",{
       condition = emotions_set[[2]]$emotion,
       test.condition = "anger",
       null.condition = "AAA",
-      ran.trials = 20
+      ran.trials = 3
     )},
     "Argument 'null.condition' is not part of the 'condition' vector."
   )
@@ -112,7 +116,7 @@ test_that("error message is given when condidions are misspecified",{
       condition = "b",
       test.condition = "b",
       null.condition = NULL,
-      ran.trials = 10
+      ran.trials = 3
     )},
     "Argument 'condition' must be the same length as nrow 'data'."
   )
@@ -124,7 +128,7 @@ test_that("warning message is given when test or null conditions are specified w
       condition = NULL,
       test.condition = "b",
       null.condition = NULL,
-      ran.trials = 10)
+      ran.trials = 3)
   })
   expect_warning({
     netfacs(
@@ -132,7 +136,7 @@ test_that("warning message is given when test or null conditions are specified w
       condition = NULL,
       test.condition = NULL,
       null.condition = "a",
-      ran.trials = 10)
+      ran.trials = 3)
   })
 })
 
