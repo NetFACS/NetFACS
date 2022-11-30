@@ -2,7 +2,7 @@
 % Please edit documentation in R/overlap_network.R
 \name{overlap.network}
 \alias{overlap.network}
-\title{Plots the overlap of multiple conditions as bipartite network}
+\title{(Deprecated) Plots the overlap of multiple conditions as bipartite network.}
 \usage{
 overlap.network(
   netfacs.list,
@@ -41,37 +41,7 @@ probability network}
 \item{plot.bubbles}{if TRUE, then the nodes in the network plots will be
 surrounded by bubbles; if FALSE, the edges connect the names directly}
 }
-\value{
-Function returns a \code{\link[ggraph]{ggraph}} plot where each
-  condition is connected to those elements that occur significantly in this
-  condition, and each element is connected to each condition under which it
-  occurs significantly more than expected. Creates four graphs: context
-  specificity, occurrence in that context, a combined graph, and a 'reduced'
-  graph where edges are only included if they pass the 'specificity' value
-  set by the user
-}
 \description{
-The function takes multiple netfacs objects and plots how different elements
-connect the conditions, based on the conditional probabilities that the
-element occurs in the condition and that the condition is seen when the
-element is present
-}
-\examples{
-data(emotions_set)
-emo.faces <- netfacs_multiple(
-  data = emotions_set[[1]],
-  condition = emotions_set[[2]]$emotion,
-  ran.trials = 10,
-  combination.size = 2
-)
-
-overlap <- overlap.network(emo.faces,
-  min.prob = 0.01,
-  min.count = 3,
-  significance = 0.01,
-  specificity = 0.5,
-  ignore.element = "25",
-  clusters = TRUE,
-  plot.bubbles = TRUE
-)
+This function is deprecated. Please see \code{\link{overlap_network}}
+instead
 }

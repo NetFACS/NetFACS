@@ -222,7 +222,9 @@ netfacs <- function(data,
     if (any(comb.size == 0)) {
       d <- lapply(d, function(x) vctrs::vec_slice(x, comb.size > 0))
       NN <- sum(comb.size == 0)
-      message(paste("Removing", NN, "rows with 0 active elements from data."))
+      rlang::inform(
+        paste("Removing", NN, "rows with 0 active elements from data.")
+      )
     }
     
     ### turn data into test data and null data
@@ -376,8 +378,8 @@ netfacs <- function(data,
         observed.prob = rs.test$observed.prob,
         boot.prob = boot.prob,
         tail = tail,
-        test.count = rs.test$count,
-        null.count = null.count
+        test.count = rs.test$count#,
+        # null.count = null.count
       )
     
     ##### combination size information per event
@@ -403,6 +405,9 @@ netfacs <- function(data,
       control = d$control,
       random.prob = boot.prob
     )
+    
+    # so that the output of null.condition matches the function argument input
+    if (null.condition == "all") null.condition <- NULL
   }
   
   # condition is not specified -----------------------------------------
@@ -574,7 +579,8 @@ netfacs <- function(data,
     null.condition = null.condition
   )
   
-  stat_method <- ifelse(is.null(used.data$condition), "permutation", "bootstrap")
+  stat_method <- 
+    ifelse(is.null(used.data$condition), "permutation", "bootstrap")
   
   out <-
     list(

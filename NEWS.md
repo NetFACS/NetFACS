@@ -1,8 +1,13 @@
 # NetFACS 0.4.0.9010
 
-- New functions: specificity(), upsample()
-- Added further validation checks for the arguments of netfacs() and netfacs_multiple()
+## Breaking changes
+- netfacs() function no longer calculates specificity by default. Specificity must now be caulculated separately using the specificity() function.
 
+## Other changes
+
+- New functions: specificity(), upsample()
+- Objects created using the specificity() now have class "netfacs_specificity"
+- overlap.network() is replaced by overlap_network()
 
 
 # NetFACS 0.4.0

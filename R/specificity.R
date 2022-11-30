@@ -78,7 +78,9 @@ specificity.matrix <- function(x,
       # calculate specificity on original data
     d <- dplyr::bind_cols(condition = condition, x)
     out <- specificity_single(d, test.condition, null.condition, max_comb_size)
-  }
+    }
+  
+  class(out) <- c("netfacs_specificity", class(out))
   
   return(out)
 }
@@ -98,19 +100,29 @@ specificity.netfacs <- function(x,
     ))
   }
   
+  nf_res <- netfacs_extract(x)
   m <- get_data(x, condition = "all")
   condition <- x$used.data$condition
   test.condition <- x$used.parameters$test.condition
   null.condition <- x$used.parameters$null.condition
   
-  if (null.condition == "all") {
-    null.condition <- NULL
-  }
+  sp <- 
+    specificity.matrix(
+      m, condition, test.condition, null.condition, combination.size, .upsample
+    )
   
-  specificity.matrix(
-    m, condition, test.condition, null.condition, combination.size, .upsample
-  )
+  sp2 <- 
+    sp %>% 
+    dplyr::select("combination", "specificity")
   
+  out <- 
+    nf_res %>% 
+    dplyr::left_join(sp2, by = "combination") %>% 
+    dplyr::mutate(dplyr::across("specificity", ~ifelse(is.na(.), 0, .))) %>% 
+    mutate(condition = test.condition, .before = 1)
+  
+  class(out) <- c("netfacs_specificity", class(out))
+  return(out)
 }
 
 #' @export

@@ -143,13 +143,15 @@ netfacs_randomize <- function(m,
 #'
 #' @importFrom Rfast rowsums Table
 #' @return A dataframe
-summarise_combination <- function(combination,
-                                  combination.size,
-                                  observed.prob,
-                                  boot.prob,
-                                  tail,
-                                  test.count,
-                                  null.count = NULL) {
+summarise_combination <- function(
+    combination,
+    combination.size,
+    observed.prob,
+    boot.prob,
+    tail,
+    test.count#,
+    # null.count = NULL
+) {
   # check that arguments have same number of observations
   if (!equal_observations(combination, boot.prob, observed.prob)) {
     stop("combination, boot.prob, and observed.prob arguments must have the same number of observations.")
@@ -161,7 +163,7 @@ summarise_combination <- function(combination,
   # create probability increase by comparing the observed probability with the
   # mean probability of the randomization process
   prob.increase <- observed.prob / expected.prob
-  prob.increase[is.infinite(prob.increase)] <- NA # Inf occurs when dividing 0/0
+  prob.increase[is.infinite(prob.increase)] <- NA # Inf occurs when dividing n/0
   
   if (tail == "upper.tail") {
     pvalue <- Rfast::rowmeans(boot.prob >= observed.prob)
@@ -182,15 +184,15 @@ summarise_combination <- function(combination,
       prob.increase = prob.increase
     )
   
-  # specificity is calculated only when a condition vector was specified
-  # specificity: divide how often the combination occurs in the test condition by
-  # the total count (test + null condition)
-  if (!is.null(null.count)) {
-    if (!equal_observations(test.count, null.count)) {
-      stop("test.count and null.count arguments must have the same number of observations.")
-    }
-    out$specificity <- test.count / (test.count + null.count)
-  } 
+  # # specificity is calculated only when a condition vector was specified
+  # # specificity: divide how often the combination occurs in the test condition by
+  # # the total count (test + null condition)
+  # if (!is.null(null.count)) {
+  #   if (!equal_observations(test.count, null.count)) {
+  #     stop("test.count and null.count arguments must have the same number of observations.")
+  #   }
+  #   out$specificity <- test.count / (test.count + null.count)
+  # } 
   return(out)
 }
 

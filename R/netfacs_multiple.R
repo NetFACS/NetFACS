@@ -75,12 +75,13 @@ netfacs_multiple <- function(data,
   
   # set class and attributes
   out <- structure(
-    out, 
-    class = "netfacs_multiple",
+    out,
+    class = c("netfacs_multiple", class(out[[1]])),
     stat_method = "bootstrap",
     random_trials = ran.trials
   )
   
+  # class(out) <- c("netfacs_multiple", class(out[[1]]))
   return(out)
 }
 

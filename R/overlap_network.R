@@ -5,8 +5,8 @@
 #' element occurs in the condition and that the condition is seen when the
 #' element is present
 #'
-#' @param netfacs.list list of objects resulting from \code{\link{netfacs}} or
-#'   \code{\link{netfacs_multiple}}
+#' @param x list of objects resulting from \code{\link{specificity}} or
+#'   \code{\link{netfacs}}
 #' @param min.prob minimum conditional probability that should be shown in the
 #'   graph
 #' @param min.count minimum number of times that a combination should occur
@@ -31,34 +31,8 @@
 #'   graph where edges are only included if they pass the 'specificity' value
 #'   set by the user
 #'
-#' @importFrom tibble as_tibble
-#' @importFrom dplyr across
-#' @importFrom dplyr filter
-#' @importFrom dplyr select
-#' @importFrom dplyr rename
-#' @importFrom dplyr mutate
-#' @importFrom dplyr bind_rows
-#' @importFrom ggplot2 arrow
-#' @importFrom ggplot2 unit
-#' @importFrom ggplot2 ggtitle
-#' @importFrom ggplot2 aes
-#' @importFrom ggraph scale_edge_alpha
-#' @importFrom ggraph geom_edge_fan
-#' @importFrom ggraph create_layout
-#' @importFrom ggraph facet_edges
-#' @importFrom ggraph ggraph
-#' @importFrom ggraph geom_node_label
-#' @importFrom ggraph geom_node_text
-#' @importFrom ggraph theme_graph
-#' @importFrom ggraph circle
-#' @importFrom igraph bipartite_mapping
-#' @importFrom igraph E
-#' @importFrom igraph modularity
-#' @importFrom igraph cluster_fast_greedy
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-#' @importFrom tidygraph as_tbl_graph
-#' @importFrom tidygraph activate
 #' @export
 #'
 #' @examples
@@ -70,7 +44,7 @@
 #'   combination.size = 2
 #' )
 #'
-#' overlap <- overlap.network(emo.faces,
+#' overlap <- overlap_network(emo.faces,
 #'   min.prob = 0.01,
 #'   min.count = 3,
 #'   significance = 0.01,
@@ -79,6 +53,81 @@
 #'   clusters = TRUE,
 #'   plot.bubbles = TRUE
 #' )
+overlap_network <- function(
+    x,
+    min.prob = 0,
+    min.count = 5,
+    significance = 0.01,
+    specificity = 0.1,
+    ignore.element = NULL,
+    clusters = FALSE,
+    plot.bubbles = TRUE
+) {
+  UseMethod("overlap_network")
+}
+
+#' @export
+overlap_network.netfacs_specificity <- function(
+    x,
+    min.prob = 0,
+    min.count = 5,
+    significance = 0.01,
+    specificity = 0.1,
+    ignore.element = NULL,
+    clusters = FALSE,
+    plot.bubbles = FALSE
+) {
+  
+  d <- 
+    x %>% 
+    dplyr::filter(
+      .data$combination.size == 1,
+      .data$observed.prob >= min.prob,
+      .data$count >= min.count,
+      .data$pvalue <= significance,
+      .data$observed.prob > .data$expected.prob,
+      !.data$combination %in% ignore.element
+    ) %>% 
+    select("condition", "combination", "observed.prob", "specificity")
+  
+  all_plots(d, specificity, clusters, plot.bubbles)
+  }
+
+#' @export
+overlap_network.netfacs <- function(
+    x,
+    min.prob = 0,
+    min.count = 5,
+    significance = 0.01,
+    specificity = 0.1,
+    ignore.element = NULL,
+    clusters = FALSE,
+    plot.bubbles = FALSE
+) {
+  
+  rlang::inform("Specificity calculated by upsampling minority conditions. Use specificity(x, .upsample = FALSE) to change.")
+  
+  sp <- specificity(x)
+  
+  overlap_network.netfacs_specificity(sp,
+                                      min.prob,
+                                      min.count,
+                                      significance,
+                                      specificity,
+                                      ignore.element,
+                                      clusters,
+                                      plot.bubbles)
+}
+
+#' (Deprecated) Plots the overlap of multiple conditions as bipartite network.
+#'
+#' This function is deprecated. Please see \code{\link{overlap_network}}
+#' instead
+#'
+#' @param netfacs.list list of objects resulting from \code{\link{netfacs}} or
+#'   \code{\link{netfacs_multiple}}
+#' @inheritParams overlap_network
+#' @export
 overlap.network <- function(netfacs.list,
                             min.prob = 0,
                             min.count = 5,
@@ -88,45 +137,45 @@ overlap.network <- function(netfacs.list,
                             clusters = FALSE,
                             plot.bubbles = FALSE) {
   
-  min.spec <- specificity # so filter() works properly later
-  nodes <- NULL # to avoid R CMD check when calling activate(nodes)
+  .Deprecated("overlap_network")
   
-  # if the netfacs.list object doesn't have names for the conditions, they are set to numbers
-  if (is.null(names(netfacs.list))) {
-    names(netfacs.list) <- 1:length(netfacs.list)
-  }
+  overlap_network.netfacs(netfacs.list,
+                          min.prob,
+                          min.count,
+                          significance,
+                          specificity,
+                          ignore.element,
+                          clusters,
+                          plot.bubbles)
   
-  # from the different netfacs objects in the list, reduce them all to single elements that meet the criteria specified by the user
-  multi.net <- 
-    netfacs.list %>% 
-    netfacs_extract(
-      combination.size = 1,
-      significance = significance,
-      min.count = min.count, 
-      min.prob = min.prob
-    ) %>% 
-    dplyr::filter(
-      .data$observed.prob > .data$expected.prob,
-      !.data$combination %in% ignore.element
-    ) %>% 
-    select("condition", "combination", "observed.prob", "specificity")
+}
+
+
+# helpers -----------------------------------------------------------------
+
+all_plots <- function(d,
+                      specificity,
+                      clusters,
+                      plot.bubbles) {
+  min.spec <- specificity # so left_join() works properly later
+  nodes <- NULL # to avoid R CMD check when calling tidygraph::activate(nodes)
   
   # create two conditional probability objects: one for the probability that the condition is present given the element, and one the opposite
   condition.element <-
-    multi.net %>% 
-    rename(A = "condition",
-           B = "combination",
-           probability = "specificity") %>% 
-    select("A", "B", "probability", -"observed.prob") %>% 
-    mutate(type = "Context Specificity (P[Condition|Element])")
+    d %>% 
+    dplyr::rename(A = "condition",
+                  B = "combination",
+                  probability = "specificity") %>% 
+    dplyr::select("A", "B", "probability", -"observed.prob") %>% 
+    dplyr::mutate(type = "Context Specificity (P[Condition|Element])")
   
   element.condition <-
-    multi.net %>% 
-    rename(A = "combination",
-           B = "condition",
-           probability = "observed.prob") %>% 
-    select("A", "B", "probability", -"specificity") %>% 
-    mutate(type = "Occurrence Probability (P[Element|Condition])")
+    d %>% 
+    dplyr::rename(A = "combination",
+                  B = "condition",
+                  probability = "observed.prob") %>% 
+    dplyr::select("A", "B", "probability", -"specificity") %>% 
+    dplyr::mutate(type = "Occurrence Probability (P[Element|Condition])")
   
   
   # if clusters should be detected, assign the color to each community
@@ -135,25 +184,28 @@ overlap.network <- function(netfacs.list,
     # create undirected unweighted network based on the occurrence rate
     g.cluster <-
       element.condition %>% 
-      graph_from_data_frame(directed = FALSE, vertices = NULL) %>% 
-      as_tbl_graph()
+      igraph::graph_from_data_frame(directed = FALSE, vertices = NULL) %>% 
+      tidygraph::as_tbl_graph()
     
     # colors based on clusters
     g.cluster2 <- 
       g.cluster %>% 
-      activate(nodes) %>%
-      mutate(
-        community = cluster_fast_greedy(
+      tidygraph::activate(nodes) %>%
+      dplyr::mutate(
+        community = igraph::cluster_fast_greedy(
           g.cluster,
-          weights = E(g.cluster)$probability
+          weights = igraph::E(g.cluster)$probability
         )$membership,
         color = as.character(.data$community)
       )
     
     # determine modularity
     modularity.net <-
-      cluster_fast_greedy(g.cluster, weights = E(g.cluster)$probability) %>% 
-      modularity()
+      igraph::cluster_fast_greedy(
+        g.cluster, 
+        weights = igraph::E(g.cluster)$probability
+      ) %>% 
+      igraph::modularity()
   }
   
   
@@ -163,16 +215,17 @@ overlap.network <- function(netfacs.list,
   g.occurrence <- basic_net(element.condition, .occurrence = TRUE)
   g.specificity <- basic_net(condition.element)
   g.both <- rbind(condition.element, element.condition) %>% basic_net()
-  g.reduced <- multi.net %>% filter(specificity > min.spec) %>% basic_net()
+  g.reduced <- 
+    d %>% dplyr::filter(.data$specificity > min.spec) %>% basic_net()
   
   if (clusters) {
     set_cluster_colors <- function(g) {
       g %>% 
-        activate(nodes) %>%
-        select(-"color") %>% 
+        tidygraph::activate(nodes) %>%
+        dplyr::select(-"color") %>% 
         # colors if there are clusters
         dplyr::left_join(
-          g.cluster2 %>% activate(nodes) %>% as_tibble(), 
+          g.cluster2 %>% tidygraph::activate(nodes) %>% tibble::as_tibble(), 
           by = "name"
         )  
     }
@@ -185,20 +238,23 @@ overlap.network <- function(netfacs.list,
   
   ### set layouts
   # occurrence as parent layout
-  all.layout    <- g.occurrence %>% create_layout(layout = "igraph", algorithm = "kk") 
+  all.layout    <- 
+    g.occurrence %>% ggraph::create_layout(layout = "igraph", algorithm = "kk") 
   # take on same layout as first graph
-  spec.layout   <- g.specificity %>% create_layout(layout = "igraph", algorithm = "kk")
+  spec.layout   <- 
+    g.specificity %>% ggraph::create_layout(layout = "igraph", algorithm = "kk")
   spec.layout$x <- all.layout$x[match(spec.layout$name, all.layout$name)]
   spec.layout$y <- all.layout$y[match(spec.layout$name, all.layout$name)]
   # take on same layout as first graph
-  both.layout   <- g.both %>% create_layout(layout = "igraph", algorithm = "kk")
+  both.layout   <- 
+    g.both %>% ggraph::create_layout(layout = "igraph", algorithm = "kk")
   both.layout$x <- all.layout$x[match(both.layout$name, all.layout$name)]
   both.layout$y <- all.layout$y[match(both.layout$name, all.layout$name)]
   # take on same layout as first graph
-  red.layout    <- g.reduced %>% create_layout(layout = "igraph", algorithm = "kk")
+  red.layout    <- 
+    g.reduced %>% ggraph::create_layout(layout = "igraph", algorithm = "kk")
   red.layout$x  <- all.layout$x[match(red.layout$name, all.layout$name)]
   red.layout$y  <- all.layout$y[match(red.layout$name, all.layout$name)]
-  
   
   ### Plots without bubbles
   p.occurrence <- 
@@ -212,7 +268,7 @@ overlap.network <- function(netfacs.list,
   p.both <- 
     basic_plot(both.layout,
                .title = NULL) + 
-    facet_edges(~type)
+    ggraph::facet_edges(~type)
   
   p.reduced <- 
     basic_plot_reduced(red.layout,
@@ -231,55 +287,56 @@ overlap.network <- function(netfacs.list,
     occurrence = p.occurrence,
     both = p.both,
     reduced = p.reduced,
-    data = multi.net,
+    data = d,
     network = g.both,
     modularity = modularity.net
   )
 }
 
-# helpers -----------------------------------------------------------------
-
 basic_net <- function(d, .occurrence = FALSE) {
-  nodes <- NULL # to avoid R CMD check when calling activate(nodes)
+  nodes <- NULL # to avoid R CMD check when calling tidygraph::activate(nodes)
   g <-
     d %>%
-    graph_from_data_frame(directed = TRUE, vertices = NULL) %>%
-    as_tbl_graph()
+    igraph::graph_from_data_frame(directed = TRUE, vertices = NULL) %>%
+    tidygraph::as_tbl_graph()
   
   g2 <-
     g %>%
-    activate(nodes) %>%
-    mutate(
+    tidygraph::activate(nodes) %>%
+    dplyr::mutate(
       # assign bipartite type as either condition or element
-      type = bipartite_mapping(g)$type,
+      type = igraph::bipartite_mapping(g)$type,
       # color set if there are no clusters
       color = ifelse(.data$type, "lightblue", "salmon"),
-      shape = ifelse(.data$type, "bold", "italic"))
+      shape = ifelse(.data$type, "bold", "italic")
+    )
   
   if (.occurrence) {
     g2 <-
       g2 %>%
-      activate(nodes) %>%
-      mutate(across("color", ~ifelse(!.data$type, "lightblue", "salmon")))
+      tidygraph::activate(nodes) %>%
+      dplyr::mutate(dplyr::across(
+        "color", ~ifelse(!.data$type, "lightblue", "salmon")
+      ))
   }
   return(g2)
 }
 
 basic_plot <- function(g.layout, .title) {
-  ggraph(g.layout) +
-    geom_node_text(
-      aes(color = .data$color,
-          label = .data$name,
-          size = 50,
-          fontface = .data$shape),
+  ggraph::ggraph(g.layout) +
+    ggraph::geom_node_text(
+      ggplot2::aes(color = .data$color,
+                   label = .data$name,
+                   size = 50,
+                   fontface = .data$shape),
       show.legend = FALSE
     ) +
-    scale_edge_alpha(guide = "none") +
-    theme_graph(base_family = "sans") +
-    ggtitle(.title) +
-    geom_edge_fan(
-      aes(label = round(.data$probability, 2),
-          colour = .data$type),
+    ggraph::scale_edge_alpha(guide = "none") +
+    ggraph::theme_graph(base_family = "sans") +
+    ggplot2::ggtitle(.title) +
+    ggraph::geom_edge_fan(
+      ggplot2::aes(label = round(.data$probability, 2),
+                   colour = .data$type),
       label_size = 4,
       arrow = NULL,
       colour = "grey",
@@ -291,18 +348,18 @@ basic_plot <- function(g.layout, .title) {
 }
 
 basic_plot_reduced <- function(g.layout, .title) {
-  ggraph(g.layout) +
-    geom_node_text(
-      aes(color = .data$color,
-          label = .data$name,
-          size = 50,
-          fontface = .data$shape),
+  ggraph::ggraph(g.layout) +
+    ggraph::geom_node_text(
+      ggplot2::aes(color = .data$color,
+                   label = .data$name,
+                   size = 50,
+                   fontface = .data$shape),
       show.legend = FALSE
     ) +
-    scale_edge_alpha(guide = "none") +
-    theme_graph(base_family = "sans") +
-    ggtitle(.title) +
-    geom_edge_fan(
+    ggraph::scale_edge_alpha(guide = "none") +
+    ggraph::theme_graph(base_family = "sans") +
+    ggplot2::ggtitle(.title) +
+    ggraph::geom_edge_fan(
       arrow = NULL,
       end_cap = circle(4, "mm"),
       start_cap = circle(4, "mm"),
@@ -316,11 +373,11 @@ basic_plot_reduced <- function(g.layout, .title) {
 
 add_bubbles <- function(p) {
   p +
-    geom_node_label(
-      aes(label = .data$name,
-          color = .data$color,
-          size = 50,
-          fontface = .data$shape),
+    ggraph::geom_node_label(
+      ggplot2::aes(label = .data$name,
+                   color = .data$color,
+                   size = 50,
+                   fontface = .data$shape),
       show.legend = FALSE
     )
 }

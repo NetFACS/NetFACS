@@ -9,8 +9,7 @@ netfacs_extract(
   combination.size = NULL,
   significance = 1,
   min.count = 0,
-  min.prob = 0,
-  min.specificity = 0
+  min.prob = 0
 )
 }
 \arguments{

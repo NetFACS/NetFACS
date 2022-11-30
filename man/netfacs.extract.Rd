@@ -10,7 +10,6 @@ netfacs.extract(
   significance = 1,
   min.count = 0,
   min.prob = 0,
-  min.specificity = 0,
   level
 )
 }
@@ -29,9 +28,6 @@ combination occurred.}
 
 \item{min.prob}{Numeric value between 0 and 1, denoting the minimum
 probability an element combination occurred to be displayed.}
-
-\item{min.specificity}{Numeric value between 0 and 1, denoting the minimum
-specificity an element combination and the test condition.}
 
 \item{level}{deprecated. Please use combination.size instead.}
 }

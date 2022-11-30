@@ -40,12 +40,14 @@
 #'   min.prob = 0.01,
 #'   min.specificity = 0.5
 #' )
-netfacs_extract <- function(netfacs.data,
-                            combination.size = NULL,
-                            significance = 1,
-                            min.count = 0,
-                            min.prob = 0,
-                            min.specificity = 0) {
+netfacs_extract <- function(
+    netfacs.data,
+    combination.size = NULL,
+    significance = 1,
+    min.count = 0,
+    min.prob = 0#,
+    # min.specificity = 0
+) {
   
   if (isFALSE(is.netfacs(netfacs.data) | is.netfacs_multiple(netfacs.data))) {
     stop("'Argument 'netfacs.data' must be of class 'netfacs' or 'netfacs_multiple'.")
@@ -56,7 +58,10 @@ netfacs_extract <- function(netfacs.data,
       lapply(netfacs.data, function(x) x[[1]]) %>% 
       dplyr::bind_rows(.id = "condition") 
   } else {
-    d <- netfacs.data$result 
+    d <- 
+      netfacs.data$result %>% 
+      dplyr::mutate(condition = netfacs.data$used.parameters$test.condition,
+                    .before = 1)
   }
   
   if (is.null(combination.size)) {
@@ -70,15 +75,15 @@ netfacs_extract <- function(netfacs.data,
       .data$observed.prob >= min.prob,
       .data$count >= min.count,
       .data$pvalue <= significance
-      ) %>% 
+    ) %>% 
     tibble::as_tibble()
   
-  # specificity is only relevant for bootstrap results
-  if (attr(netfacs.data, "stat_method") == "bootstrap") {
-    d <- 
-      d %>% 
-      dplyr::filter(.data$specificity >= min.specificity)
-  }
+  # # specificity is only relevant for bootstrap results
+  # if (attr(netfacs.data, "stat_method") == "bootstrap") {
+  #   d <- 
+  #     d %>% 
+  #     dplyr::filter(.data$specificity >= min.specificity)
+  # }
   
   return(d)
 }
@@ -102,7 +107,7 @@ netfacs.extract <- function(netfacs.data,
                             significance = 1,
                             min.count = 0,
                             min.prob = 0,
-                            min.specificity = 0,
+                            # min.specificity = 0,
                             level) {
 
   .Deprecated("netfacs_extract")
@@ -117,7 +122,7 @@ netfacs.extract <- function(netfacs.data,
     combination.size = combination.size,
     significance = significance,
     min.count = min.count,
-    min.prob = min.prob,
-    min.specificity = min.specificity
+    min.prob = min.prob#,
+    # min.specificity = min.specificity
   )
 }

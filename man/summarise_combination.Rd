@@ -10,8 +10,7 @@ summarise_combination(
   observed.prob,
   boot.prob,
   tail,
-  test.count,
-  null.count = NULL
+  test.count
 )
 }
 \arguments{
