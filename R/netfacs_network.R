@@ -1,7 +1,7 @@
 #' Creates a network object out of the netfacs data
 #'
 #' Takes the results of the nefacs object for combinations of 2 elements and
-#' turns them into a network object (igraph or sna/network) that can be used for
+#' turns them into a network object (igraph) that can be used for
 #' further plotting and analyses
 #'
 #'
@@ -14,8 +14,6 @@
 #'   should at least occur to be displayed
 #' @param min.prob numeric value, suggesting the probability at which a
 #'   combination should at least occur to be displayed
-#' @param min.specificity numeric value, suggesting the specificity a
-#'   combination should at least have for the test condition to be displayed
 #' @param significance numeric value, determining the p-value below which
 #'   combinations are considered to be dissimilar enough from the null
 #'   distribution
@@ -40,23 +38,20 @@
 #'   combination.size = 2
 #' )
 #'
-#' anger.net <- netfacs.network(
+#' anger.net <- netfacs_network(
 #'   netfacs.data = angry.face,
 #'   link = "unweighted",
 #'   significance = 0.01,
-#'   min.count = 1,
-#'   min.prob = 0,
-#'   min.specificity = 0,
-#'   ignore.element = NULL
+#'   min.count = 1
 #' )
-netfacs.network <- function(netfacs.data,
-                            link = "unweighted",
-                            significance = 0.01,
-                            min.count = 1,
-                            min.prob = 0,
-                            min.specificity = 0,
-                            ignore.element = NULL) {
-  
+netfacs_network <- function(
+    netfacs.data,
+    link = "unweighted",
+    significance = 0.01,
+    min.count = 1,
+    min.prob = 0,
+    ignore.element = NULL
+) {
   nodes <- NULL # to avoid R CMD check when calling activate(nodes)
   edges <- NULL # to avoid R CMD check when calling activate(edges)
   
@@ -67,21 +62,15 @@ netfacs.network <- function(netfacs.data,
   node.weight <-
     netfacs.data %>%
     netfacs_extract(combination.size = 1) %>% 
-    dplyr::mutate(dplyr::across("pvalue", ~ifelse(.data$effect.size < 0, 1, .))) %>% 
+    dplyr::mutate(dplyr::across(
+      "pvalue", ~ifelse(.data$effect.size < 0, 1, .)
+    )) %>% 
     dplyr::select("combination", "observed.prob", "pvalue")
-  
-  if (attr(netfacs.data, "stat_method") == "permutation") {
-    compare.mat <-
-      compare.mat %>%
-      dplyr::mutate(specificity = 1,
-                    prob.increase = 1)
-  }
   
   compare.mat <-
     compare.mat %>%
     dplyr::filter(.data$observed.prob >= min.prob,
                   .data$count         >= min.count,
-                  .data$specificity   >= min.specificity,
                   .data$observed.prob > .data$expected.prob) %>%
     dplyr::mutate(dplyr::across("prob.increase", ~ifelse(is.na(.), 10, .))) %>%
     tidyr::separate("combination", into = c("element1", "element2"), 
@@ -93,7 +82,7 @@ netfacs.network <- function(netfacs.data,
                   !.data$element2 %in% ignore.element) %>%
     dplyr::select(
       "element1", "element2", "prob.increase", "observed.prob", "expected.prob",
-      "effect.size", "pvalue", "specificity", "count", "combination"
+      "effect.size", "pvalue", "count", "combination"
     )
   
   g <- 
@@ -106,25 +95,22 @@ netfacs.network <- function(netfacs.data,
     g %>% 
     tidygraph::activate(nodes) %>% 
     dplyr::left_join(node.weight, by = c("name" = "combination")) %>% 
-    dplyr::rename(element.prob = .data$observed.prob,
-                  element.significance = .data$pvalue)
+    dplyr::rename(element.prob = "observed.prob",
+                  element.significance = "pvalue")
   
   # edit edge attributes
   if (link == "unweighted") {
     g3 <- 
       g2 %>% 
       tidygraph::activate(edges) %>% 
-      dplyr::mutate(
-        unweighted = .data$pvalue <= significance & .data$effect.size > 0
-      ) %>% 
-      dplyr::filter(.data$unweighted) %>% 
-      dplyr::mutate(association = .data$observed.prob - .data$expected.prob)
+      dplyr::filter(.data$pvalue <= significance, 
+                    .data$effect.size > 0)
   }
   if (link == "weighted") {
     g3 <- 
       g2 %>% 
       tidygraph::activate(edges) %>% 
-      dplyr::mutate(weight = .data$observed.prob - .data$expected.prob)
+      dplyr::mutate(weight = .data$effect.size)
   }
   if (link == "raw") {
     g3 <- 
@@ -143,4 +129,24 @@ netfacs.network <- function(netfacs.data,
     dplyr::full_join(data.frame(name = missing.nodes2), by = "name")
   
   return(g4)
+}
+
+#' @rdname netfacs_network
+#' @export
+netfacs.network <- function(
+    netfacs.data,
+    link = "unweighted",
+    significance = 0.01,
+    min.count = 1,
+    min.prob = 0,
+    ignore.element = NULL
+) {
+  netfacs_network(
+    netfacs.data,
+    link,
+    significance,
+    min.count,
+    min.prob,
+    ignore.element
+  )
 }

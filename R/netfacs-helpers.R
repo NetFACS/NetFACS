@@ -139,7 +139,6 @@ netfacs_randomize <- function(m,
 #' @param observed.prob A vector with probability of combination in test data
 #' @param tail upper.tail or lower.tail,
 #' @param test.count Number of times a combination occurs in test dataset
-#' @param null.count Number of times a combination occurs in null dataset
 #'
 #' @importFrom Rfast rowsums Table
 #' @return A dataframe
@@ -149,8 +148,7 @@ summarise_combination <- function(
     observed.prob,
     boot.prob,
     tail,
-    test.count#,
-    # null.count = NULL
+    test.count
 ) {
   # check that arguments have same number of observations
   if (!equal_observations(combination, boot.prob, observed.prob)) {
@@ -183,16 +181,7 @@ summarise_combination <- function(
       pvalue = pvalue,
       prob.increase = prob.increase
     )
-  
-  # # specificity is calculated only when a condition vector was specified
-  # # specificity: divide how often the combination occurs in the test condition by
-  # # the total count (test + null condition)
-  # if (!is.null(null.count)) {
-  #   if (!equal_observations(test.count, null.count)) {
-  #     stop("test.count and null.count arguments must have the same number of observations.")
-  #   }
-  #   out$specificity <- test.count / (test.count + null.count)
-  # } 
+
   return(out)
 }
 
