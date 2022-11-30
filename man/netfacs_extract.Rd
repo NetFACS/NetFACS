@@ -2,9 +2,18 @@
 % Please edit documentation in R/netfacs_extract.R
 \name{netfacs_extract}
 \alias{netfacs_extract}
+\alias{netfacs.extract}
 \title{Extract results from a netfacs object}
 \usage{
 netfacs_extract(
+  netfacs.data,
+  combination.size = NULL,
+  significance = 1,
+  min.count = 0,
+  min.prob = 0
+)
+
+netfacs.extract(
   netfacs.data,
   combination.size = NULL,
   significance = 1,
@@ -27,9 +36,6 @@ combination occurred.}
 
 \item{min.prob}{Numeric value between 0 and 1, denoting the minimum
 probability an element combination occurred to be displayed.}
-
-\item{min.specificity}{Numeric value between 0 and 1, denoting the minimum
-specificity an element combination and the test condition.}
 }
 \value{
 Function returns a \code{\link[tibble:tibble]{tibble}} data.frame
@@ -47,15 +53,9 @@ angry.face <- netfacs(
   data = emotions_set[[1]],
   condition = emotions_set[[2]]$emotion,
   test.condition = "anger",
-  ran.trials = 100,
+  ran.trials = 10,
   combination.size = 2
 )
 
-netfacs_extract(angry.face,
-  combination.size = 2,
-  significance = 0.01,
-  min.count = 5,
-  min.prob = 0.01,
-  min.specificity = 0.5
-)
+netfacs_extract(angry.face)
 }

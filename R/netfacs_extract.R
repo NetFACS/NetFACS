@@ -12,8 +12,6 @@
 #'   combination occurred.
 #' @param min.prob Numeric value between 0 and 1, denoting the minimum
 #'   probability an element combination occurred to be displayed.
-#' @param min.specificity Numeric value between 0 and 1, denoting the minimum
-#'   specificity an element combination and the test condition.
 #'
 #' @return Function returns a \code{\link[tibble:tibble]{tibble}} data.frame
 #'   that contains the results of the \code{\link{netfacs}} object. By default,
@@ -29,24 +27,17 @@
 #'   data = emotions_set[[1]],
 #'   condition = emotions_set[[2]]$emotion,
 #'   test.condition = "anger",
-#'   ran.trials = 100,
+#'   ran.trials = 10,
 #'   combination.size = 2
 #' )
 #'
-#' netfacs_extract(angry.face,
-#'   combination.size = 2,
-#'   significance = 0.01,
-#'   min.count = 5,
-#'   min.prob = 0.01,
-#'   min.specificity = 0.5
-#' )
+#' netfacs_extract(angry.face)
 netfacs_extract <- function(
     netfacs.data,
     combination.size = NULL,
     significance = 1,
     min.count = 0,
-    min.prob = 0#,
-    # min.specificity = 0
+    min.prob = 0
 ) {
   
   if (isFALSE(is.netfacs(netfacs.data) | is.netfacs_multiple(netfacs.data))) {
@@ -78,51 +69,22 @@ netfacs_extract <- function(
     ) %>% 
     tibble::as_tibble()
   
-  # # specificity is only relevant for bootstrap results
-  # if (attr(netfacs.data, "stat_method") == "bootstrap") {
-  #   d <- 
-  #     d %>% 
-  #     dplyr::filter(.data$specificity >= min.specificity)
-  # }
-  
   return(d)
 }
 
 
-#' (Deprecated) Extract results from a \code{\link{netfacs}} object.
-#'
-#' This function is deprecated. Please see \code{\link{netfacs_extract}}
-#' instead
-#'
-#' @inheritParams netfacs_extract
-#' @param level deprecated. Please use combination.size instead.
-#' 
-#' @return Function returns a dataframe that contains the results of the
-#'   \code{\link{netfacs}} object. By default, returns all results for all
-#'   observed combinations
-#'
+#' @rdname netfacs_extract
 #' @export
 netfacs.extract <- function(netfacs.data,
                             combination.size = NULL,
                             significance = 1,
                             min.count = 0,
-                            min.prob = 0,
-                            # min.specificity = 0,
-                            level) {
-
-  .Deprecated("netfacs_extract")
-  
-  if (!missing(level)) {
-    warning("argument level is deprecated; please use combination.size instead.", 
-            call. = FALSE)
-    combination.size <- level
-  }
+                            min.prob = 0) {
   netfacs_extract(
-    netfacs.data = netfacs.data,
-    combination.size = combination.size,
-    significance = significance,
-    min.count = min.count,
-    min.prob = min.prob#,
-    # min.specificity = min.specificity
+    netfacs.data,
+    combination.size,
+    significance,
+    min.count,
+    min.prob
   )
 }
