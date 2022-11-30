@@ -60,21 +60,21 @@ conditional_probabilities.netfacs <- function(netfacs.data) {
   # pAandB = n_AandB / n_events
   p_AandB <-
     apply(epairs2, 1, function(x) {
-      mAB <- m[complete.cases(m[, x]), x, drop = FALSE]
+      mAB <- m[stats::complete.cases(m[, x]), x, drop = FALSE]
       sum(rowSums(mAB[, x, drop = FALSE]) == 2) / nrow(mAB)
     }) 
   
   # PA|B = p_AandB / pB
   p_AgivenB <-
     apply(epairs2, 1, function(x) {
-      mAB <- m[complete.cases(m[, x]), x, drop = FALSE]
+      mAB <- m[stats::complete.cases(m[, x]), x, drop = FALSE]
       sum(rowSums(mAB[, x, drop = FALSE]) == 2) / sum(mAB[, x[2]])
     })
   
   # PB|A = p_AandB / pA
   p_BgivenA <-
     apply(epairs2, 1, function(x) {
-      mAB <- m[complete.cases(m[, x]), x, drop = FALSE]
+      mAB <- m[stats::complete.cases(m[, x]), x, drop = FALSE]
       sum(rowSums(mAB[, x, drop = FALSE]) == 2) / sum(mAB[, x[1]])
     })
   

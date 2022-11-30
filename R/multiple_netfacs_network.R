@@ -28,17 +28,6 @@
 #'   edges represent their co-occurrence, and the vertex and edge attributes
 #'   contain all additional information from the netfacs object
 #'
-#' @importFrom igraph vertex.attributes
-#' @importFrom igraph vertex.attributes<-
-#' @importFrom igraph add_vertices V
-#' @importFrom igraph edge.attributes
-#' @importFrom igraph edge.attributes<-
-#' @importFrom igraph graph_from_data_frame
-#' @importFrom igraph graph.adjacency
-#' @importFrom igraph delete_edges
-#' @importFrom igraph add_vertices
-#' @importFrom igraph get.data.frame
-#' @importFrom stats complete.cases
 #' @export
 #'
 #' @examples
@@ -50,8 +39,8 @@
 #'   combination.size = 2
 #' )
 #'
-#' emo.nets <- multiple.netfacs.network(emo.faces)
-multiple.netfacs.network <-
+#' emo.nets <- multiple_netfacs_network(emo.faces)
+multiple_netfacs_network <-
   function(netfacs.list,
            link = "unweighted",
            significance = 0.01,
@@ -59,7 +48,7 @@ multiple.netfacs.network <-
            min.prob = 0,
            ignore.element = NULL) {
     multi.net <- lapply(netfacs.list, function(x) {
-      xx <- netfacs.network(
+      xx <- netfacs_network(
         x,
         link = link,
         significance = significance,
@@ -71,4 +60,21 @@ multiple.netfacs.network <-
     })
     names(multi.net) <- names(netfacs.list)
     return(multi.net)
+  }
+
+#' @rdname multiple_netfacs_network
+#' @export
+multiple.netfacs.network <-
+  function(netfacs.list,
+           link = "unweighted",
+           significance = 0.01,
+           min.count = 1,
+           min.prob = 0,
+           ignore.element = NULL) {
+    multiple_netfacs_network(netfacs.list,
+                             link,
+                             significance,
+                             min.count,
+                             min.prob,
+                             ignore.element)
   }

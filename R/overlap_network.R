@@ -341,7 +341,7 @@ basic_plot <- function(g.layout, .title) {
       arrow = NULL,
       colour = "grey",
       fontface = 'bold',
-      label_dodge = unit(2, "mm"),
+      label_dodge = grid::unit(2, "mm"),
       angle_calc = "along",
       show.legend = FALSE
     )
@@ -361,11 +361,11 @@ basic_plot_reduced <- function(g.layout, .title) {
     ggplot2::ggtitle(.title) +
     ggraph::geom_edge_fan(
       arrow = NULL,
-      end_cap = circle(4, "mm"),
-      start_cap = circle(4, "mm"),
+      end_cap = ggraph::circle(4, "mm"),
+      start_cap = ggraph::circle(4, "mm"),
       colour = "grey",
       fontface = 'bold',
-      label_dodge = unit(2, "mm"),
+      label_dodge = grid::unit(2, "mm"),
       angle_calc = "along", 
       show.legend = FALSE
     )

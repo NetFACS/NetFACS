@@ -6,7 +6,7 @@
 #'
 #' @param netfacs.graphs List of network objects resulting from
 #'   \code{\link{netfacs_multiple}} function or
-#'   \code{\link{multiple.netfacs.network}} function
+#'   \code{\link{multiple_netfacs_network}} function
 #' @param sig.level Numeric between 0 and 1. P value used to determine whether
 #'   nodes are significant. Default = 0.01.
 #' @param sig.nodes.only Logical. Should only nodes that were significant in _at
@@ -16,23 +16,8 @@
 #'   between nodes in the different networks. Elements that are significantly
 #'   more likely to occur than expected are large, non-significant elements are
 #'   small, and absent elements are absent.
-#' @importFrom dplyr mutate
-#' @importFrom dplyr case_when
-#' @importFrom dplyr full_join
-#' @importFrom ggplot2 aes
-#' @importFrom ggplot2 labs
-#' @importFrom ggplot2 element_text
-#' @importFrom ggplot2 unit
-#' @importFrom ggplot2 theme
-#' @importFrom ggraph geom_node_point
-#' @importFrom ggraph geom_node_text
-#' @importFrom ggraph geom_edge_link
-#' @importFrom ggraph ggraph
-#' @importFrom ggraph theme_graph
-#' @importFrom grDevices colors
-#' @importFrom igraph V
+#'   
 #' @importFrom magrittr %>%
-#' @importFrom tidygraph activate
 #' @export
 #'
 #' @examples
@@ -47,9 +32,9 @@
 #'   combination.size = 2
 #' )
 #'
-#' emo.nets <- multiple.netfacs.network(emo.faces, min.count = 5)
-#' multiple.network.plot(emo.nets)
-multiple.network.plot <- function(netfacs.graphs,
+#' emo.nets <- multiple_netfacs_network(emo.faces, min.count = 5)
+#' multiple_network_plot(emo.nets)
+multiple_network_plot <- function(netfacs.graphs,
                                   sig.level = 0.01,
                                   sig.nodes.only = FALSE) {
   nodes <- NULL # to avoid R CMD check when calling activate(nodes)
@@ -68,24 +53,24 @@ multiple.network.plot <- function(netfacs.graphs,
       netfacs.graphs %>%
       lapply(function(x){
         x %>%
-          activate(nodes) %>% 
-          filter(.data$element.significance <= sig.level)
+          tidygraph::activate(nodes) %>% 
+          dplyr::filter(.data$element.significance <= sig.level)
       })
     
     plot.nodes <- sort(unique(unlist(lapply(netfacs.graphs, function(x) {
-      return(V(x)$name)
+      return(igraph::V(x)$name)
     }))))
     
     netfacs.graphs <-
       netfacs.graphs %>%
       lapply(function(x){
         x %>%
-          activate(nodes) %>% 
-          full_join(data.frame(name = plot.nodes), by = "name")
+          tidygraph::activate(nodes) %>% 
+          dplyr::full_join(data.frame(name = plot.nodes), by = "name")
       })
   } else {
     plot.nodes <- sort(unique(unlist(lapply(netfacs.graphs, function(x) {
-      return(V(x)$name)
+      return(igraph::V(x)$name)
     }))))
   }
   
@@ -93,34 +78,45 @@ multiple.network.plot <- function(netfacs.graphs,
     netfacs.graphs %>% 
     lapply(function(x){
       x %>% 
-        activate(nodes) %>% 
-        mutate(
-          node.size = case_when(.data$element.significance  > sig.level ~ 50,
-                                .data$element.significance <= sig.level ~ 150,
-                                is.na(.data$element.significance) ~ 0)) %>% 
-        activate(edges) %>% 
-        mutate(edge.weight = .data$observed.prob * 3,
-               edge.size = .data$edge.weight)
+        tidygraph::activate(nodes) %>% 
+        dplyr::mutate(
+          node.size = dplyr::case_when(
+            .data$element.significance  > sig.level ~ 50,
+            .data$element.significance <= sig.level ~ 150,
+            is.na(.data$element.significance) ~ 0
+          )
+        ) %>% 
+        tidygraph::activate(edges) %>% 
+        dplyr::mutate(edge.weight = .data$observed.prob * 3,
+                      edge.size = .data$edge.weight)
     })
   
   plot_graphs <- function(g, node.order, node.color, .title) {
     g %>%
-      ggraph(layout = "circle",
-             order = node.order) +
-      geom_edge_link(aes(edge_width = .data$edge.size),
-                     color = "lightgrey",
-                     show.legend = FALSE) +
-      geom_node_point(aes(size = .data$node.size),
-                      color = node.color,
-                      show.legend = FALSE) +
-      geom_node_text(aes(label = .data$name,
-                         size = 20),
-                     color = "black",
-                     show.legend = FALSE) +
-      ggtitle(.title) +
-      theme_graph(base_family = "sans") +
-      theme(plot.margin = unit(c(2, 2, 2, 2), "mm"),
-            plot.title = element_text(size = 12))
+      ggraph::ggraph(layout = "circle",
+                     order = node.order) +
+      ggraph::geom_edge_link(
+        ggplot2::aes(edge_width = .data$edge.size),
+        color = "lightgrey",
+        show.legend = FALSE
+      ) +
+      ggraph::geom_node_point(
+        ggplot2::aes(size = .data$node.size),
+        color = node.color,
+        show.legend = FALSE
+      ) +
+      ggraph::geom_node_text(
+        ggplot2::aes(label = .data$name,
+                     size = 20),
+        color = "black",
+        show.legend = FALSE
+      ) +
+      ggplot2::ggtitle(.title) +
+      ggraph::theme_graph(base_family = "sans") +
+      ggplot2::theme(
+        plot.margin = grid::unit(c(2, 2, 2, 2), "mm"),
+        plot.title = ggplot2::element_text(size = 12)
+      )
   }
   
   plot.titles <- names(netfacs.graphs)
@@ -130,11 +126,19 @@ multiple.network.plot <- function(netfacs.graphs,
     p.list[[i]] <- 
       plot_graphs(netfacs.graphs[[i]], 
                   node.order = plot.nodes, 
-                  node.color = colors()[i * 3], 
+                  node.color = grDevices::colors()[i * 3], 
                   .title = plot.titles[i])
   }
   
   p <- patchwork::wrap_plots(p.list)
   
   return(p)
+}
+
+#' @rdname multiple_network_plot
+#' @export
+multiple.network.plot <- function(netfacs.graphs,
+                                  sig.level = 0.01,
+                                  sig.nodes.only = FALSE) {
+  multiple_network_plot(netfacs.graphs, sig.level, sig.nodes.only)
 }

@@ -2,16 +2,15 @@
 #'
 #' Calculates graph level summary measures from the network object
 #'
-#' @param netfacs.net igraph network object resulting from netfacs.network() function
+#' @param netfacs.net igraph network object resulting from
+#'   \link{netfacs_network} function
 #'
-#' @return Function returns a dataframe with the number of elements in the graph, the number of connected edges, mean strength of connections, transitivity (mean number of closed triads), diameter (furthest path between two elements), degree centralization, and mean distance between elements
-#' @importFrom igraph mean_distance
-#' @importFrom igraph centr_degree
-#' @importFrom igraph diameter
-#' @importFrom igraph transitivity
-#' @importFrom igraph simplify
-#' @importFrom igraph edge_density
-#' @importFrom igraph as.undirected
+#' @return Function returns a dataframe with the number of elements in the
+#'   graph, the number of connected edges, mean strength of connections,
+#'   transitivity (mean number of closed triads), diameter (furthest path
+#'   between two elements), degree centralization, and mean distance between
+#'   elements
+#'   
 #' @export
 #'
 #' @examples
@@ -20,35 +19,37 @@
 #'   data = emotions_set[[1]],
 #'   condition = emotions_set[[2]]$emotion,
 #'   test.condition = "anger",
-#'   ran.trials = 100,
+#'   ran.trials = 10,
 #'   combination.size = 2
 #' )
 #'
-#' anger.net <- netfacs.network(
+#' anger.net <- netfacs_network(
 #'   netfacs.data = angry.face,
 #'   link = "unweighted",
 #'   significance = 0.01,
-#'   min.count = 1,
-#'   min.prob = 0,
-#'   min.specificity = 0,
-#'   ignore.element = NULL
+#'   min.count = 1
 #' )
 #'
-#' network.summary.graph(anger.net)
-network.summary.graph <- function(netfacs.net) {
+#' network_summary_graph(anger.net)
+network_summary_graph <- function(netfacs.net) {
   # set result data frame
 
   net.from.igraph <-
     data.frame(
-      nr.elements = length(vertex.attributes(netfacs.net)$name),
-      nr.edges = length(edge.attributes(netfacs.net)$weight),
-      density = edge_density(simplify(netfacs.net), loops = FALSE),
-      transitivity = transitivity(simplify(netfacs.net), type = "global"),
-      diameter = diameter(simplify(netfacs.net), directed = FALSE),
-      degree_centralization = centr_degree(simplify(netfacs.net))$centralization,
-      mean_distance = mean_distance(simplify(netfacs.net))
+      nr.elements = length(igraph::vertex.attributes(netfacs.net)$name),
+      nr.edges = length(igraph::edge.attributes(netfacs.net)$weight),
+      density = igraph::edge_density(igraph::simplify(netfacs.net), loops = FALSE),
+      transitivity = igraph::transitivity(igraph::simplify(netfacs.net), type = "global"),
+      diameter = igraph::diameter(igraph::simplify(netfacs.net), directed = FALSE),
+      degree_centralization = igraph::centr_degree(igraph::simplify(netfacs.net))$centralization,
+      mean_distance = igraph::mean_distance(igraph::simplify(netfacs.net))
     )
+  
   net.from.igraph[sapply(net.from.igraph, is.numeric)] <-
     lapply(net.from.igraph[sapply(net.from.igraph, is.numeric)], round, 3)
+  
   net.from.igraph
+}
+network.summary.graph <- function(netfacs.net) {
+  network_summary_graph(netfacs.net)
 }
