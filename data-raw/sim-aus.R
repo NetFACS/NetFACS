@@ -20,44 +20,8 @@ jp["9", "10"] <- 1 # if 9 is active, 10 has 100% prob
 jp["3", "8"] <- 1 # if 3 is active, 8 has 100% prob
 diag(jp) <- NA
 
-
-# simulate observations for single AUs
-m <- matrix(nrow = n_obs, ncol = length(p))
-colnames(m) <- names(p)
-# sim prob of single AUs
-for(i in 1:n_obs){
-  m[i, ] <- rbinom(length(p), size = 1, prob = p)
-}
-
-head(m)
-d <- m
-
-# sim joint probabilities
-# i <- 1
-for(i in seq_len(nrow(d))){
-  obs <- d[i, ]
-  active <- names(obs[obs == 1])
-  inactive <- names(obs[obs == 0])
-  
-  # get joint prob of active and inactive AUs
-  xx <- jp[active, inactive, drop = FALSE]
-  res <- rbinom(length(xx), size = 1, prob = xx)
-  if(is.matrix(xx) & length(res)!=0){
-    res <- matrix(res, nrow = nrow(xx), dimnames = list(NULL, colnames(xx)))
-    res2 <- colSums(res)
-  } else{
-    res2 <- setNames(res, names(xx))
-  }
-  # update inactive AUs based on joint prob
-  if(length(res2) != 0) d[i, inactive] <- res2
-}
-
-head(d)
-colSums(d)
-
-# for when there are multiple joint probabilities
-d.sim.no.context <- apply(d, 2, function(x) ifelse(x>1, 1, x))
-# any(d>1)
+set.seed(1984)
+d.sim.no.context <- sim_facs(p, jp = jp, n_obs = n_obs)
 
 # sim with context --------------------------------------------------------
 
@@ -81,9 +45,10 @@ joint.prob.matrix <-
        b = jpb)
 
 # sample
-d.sim.with.context <- sample_contexts(context.def, 
-                                      jp = joint.prob.matrix,
-                                      n_obs = 2500)
+
+d.sim.with.context <- sim_facs(context.def, 
+                               jp = joint.prob.matrix,
+                               n_obs = 2500)
 
 head(d.sim.with.context)
 
