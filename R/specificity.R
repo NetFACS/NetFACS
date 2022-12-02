@@ -3,25 +3,26 @@
 #' Calculate specificity of element combinations to a given condition
 #'
 #' @param x A binary matrix, with AUs as \code{colnames}, or an object of class
-#'   \link{netfacs}
+#'   \code{\link{netfacs}}
 #' @param condition A character condition vector
-#' @param test.condition A string, denoting the test condition
+#' @param test.condition A string, denoting the test condition. If \code{NULL}
+#'   (default) specificity is calculated for all conditions.
 #' @param null.condition A string, denoting the null condition. If \code{NULL}
 #'   (default) all observations not part of the test.condition will be
 #'   considered part of the null.
 #' @param combination.size A positive integer, indicating the maximum
 #'   combination size of element combinations. If \code{NULL} (default), the
 #'   maximum combination size observed in the x is used.
-#' @param .upsample Logical. Should minority condition(s) be \link{upsample}d?
-#'   \code{TRUE} by default.
+#' @param upsample Logical. Should minority condition(s) be
+#'   \code{\link{upsample}}d? \code{TRUE} by default.
 #'
 #' @details Specificity values are biased when the number of observations per
-#'   condition is highly imbalanced. When \code{.upsample} = \code{TRUE}
+#'   condition is highly imbalanced. When \code{upsample} = \code{TRUE}
 #'   (recommended), the condition(s) with fewer observations are randomly
-#'   \link{upsample}d to match the number of observations in the most common
-#'   condition prior to the specificity calculation. This procedure minimizes
-#'   the bias in the specificity results.
-#'   
+#'   \code{\link{upsample}}d to match the number of observations in the most
+#'   common condition prior to the specificity calculation. This procedure
+#'   minimizes the bias in the specificity results.
+#'
 #' @return A data frame
 #' @export
 #' 
@@ -38,7 +39,7 @@ specificity <- function(x,
                         test.condition = NULL,
                         null.condition = NULL,
                         combination.size = NULL,
-                        .upsample = TRUE) {
+                        upsample = TRUE) {
   UseMethod("specificity")
 }
 
@@ -48,37 +49,63 @@ specificity.matrix <- function(x,
                                test.condition = NULL,
                                null.condition = NULL,
                                combination.size = NULL,
-                               .upsample = TRUE) {
+                               upsample = TRUE) {
   stopifnot(vctrs::vec_size(x) == vctrs::vec_size(condition))
   
   max_comb_size <- min(max(Rfast::rowsums(x)), combination.size)
   
-  if (.upsample) {
+  if (upsample) {
+    # probability of combination in original data
+    if (is.null(test.condition)) {
+      conditions <- as.character(sort(unique(condition)))
+      
+      comb_prob <- 
+        lapply(conditions, function(cond) {
+          test_m <- x[condition == cond, , drop = FALSE]
+          probability_of_combination(test_m, maxlen = max_comb_size)
+        }) %>% 
+        setNames(conditions) %>% 
+        bind_rows(.id = "condition") 
+      
+    } else {
+      test_m <- x[condition == test.condition, , drop = FALSE]
+      comb_prob <- 
+        probability_of_combination(test_m, maxlen = max_comb_size) %>% 
+        mutate(condition = test.condition, .before = 1)
+    }
+    
     # upsample minority condition(s) to have same number of observations as majority condition
     d <- upsample(x, condition)  
     
-    # probability of combination in original data
-    test_m <- x[condition == test.condition, , drop = FALSE]
-    comb_prob <- 
-      probability_of_combination(test_m, maxlen = max_comb_size)
-    
     # specificity on upsampled data
-    sp <- specificity_single(d, test.condition, null.condition, max_comb_size)
+    sp <- specificity_default(d, 
+                              condition,
+                              test.condition, 
+                              null.condition, 
+                              max_comb_size)
     
     out <- 
       sp %>% 
       dplyr::select(-c("count", "observed.prob")) %>% 
-      dplyr::left_join(comb_prob, by = "combination") %>% 
+      dplyr::left_join(comb_prob, by = c("condition", "combination")) %>% 
       dplyr::select("condition", "combination", "count", "observed.prob", 
                     "specificity", "combination.size") %>% 
-      dplyr::arrange(dplyr::desc(.data$count)) 
+      dplyr::arrange(
+        .data$condition, .data$combination.size, dplyr::desc(.data$count)
+      ) 
     
-  
-    } else {
-      # calculate specificity on original data
+  } else {
+    # calculate specificity on original data
     d <- dplyr::bind_cols(condition = condition, x)
-    out <- specificity_single(d, test.condition, null.condition, max_comb_size)
-    }
+    out <- specificity_default(d, 
+                               condition, 
+                               test.condition, 
+                               null.condition, 
+                               max_comb_size) %>% 
+      dplyr::arrange(
+        .data$condition, .data$combination.size, dplyr::desc(.data$count)
+      )
+  }
   
   class(out) <- c("netfacs_specificity", class(out))
   
@@ -92,7 +119,7 @@ specificity.netfacs <- function(x,
                                 test.condition = NULL,
                                 null.condition = NULL,
                                 combination.size = NULL,
-                                .upsample = TRUE) {
+                                upsample = TRUE) {
   # if test data was compared against random, specificity is meaningless
   if (attr(x, "stat_method") == "permutation") {
     return(print(
@@ -108,7 +135,7 @@ specificity.netfacs <- function(x,
   
   sp <- 
     specificity.matrix(
-      m, condition, test.condition, null.condition, combination.size, .upsample
+      m, condition, test.condition, null.condition, combination.size, upsample
     )
   
   sp2 <- 
@@ -131,7 +158,7 @@ specificity.netfacs_multiple <- function(x,
                                          test.condition = NULL,
                                          null.condition = NULL,
                                          combination.size = NULL,
-                                         .upsample = TRUE) {
+                                         upsample = TRUE) {
   # if test data was compared against random, specificity is meaningless
   if (attr(x, "stat_method") == "permutation") {
     return(
@@ -143,7 +170,7 @@ specificity.netfacs_multiple <- function(x,
   
   out <- lapply(x, function(nf) {
     specificity.netfacs(
-      nf, condition, test.condition, null.condition, combination.size, .upsample
+      nf, condition, test.condition, null.condition, combination.size, upsample
     )
   })
   
@@ -152,6 +179,27 @@ specificity.netfacs_multiple <- function(x,
 
 
 # helpers -----------------------------------------------------------------
+
+specificity_default <- function(d,
+                                condition,
+                                test.condition = NULL,
+                                null.condition = NULL,
+                                combination.size = NULL) {
+  
+  if (is.null(test.condition)) {
+    res <- specificity_multiple(d, 
+                                condition, 
+                                null.condition,
+                                combination.size)
+    
+  } else {
+    res <-specificity_single(d, 
+                             test.condition, 
+                             null.condition, 
+                             combination.size)
+  }
+  return(res)
+}
 
 specificity_single <- function(d,
                                test.condition,
@@ -217,4 +265,23 @@ specificity_single <- function(d,
     dplyr::arrange(dplyr::desc(.data$count)) 
   
   return(rs)
+}
+
+specificity_multiple <- function(d,
+                                 condition,
+                                 null.condition = NULL,
+                                 combination.size = NULL) {
+  
+  conditions <- as.character(sort(unique(condition)))
+  
+  out <- lapply(conditions, function(x) {
+    xx <- specificity_single(
+      d = d,
+      test.condition = x,
+      null.condition = null.condition,
+      combination.size = combination.size
+    )
+    return(xx)
+  })
+  dplyr::bind_rows(out)
 }

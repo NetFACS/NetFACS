@@ -10,16 +10,17 @@ specificity(
   test.condition = NULL,
   null.condition = NULL,
   combination.size = NULL,
-  .upsample = TRUE
+  upsample = TRUE
 )
 }
 \arguments{
 \item{x}{A binary matrix, with AUs as \code{colnames}, or an object of class
-\link{netfacs}}
+\code{\link{netfacs}}}
 
 \item{condition}{A character condition vector}
 
-\item{test.condition}{A string, denoting the test condition}
+\item{test.condition}{A string, denoting the test condition. If \code{NULL}
+(default) specificity is calculated for all conditions.}
 
 \item{null.condition}{A string, denoting the null condition. If \code{NULL}
 (default) all observations not part of the test.condition will be
@@ -29,8 +30,8 @@ considered part of the null.}
 combination size of element combinations. If \code{NULL} (default), the
 maximum combination size observed in the x is used.}
 
-\item{.upsample}{Logical. Should minority condition(s) be \link{upsample}d?
-\code{TRUE} by default.}
+\item{upsample}{Logical. Should minority condition(s) be
+\code{\link{upsample}}d? \code{TRUE} by default.}
 }
 \value{
 A data frame
@@ -40,11 +41,11 @@ Calculate specificity of element combinations to a given condition
 }
 \details{
 Specificity values are biased when the number of observations per
-  condition is highly imbalanced. When \code{.upsample} = \code{TRUE}
+  condition is highly imbalanced. When \code{upsample} = \code{TRUE}
   (recommended), the condition(s) with fewer observations are randomly
-  \link{upsample}d to match the number of observations in the most common
-  condition prior to the specificity calculation. This procedure minimizes
-  the bias in the specificity results.
+  \code{\link{upsample}}d to match the number of observations in the most
+  common condition prior to the specificity calculation. This procedure
+  minimizes the bias in the specificity results.
 }
 \examples{
 specificity(
