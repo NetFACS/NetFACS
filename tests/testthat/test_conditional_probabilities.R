@@ -17,39 +17,39 @@ test_that("probability of A given B is correct", {
       use_parallel = TRUE, 
       n_cores = detectCores()-1
     )
-  res.na <- 
-    suppressWarnings(
-      netfacs_na(
-        data = apply(d.sim.no.context, 2, insert_na),
-        condition = NULL,
-        ran.trials = 3,
-        combination.size = 2,
-        tail = "upper.tail",
-        use_parallel = TRUE, 
-        n_cores = detectCores()-1
-      )
-    )
-    
+  # res.na <- 
+  #   suppressWarnings(
+  #     netfacs_na(
+  #       data = apply(d.sim.no.context, 2, insert_na),
+  #       condition = NULL,
+  #       ran.trials = 3,
+  #       combination.size = 2,
+  #       tail = "upper.tail",
+  #       use_parallel = TRUE, 
+  #       n_cores = detectCores()-1
+  #     )
+  #   )
+  #   
   cp <- conditional_probabilities(res)
-  cp.na <- conditional_probabilities(res.na)
+  # cp.na <- conditional_probabilities(res.na)
   
   p_8given3.cp <- 
     cp %>% 
     dplyr::filter(combination == "8_3") %>% 
     dplyr::pull(probability_AgivenB)
-  p_8given3.cp.na <- 
-    cp.na %>% 
-    dplyr::filter(combination == "8_3") %>% 
-    dplyr::pull(probability_AgivenB)
+  # p_8given3.cp.na <- 
+  #   cp.na %>% 
+  #   dplyr::filter(combination == "8_3") %>% 
+  #   dplyr::pull(probability_AgivenB)
   
   p_2given4.cp <- 
     cp %>% 
     dplyr::filter(combination == "2_4") %>% 
     dplyr::pull(probability_AgivenB)
-  p_2given4.cp.na <- 
-    cp.na %>% 
-    dplyr::filter(combination == "2_4") %>% 
-    dplyr::pull(probability_AgivenB)
+  # p_2given4.cp.na <- 
+  #   cp.na %>% 
+  #   dplyr::filter(combination == "2_4") %>% 
+  #   dplyr::pull(probability_AgivenB)
   
   # norm_pmi_9and10.cp <- cp %>% filter(combination == "9_10") %>% pull(norm_pmi)
   # norm_pmi_9and10.cp.na <- cp.na %>% filter(combination == "9_10") %>% pull(norm_pmi)
@@ -57,10 +57,10 @@ test_that("probability of A given B is correct", {
   p_tol <- 0.2
   # conditional probabilities
   expect_equal(p_8given3.cp, 1)
-  expect_equal(p_8given3.cp.na, 1)
+  # expect_equal(p_8given3.cp.na, 1)
   
   expect_equal(p_2given4.cp, jp.no.context["4", "2"], tolerance = p_tol)
-  expect_equal(p_2given4.cp.na, jp.no.context["4", "2"], tolerance = p_tol)
+  # expect_equal(p_2given4.cp.na, jp.no.context["4", "2"], tolerance = p_tol)
   
   # expect_equal(norm_pmi_9and10.cp, 1)
   # expect_equal(norm_pmi_9and10.cp.na, 1)
