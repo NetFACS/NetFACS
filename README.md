@@ -5,38 +5,27 @@
 
 The NetFACS package is a tool that allows users to analyse and plot
 their facial signal data, generated using the Facial Action Coding
-System (FACS), in a statistical meaningful way using network analysis.
-FACS data, based on the co-occurrence of different elements representing
-facial muscle movements (called ‘Action Units’ or AUs), have some rather
-awkward properties: single AUs are binary (present/absent), they are
-part of larger expressions and combined with each other, their use can
-be non-normally distributed, individuals can provide multiple
-datapoints, data are often autocorrelated etc (see [Mielke et al.,
-2021](https://doi.org/10.3758/s13428-021-01692-5) for more information).
-NetFACS allows users to overcome some of these problems and present
-their results in a form that is easy to communicate to other
-researchers.
+System (FACS), in a statistical meaningful way using bootstrapping and
+network analysis. FACS data, based on the co-occurrence of different
+elements representing facial muscle movements (called ‘Action Units’ or
+AUs), have some rather awkward properties: single AUs are binary
+(present/absent), they are part of larger expressions and combined with
+each other, their use can be non-normally distributed, individuals can
+provide multiple datapoints, data are often autocorrelated etc (see
+[Mielke et al., 2021](https://doi.org/10.3758/s13428-021-01692-5) for
+more information). NetFACS allows users to overcome some of these
+problems and present their results in a form that is easy to communicate
+to other researchers.
 
 This is a tutorial and overview over which functions are currently
 available in the NetFACS package and which questions we can potentially
-already answer. NetFACS at this point is still work in progress. We will
-demonstrate the whole process of creating a NetFACS object, and explain
-the existing analytical and plotting tools. Currently, all functions are
-concerned with co-occurrence, so which elements happen simultaneously.
-Time-series analyses should follow soon. While we will use mainly Facial
-Action Coding System examples throughout (meaning ‘elements’ in the
-functions are Action Units, or AU), the functions can be applied to any
-co-occurrence data, so other questions regarding communication are also
-possible. This allows researchers to directly compare the complexity of
-different communication systems, e.g. gestures and facial expressions in
-nonhuman primates.
-
-In this tutorial, we will mainly talk about FACS and emotions, simply
-because this has been historically the area where FACS has been employed
-the most. However, the main goal is to open up the use of FACS to other
-topics. So, whenever the ‘context’ here is ‘emotion’, any other context
-can be chosen: different experimental interventions, behavioural
-contexts, or different groups of participants.
+already answer. While we will use mainly Facial Action Coding System
+examples throughout (meaning ‘elements’ in the functions are Action
+Units, or AU), the functions can be applied to any co-occurrence data,
+so other questions regarding communication are also possible. This
+allows researchers to directly compare the complexity of different
+communication systems, e.g. gestures and facial expressions in nonhuman
+primates.
 
 ### NetFACS basics
 
@@ -61,33 +50,26 @@ selected over and over again for the same purpose.
 
 NetFACS is based mainly on different probabilities: unconditional
 probability is the simply the proportion of occurrence;
-![P(A \\cap B) = \\frac{number of occurrences A+B}{number of possible occurrences A+B}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;P%28A%20%5Ccap%20B%29%20%3D%20%5Cfrac%7Bnumber%20of%20occurrences%20A%2BB%7D%7Bnumber%20of%20possible%20occurrences%20A%2BB%7D "P(A \cap B) = \frac{number of occurrences A+B}{number of possible occurrences A+B}")).
+$P(A \cap B) = \frac{number of occurrences A+B}{number of possible occurrences A+B}$).
 The unconditional probability of a combination AB is not directional,
-i.e. it is the same for AB as it is for BA:
-(![P(A \\cap B)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;P%28A%20%5Ccap%20B%29 "P(A \cap B)")
-==
-![P(B \\cap A)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;P%28B%20%5Ccap%20A%29 "P(B \cap A)")).
-We use the unconditional probability mainly to express how often an AU
-or a combination of AUs occurs at all, either in the whole data set or
-in a specific context. Conditional probability, on the other hand, is
-the probability of an event A given an event B;
-![P(A \\mid B) = \\frac{P(A \\cap B)}{P(B)}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;P%28A%20%5Cmid%20B%29%20%3D%20%5Cfrac%7BP%28A%20%5Ccap%20B%29%7D%7BP%28B%29%7D "P(A \mid B) = \frac{P(A \cap B)}{P(B)}")).
-Thus, it tells us not how often A occurs at all, but how often A occurs
-in the subset of cases where we know that B is present. Therefore, the
-conditional probabilities can differ depending on which direction we are
-looking at
-(![P(A \\mid B)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;P%28A%20%5Cmid%20B%29 "P(A \mid B)")
-!=
-![P(B \\mid A)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;P%28B%20%5Cmid%20A%29 "P(B \mid A)")).
-For example, in the English language, the letter ‘h’ is often
-accompanied by the letter ‘s’, but the reverse is not true: most cases
-of ‘s’ do not involve ‘h’. We can explore the conditional probability
-between two elements, or between an element/combination and a context.
-Probabilities are used as they are intuitive for most people, in
-contrast to many more opaque association indices that are often used in
-social network analysis. It also means that we can tie in other
-analytical tools that are very directly based on probabilities, such as
-Bayesian models and Markov Chains.
+i.e. it is the same for AB as it is for BA: ($P(A \cap B)$ ==
+$P(B \cap A)$). We use the unconditional probability mainly to express
+how often an AU or a combination of AUs occurs at all, either in the
+whole data set or in a specific context. Conditional probability, on the
+other hand, is the probability of an event A given an event B;
+$P(A \mid B) = \frac{P(A \cap B)}{P(B)}$). Thus, it tells us not how
+often A occurs at all, but how often A occurs in the subset of cases
+where we know that B is present. Therefore, the conditional
+probabilities can differ depending on which direction we are looking at
+($P(A \mid B)$ != $P(B \mid A)$). For example, in the English language,
+the letter ‘h’ is often accompanied by the letter ‘s’, but the reverse
+is not true: most cases of ‘s’ do not involve ‘h’. We can explore the
+conditional probability between two elements, or between an
+element/combination and a context. Probabilities are used as they are
+intuitive for most people, in contrast to many more opaque association
+indices that are often used in social network analysis. It also means
+that we can tie in other analytical tools that are very directly based
+on probabilities, such as Bayesian models and Markov Chains.
 
 ### Install the package
 
@@ -131,150 +113,14 @@ event as a row (this can be a communication sequence, a facial
 expression, a frame in a video, or a word, for example), and each
 element as a column (for example, Action Units in FACS data or letters
 for words). Elements get a 0 if they are absent in this event, and a 1
-if they are present. So, for example, the word ‘word’ would have a 1 in
-the columns for d,o,r, and w, and 0 in all other letter columns. It’s
-usually good to have a second data frame of the same length that
-contains additional information about the condition, duration, etc. This
-will look like this for the words:
-
-|   a |   b |   c |   d |   e |   f |   g |   h |   i |   j |   k |   l |   m |   n |   o |   p |   q |   r |   s |   t |   u |   v |   w |   x |   y |   z |
-|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|----:|
-|   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |
-|   0 |   0 |   0 |   0 |   1 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   0 |   1 |   0 |   0 |   1 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |
-|   0 |   0 |   0 |   0 |   1 |   0 |   1 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |
-|   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |
-|   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |
-|   1 |   0 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   0 |   1 |   1 |   0 |   1 |   0 |   0 |   1 |   0 |   0 |   0 |   0 |   0 |
-
-Letter data for words in the Communist Manifesto
-
-| word     | comb.size | sentence | language |
-|:---------|----------:|---------:|:---------|
-| ein      |         3 |        1 | german   |
-| gespenst |         8 |        1 | german   |
-| geht     |         4 |        1 | german   |
-| um       |         2 |        1 | german   |
-| in       |         2 |        1 | german   |
-| europa   |         6 |        1 | german   |
-
-Additional information for Communist Manifesto
-
-### Prepare the data
-
-Users who code FACS data will often have them stored in a different
-format, where they have the Action Unit together with its start and end
-time or duration in a specific video. The package has a function that
-can deal with these data and transform them into the right format, as
-long as they contain information about the video from which they were
-taken.
-
-So, for photos, data will sometimes look like this:
-
-``` r
-odd.photo <- data.frame(
-  photo = c("photo1", "photo2", "photo3", "photo4", "photo5", "photo6"),
-  AUs = c(
-    "AU1/AU5/AU9",
-    "AU1/AU2",
-    "AU1/AU2/AU10",
-    "AU1/AU2",
-    "AU5/AU17/AU18",
-    "AU6/AU12"
-  )
-)
-kable(odd.photo, row.names = FALSE, caption = "Photo Data")
-```
-
-| photo  | AUs           |
-|:-------|:--------------|
-| photo1 | AU1/AU5/AU9   |
-| photo2 | AU1/AU2       |
-| photo3 | AU1/AU2/AU10  |
-| photo4 | AU1/AU2       |
-| photo5 | AU5/AU17/AU18 |
-| photo6 | AU6/AU12      |
-
-Photo Data
-
-Videos, on the other hand, will sometimes look this:
-
-``` r
-odd.video <- data.frame(
-  video = c(rep("video 1", 3),
-            rep("video 2", 2),
-            rep("video 3", 3)),
-  AUs = c("AU1", "AU5", "AU9",
-          "AU1", "AU2",
-          "AU1", "AU2", "AU10"),
-  start.times = c(0.1, 0.2, 0.3,
-                  0.1, 0.3,
-                  0.1, 0.4, 0.4),
-  durations = rep(0.3, times = 8)
-)
-kable(odd.video, row.names = FALSE, caption = "Video Data")
-```
-
-| video   | AUs  | start.times | durations |
-|:--------|:-----|------------:|----------:|
-| video 1 | AU1  |         0.1 |       0.3 |
-| video 1 | AU5  |         0.2 |       0.3 |
-| video 1 | AU9  |         0.3 |       0.3 |
-| video 2 | AU1  |         0.1 |       0.3 |
-| video 2 | AU2  |         0.3 |       0.3 |
-| video 3 | AU1  |         0.1 |       0.3 |
-| video 3 | AU2  |         0.4 |       0.3 |
-| video 3 | AU10 |         0.4 |       0.3 |
-
-Video Data
-
-The prepare.netfacs() function can take either of these inputs and turn
-them into the right format. This will look something like this:
-
-``` r
-au.prepared <- prepare.netfacs(
-  elements = odd.video$AUs,
-  type = "video",
-  video.id = odd.video$video,
-  start.time = odd.video$start.times,
-  duration = odd.video$durations,
-  frame.duration = 0.05
-)
-kable(head(au.prepared$element.matrix),
-      row.names = FALSE,
-      caption = "Element Matrix of prepare.netfacs")
-```
-
-| AU1 | AU10 | AU2 | AU5 | AU9 |
-|----:|-----:|----:|----:|----:|
-|   1 |    0 |   0 |   0 |   0 |
-|   1 |    0 |   0 |   0 |   0 |
-|   1 |    0 |   0 |   1 |   0 |
-|   1 |    0 |   0 |   1 |   0 |
-|   1 |    0 |   0 |   1 |   1 |
-|   1 |    0 |   0 |   1 |   1 |
-
-Element Matrix of prepare.netfacs
-
-``` r
-kable(head(au.prepared$video.info),
-      row.names = FALSE,
-      caption = "Video Info of prepare.netfacs")
-```
-
-| video.id | start.sec | end.sec | duration |
-|:---------|----------:|--------:|---------:|
-| video 1  |      0.10 |    0.15 |     0.05 |
-| video 1  |      0.15 |    0.20 |     0.05 |
-| video 1  |      0.20 |    0.25 |     0.05 |
-| video 1  |      0.25 |    0.30 |     0.05 |
-| video 1  |      0.30 |    0.35 |     0.05 |
-| video 1  |      0.35 |    0.40 |     0.05 |
-
-Video Info of prepare.netfacs
+if they are present. It’s usually good to have a second data frame of
+the same length that contains additional information about the
+condition, duration, etc. In this tutorial we will use the Extended
+Cohn-Kanade dataset as an example.
 
 # The ‘netfacs’ function
 
-The basis for the whole package so far is the ‘netfacs’ function. The
+The basis for the whole package so far is the `netfacs` function. The
 function creates a list for all possible combination of elements that
 has the information on their observed probability of occurrence in the
 chosen data set. It also tests whether this observed probability is
@@ -310,64 +156,62 @@ either of the two elements were present.
 
 These are the function parameters and what they do:
 
--   data: this is the data matrix that contains each event as a row and
-    each element as a column, with 0 and 1 denoting whether an element
-    was active at all
--   condition: this denotes the condition (e.g., the emotion, language,
-    gender …) that we want to find out about. The input should be a
-    vector of the same length as *data* with the condition each event
-    belongs to, to allow the algorithm to assign each event. If no
-    condition is set, then all data points are compared against random
-    distribution. If a condition is set, the user has to define a *test
-    condition*: one of the levels of the *condition* vector that we are
-    interested in.
--   test.condition: marks the condition that we want to find out about.
--   null.condition: marks the comparison level. If NULL, then the test
-    condition is compared with all other data points (e.g. anger against
-    all other emotions). If it is set to a value (e.g., ‘happy’), then
-    only the test and null condition are compared with each other (e.g.,
-    happy and angry faces).
--   duration: when analysing videos with FACS, each event could differ
-    in duration; for example, some events contain 5 frames, while
-    another contains 10 frames. If this information is available, FACS
-    will weight the results accordingly. Here, you should enter a vector
-    of the same length as the data set that defines the duration of each
-    event. It doesn’t matter if you put seconds or frames as duration,
-    the function will determine the smallest value and compare all other
-    values to this.
--   ran.trials: determines how many permutations or bootstraps are
-    performed. The larger, the better and more accurate, but things take
-    longer. 1000 iterations is usually good.
--   control: Here, you would enter a list of control variables. So, for
-    example, to control for gender and place of origin, you would enter
-    ‘list(gender, place.of.origin)’; if these were available. This way,
-    in the bootstraps, he algorithm will approximate the distribution of
-    these control parameters in the test and null condition. So, if
-    there are 10 males and 20 females in the angry faces, the null
-    condition will select a ratio of 1 to 2 as well, to prevent
-    difference to be driven by differences in the data set. Note that
-    you need enough data to include control variables: if there are no
-    female faces in one of the conditions, the algorithm will fail at
-    adjusting the distribution.
--   random.level: Should be a vector of the same length as the data
-    matrix that assigns each event a higher-level identifier, such as
-    individual or video. For the bootstraps, this works similar to a
-    random effect in that it controls for the fact that some data points
-    belong to the same hierachical level. So, if an individual provides
-    several data points, or data points come from the same video, noting
-    this in the *random.level* parameter means that random selection
-    occurs on the level of the video or individual rather than each
-    event separately. Thus, the probability space of the null
-    distribution is not biased by one individual or video.
--   combination.size: If null, the algorithm will pop out all possible
-    combinations. If we don’t care for the higher-order combinations
-    (e.g. combinations of 5 elements), we can speed the analysis up by
-    limiting this to 2 or 3.
--   tail: Should p-values be *upper.tail* (the observed value is larger
-    than the expected values) or *left.tail* (the observed value is
-    smaller than the expected values)?
--   use_parallel: Should processing be done in parallel?
--   n_cores: How many cores should be used for parallel processing?
+- `data`: this is the data matrix that contains each event as a row and
+  each element as a column, with 0 and 1 denoting whether an element was
+  active at all
+- `condition`: this denotes the condition (e.g., the emotion, language,
+  gender …) that we want to find out about. The input should be a vector
+  of the same length as *data* with the condition each event belongs to,
+  to allow the algorithm to assign each event. If no condition is set,
+  then all data points are compared against random distribution. If a
+  condition is set, the user has to define a *test condition*: one of
+  the levels of the *condition* vector that we are interested in.
+- `test.condition`: marks the condition that we want to find out about.
+- `null.condition`: marks the comparison level. If NULL, then the test
+  condition is compared with all other data points (e.g. anger against
+  all other emotions). If it is set to a value (e.g., ‘happy’), then
+  only the test and null condition are compared with each other (e.g.,
+  happy and angry faces).
+- `duration`: when analysing videos with FACS, each event could differ
+  in duration; for example, some events contain 5 frames, while another
+  contains 10 frames. If this information is available, FACS will weight
+  the results accordingly. Here, you should enter a vector of the same
+  length as the data set that defines the duration of each event. It
+  doesn’t matter if you put seconds or frames as duration, the function
+  will determine the smallest value and compare all other values to
+  this.
+- `ran.trials`: determines how many permutations or bootstraps are
+  performed. The larger, the better and more accurate, but things take
+  longer. 1000 iterations is usually good.
+- `control`: Here, you would enter a list of control variables. So, for
+  example, to control for gender and place of origin, you would enter
+  ‘list(gender, place.of.origin)’; if these were available. This way, in
+  the bootstraps, he algorithm will approximate the distribution of
+  these control parameters in the test and null condition. So, if there
+  are 10 males and 20 females in the angry faces, the null condition
+  will select a ratio of 1 to 2 as well, to prevent difference to be
+  driven by differences in the data set. Note that you need enough data
+  to include control variables: if there are no female faces in one of
+  the conditions, the algorithm will fail at adjusting the distribution.
+- `random.level`: Should be a vector of the same length as the data
+  matrix that assigns each event a higher-level identifier, such as
+  individual or video. For the bootstraps, this works similar to a
+  random effect in that it controls for the fact that some data points
+  belong to the same hierachical level. So, if an individual provides
+  several data points, or data points come from the same video, noting
+  this in the *random.level* parameter means that random selection
+  occurs on the level of the video or individual rather than each event
+  separately. Thus, the probability space of the null distribution is
+  not biased by one individual or video.
+- `combination.size`: If null, the algorithm will pop out all possible
+  combinations. If we don’t care for the higher-order combinations
+  (e.g. combinations of 5 elements), we can speed the analysis up by
+  limiting this to 2 or 3.
+- `tail`: Should p-values be *upper.tail* (the observed value is larger
+  than the expected values) or *left.tail* (the observed value is
+  smaller than the expected values)?
+- `use_parallel`: Should processing be done in parallel?
+- `n_cores`: How many cores should be used for parallel processing?
 
 Here, I will give an example where we compare the facial expression of
 anger against all other facial expression. We assume that every
@@ -406,28 +250,28 @@ angry.face <- netfacs(
 )
 ```
 
-| combination | combination.size | count | expected.prob | observed.prob | effect.size | pvalue | prob.increase | specificity |
-|:-----------:|:----------------:|:-----:|:-------------:|:-------------:|:-----------:|:------:|:-------------:|:-----------:|
-|      4      |        1         |  40   |     0.291     |     0.889     |    0.597    | 0.000  |     3.050     |    0.328    |
-|     17      |        1         |  39   |     0.267     |     0.867     |    0.600    | 0.000  |     3.250     |    0.342    |
-|     23      |        1         |  36   |     0.025     |     0.800     |    0.775    | 0.000  |    32.283     |    0.837    |
-|     24      |        1         |  33   |     0.035     |     0.733     |    0.698    | 0.000  |    20.820     |    0.767    |
-|      7      |        1         |  32   |     0.165     |     0.711     |    0.546    | 0.000  |     4.299     |    0.405    |
-|      6      |        1         |   8   |     0.308     |     0.178     |   -0.130    | 1.000  |     0.577     |    0.084    |
-|     14      |        1         |   7   |     0.089     |     0.156     |    0.066    | 0.000  |     1.744     |    0.219    |
-|      5      |        1         |   6   |     0.306     |     0.133     |   -0.173    | 1.000  |     0.435     |    0.065    |
-|     18      |        1         |   4   |     0.007     |     0.089     |    0.082    | 0.000  |    12.100     |    0.667    |
-|     15      |        1         |   3   |     0.107     |     0.067     |   -0.040    | 0.997  |     0.625     |    0.091    |
-|      9      |        1         |   3   |     0.205     |     0.067     |   -0.138    | 1.000  |     0.325     |    0.049    |
-|     10      |        1         |   2   |     0.046     |     0.044     |   -0.002    | 0.605  |     0.961     |    0.133    |
-|     12      |        1         |   1   |     0.281     |     0.022     |   -0.259    | 1.000  |     0.079     |    0.013    |
-|     16      |        1         |   1   |     0.039     |     0.022     |   -0.017    | 0.975  |     0.573     |    0.083    |
-|    4_17     |        2         |  36   |     0.196     |     0.800     |    0.604    | 0.000  |     4.082     |    0.396    |
-|    17_23    |        2         |  31   |     0.014     |     0.689     |    0.675    | 0.000  |    47.932     |    0.886    |
-|    4_23     |        2         |  31   |     0.014     |     0.689     |    0.675    | 0.000  |    47.932     |    0.886    |
-|    4_24     |        2         |  31   |     0.000     |     0.689     |    0.689    | 0.000  |      NA       |    1.000    |
-|    17_24    |        2         |  28   |     0.014     |     0.622     |    0.608    | 0.000  |    44.307     |    0.875    |
-|    7_17     |        2         |  28   |     0.092     |     0.622     |    0.531    | 0.000  |     6.794     |    0.519    |
+| combination | combination.size | count | expected.prob | observed.prob | effect.size | pvalue | prob.increase |
+|:-----------:|:----------------:|:-----:|:-------------:|:-------------:|:-----------:|:------:|:-------------:|
+|      4      |        1         |  40   |     0.291     |     0.889     |    0.598    | 0.000  |     3.051     |
+|     17      |        1         |  39   |     0.267     |     0.867     |    0.600    | 0.000  |     3.248     |
+|     23      |        1         |  36   |     0.025     |     0.800     |    0.775    | 0.000  |    31.759     |
+|     24      |        1         |  33   |     0.035     |     0.733     |    0.698    | 0.000  |    20.742     |
+|      7      |        1         |  32   |     0.167     |     0.711     |    0.544    | 0.000  |     4.255     |
+|      6      |        1         |   8   |     0.309     |     0.178     |   -0.131    | 1.000  |     0.575     |
+|     14      |        1         |   7   |     0.089     |     0.156     |    0.067    | 0.000  |     1.756     |
+|      5      |        1         |   6   |     0.307     |     0.133     |   -0.174    | 1.000  |     0.434     |
+|     18      |        1         |   4   |     0.007     |     0.089     |    0.082    | 0.000  |    12.369     |
+|     15      |        1         |   3   |     0.107     |     0.067     |   -0.040    | 0.999  |     0.623     |
+|      9      |        1         |   3   |     0.207     |     0.067     |   -0.140    | 1.000  |     0.323     |
+|     10      |        1         |   2   |     0.046     |     0.044     |   -0.001    | 0.565  |     0.973     |
+|     12      |        1         |   1   |     0.280     |     0.022     |   -0.258    | 1.000  |     0.079     |
+|     16      |        1         |   1   |     0.039     |     0.022     |   -0.017    | 0.975  |     0.571     |
+|    4_17     |        2         |  36   |     0.196     |     0.800     |    0.604    | 0.000  |     4.090     |
+|    17_23    |        2         |  31   |     0.014     |     0.689     |    0.674    | 0.000  |    47.805     |
+|    4_23     |        2         |  31   |     0.014     |     0.689     |    0.674    | 0.000  |    47.805     |
+|    4_24     |        2         |  31   |     0.000     |     0.689     |    0.689    | 0.000  |      NA       |
+|    17_24    |        2         |  28   |     0.014     |     0.622     |    0.608    | 0.000  |    43.928     |
+|    7_17     |        2         |  28   |     0.092     |     0.622     |    0.530    | 0.000  |     6.728     |
 
 Top rows of the netfacs function results
 
@@ -438,27 +282,24 @@ facial expression.
 As we can see in the last table already, there is a lot of information
 in this object:
 
--   combination: the name of the combination
--   combination.size: how many elements make up the combination
--   count: how often it occurs in the test condition
--   observed.prob: Probability that the combination occurs in a frame of
-    that condition
--   expected.prob: Expected probability of the combination if the data
-    set was drawn from the null condition; mean of all randomisations.
--   effect.size: Difference between the observed probability and the
-    mean expected probability.
--   pvalue: how many random probabilities were more extreme than the
-    observed probability (larger for *right.tail*, smaller for
-    *left.tail*)
--   specificity: probability that the condition is ‘anger’ when the
-    combination is observed. e.g, 0.8 means that 80% of all occurrences
-    of the Action Unit are in ‘anger’
--   probability.increase: how many times more likely is the combination
-    in this condition than the null condition?
+- `combination`: the name of the combination
+- `combination.size`: how many elements make up the combination
+- `count`: how often it occurs in the test condition
+- `observed.prob`: Probability that the combination occurs in a frame of
+  that condition
+- `expected.prob`: Expected probability of the combination if the data
+  set was drawn from the null condition; mean of all randomisations.
+- `effect.size`: Difference between the observed probability and the
+  mean expected probability.
+- `pvalue`: how many random probabilities were more extreme than the
+  observed probability (larger for *right.tail*, smaller for
+  *left.tail*)
+- `probability.increase`: how many times more likely is the combination
+  in this condition than the null condition?
 
 As this table is very large in many instances, we can extract results
 more easily while already cleaning the table a bit using the
-‘extract.netfacs’ function:
+‘netfacs_extract’ function:
 
 ``` r
 # extract angry face information for the first level (single elements)
@@ -467,20 +308,19 @@ anger.aus <- netfacs_extract(
   combination.size = 1, # only looking at combinations with 1 element (here, Action Units)
   min.count = 1, # minimum number of times that the combination should occur
   min.prob = 0, # minimum observed probability of the combination
-  min.specificity = 0, # minimum specificity of the combination
   significance = 0.01
 ) # significance level we are interested in
 ```
 
-| combination | combination.size | count | expected.prob | observed.prob | effect.size | pvalue | prob.increase | specificity |
-|:-----------:|:----------------:|:-----:|:-------------:|:-------------:|:-----------:|:------:|:-------------:|:-----------:|
-|     23      |        1         |  36   |     0.025     |     0.800     |    0.775    |   0    |    32.283     |    0.837    |
-|     24      |        1         |  33   |     0.035     |     0.733     |    0.698    |   0    |    20.820     |    0.767    |
-|     17      |        1         |  39   |     0.267     |     0.867     |    0.600    |   0    |     3.250     |    0.342    |
-|      4      |        1         |  40   |     0.291     |     0.889     |    0.597    |   0    |     3.050     |    0.328    |
-|      7      |        1         |  32   |     0.165     |     0.711     |    0.546    |   0    |     4.299     |    0.405    |
-|     18      |        1         |   4   |     0.007     |     0.089     |    0.082    |   0    |    12.100     |    0.667    |
-|     14      |        1         |   7   |     0.089     |     0.156     |    0.066    |   0    |     1.744     |    0.219    |
+| condition | combination | combination.size | count | expected.prob | observed.prob | effect.size | pvalue | prob.increase |
+|:---------:|:-----------:|:----------------:|:-----:|:-------------:|:-------------:|:-----------:|:------:|:-------------:|
+|   anger   |     23      |        1         |  36   |     0.025     |     0.800     |    0.775    |   0    |    31.759     |
+|   anger   |     24      |        1         |  33   |     0.035     |     0.733     |    0.698    |   0    |    20.742     |
+|   anger   |     17      |        1         |  39   |     0.267     |     0.867     |    0.600    |   0    |     3.248     |
+|   anger   |      4      |        1         |  40   |     0.291     |     0.889     |    0.598    |   0    |     3.051     |
+|   anger   |      7      |        1         |  32   |     0.167     |     0.711     |    0.544    |   0    |     4.255     |
+|   anger   |     18      |        1         |   4   |     0.007     |     0.089     |    0.082    |   0    |    12.369     |
+|   anger   |     14      |        1         |   7   |     0.089     |     0.156     |    0.067    |   0    |     1.756     |
 
 Result of netfacs_extract for single elements
 
@@ -488,8 +328,7 @@ The results show that in angry faces, the Action Units 4, 7, 14, 17, 18,
 23, and 24 are significantly more common than would be expected given
 the information we have from the other emotions. AU23, for example,
 occurs 36 times, which is 80% of all ‘angry’ faces. Expected would be
-2.5%, so we have an increase in probability of 32 times. When we see AU
-23, we can be 84% sure that this is an angry face (specificity).
+2.5%, so we have an increase in probability of 32 times.
 
 We can also plot this. In element.plot, the y-axis is based on the
 log-transformed change in probability between the observed and all
@@ -545,19 +384,18 @@ anger.aus3 <- netfacs_extract(
   combination.size = 3, # only looking at combinations with 3 elements (here, Action Units)
   min.count = 5, # minimum number of times that the combination should occur
   min.prob = 0, # minimum observed probability of the combination
-  min.specificity = 0, # minimum specificity of the combination
-  significance = 0.01
-) # significance level we are interested in
+  significance = 0.01 # significance level we are interested in
+) 
 ```
 
-| combination | combination.size | count | expected.prob | observed.prob | effect.size | pvalue | prob.increase | specificity |
-|:-----------:|:----------------:|:-----:|:-------------:|:-------------:|:-----------:|:------:|:-------------:|:-----------:|
-|   4_17_23   |        3         |  28   |     0.014     |     0.622     |    0.608    |   0    |    43.293     |    0.875    |
-|   4_17_24   |        3         |  27   |     0.000     |     0.600     |    0.600    |   0    |      NA       |    1.000    |
-|   4_23_24   |        3         |  23   |     0.000     |     0.511     |    0.511    |   0    |      NA       |    1.000    |
-|   4_7\_24   |        3         |  23   |     0.000     |     0.511     |    0.511    |   0    |      NA       |    1.000    |
-|   7_17_23   |        3         |  22   |     0.000     |     0.489     |    0.489    |   0    |      NA       |    1.000    |
-|   7_17_24   |        3         |  22   |     0.000     |     0.489     |    0.489    |   0    |      NA       |    1.000    |
+| condition | combination | combination.size | count | expected.prob | observed.prob | effect.size | pvalue | prob.increase |
+|:---------:|:-----------:|:----------------:|:-----:|:-------------:|:-------------:|:-----------:|:------:|:-------------:|
+|   anger   |   4_17_23   |        3         |  28   |     0.014     |     0.622     |    0.608    |   0    |    43.178     |
+|   anger   |   4_17_24   |        3         |  27   |     0.000     |     0.600     |    0.600    |   0    |      NA       |
+|   anger   |   4_23_24   |        3         |  23   |     0.000     |     0.511     |    0.511    |   0    |      NA       |
+|   anger   |   4_7\_24   |        3         |  23   |     0.000     |     0.511     |    0.511    |   0    |      NA       |
+|   anger   |   7_17_23   |        3         |  22   |     0.000     |     0.489     |    0.489    |   0    |      NA       |
+|   anger   |   7_17_24   |        3         |  22   |     0.000     |     0.489     |    0.489    |   0    |      NA       |
 
 Results of netfacs_extract function for combinations of three elements
 
@@ -582,15 +420,17 @@ own, but also as AU1+2, AU1+2+5, AU1+2+5+26 etc. The question is whether
 the elements actually add information about the condition: If I remove
 AU1 from AU1+2+5+26, does the resulting combination still convey the
 same message? We do this through the specificity measure (i.e., strength
-association of the element with the condition in question): the function
-‘element.specificity’ goes through all combinations that contain an
-element and calculates the mean specificity with and without the
+association of the element with the condition in question). First, the
+function `specificity` calculates the specificity of all elements to a
+context, then the function `specificity_increase` goes through all
+combinations and calculates the mean specificity with and without an
 element. The result tells us which Action Units actually add the
 information ‘angry!’ and which ones potentially just appear as part of
 combinations:
 
 ``` r
-specificity <- element.specificity(netfacs.data = angry.face)
+spec <- specificity(angry.face)
+spec.increase <- specificity_increase(spec)
 ```
 
 Here, we see that even though AU5 is pretty rare, as it only occurred 6
@@ -605,22 +445,22 @@ decreases the likelihood that a combination is ‘angry’ (specificity
 increase = -0.09). The specificity increase is available for the first
 level (single elements) and second level (dyads of elements).
 
-| element | number.combinations | specificity.increase | count |
-|:-------:|:-------------------:|:--------------------:|:-----:|
-|    5    |         37          |         0.35         |   6   |
-|   23    |         120         |         0.30         |  36   |
-|   24    |         105         |         0.28         |  33   |
-|   18    |         64          |         0.22         |   4   |
-|   10    |         64          |         0.11         |   2   |
-|    7    |         104         |         0.11         |  32   |
-|   14    |         41          |         0.08         |   7   |
-|    6    |         71          |         0.08         |   8   |
-|    4    |         121         |         0.08         |  40   |
-|   17    |         111         |         0.06         |  39   |
-|    9    |         44          |         0.06         |   3   |
-|   16    |         26          |         0.05         |   1   |
-|   15    |         30          |         0.02         |   3   |
-|   12    |          8          |        -0.09         |   1   |
+| element | number.combinations | specificity.increase | count | combination.size |
+|:-------:|:-------------------:|:--------------------:|:-----:|:----------------:|
+|    5    |         37          |         0.37         |   6   |        1         |
+|   23    |         120         |         0.32         |  36   |        1         |
+|   24    |         105         |         0.29         |  33   |        1         |
+|   18    |         64          |         0.22         |   4   |        1         |
+|    7    |         104         |         0.12         |  32   |        1         |
+|   10    |         64          |         0.11         |   2   |        1         |
+|    9    |         44          |         0.10         |   3   |        1         |
+|    6    |         71          |         0.10         |   8   |        1         |
+|   16    |         26          |         0.08         |   1   |        1         |
+|    4    |         121         |         0.08         |  40   |        1         |
+|   17    |         111         |         0.07         |  39   |        1         |
+|   14    |         41          |         0.06         |   7   |        1         |
+|   15    |         30          |        -0.01         |   3   |        1         |
+|   12    |          8          |        -0.09         |   1   |        1         |
 
 Results of the specificity increase in combinations due to to inclusion
 of each element
@@ -658,33 +498,27 @@ between many consonants. The last alternative is the the two elements
 are not related to each other and randomly co-occur across events.
 
 In NetFACS, we can get information on the conditional probabilities
-using the ‘network.conditional’ function, which also gives us a network
-representation (discussed below). If we are simply interested in the
-conditional probabilities themselves, we use the following function:
+using the `conditional_probabilities` function:
 
 ``` r
-conditional.probs <- network.conditional(
-  netfacs.data = angry.face,
-  min.prob = 0,
-  min.count = 5,
-  ignore.element = NULL
-)
+conditional.probs <- conditional_probabilities(angry.face)
 ```
 
-| elementA | elementB | combination | count | Probability_A | Probability_B | Probability_AandB | Probability_AgivenB |
-|:--------:|:--------:|:-----------:|:-----:|:-------------:|:-------------:|:-----------------:|:-------------------:|
-|    17    |    4     |    17_4     |  36   |     0.87      |     0.89      |       0.80        |        0.90         |
-|    4     |    17    |    4_17     |  36   |     0.89      |     0.87      |       0.80        |        0.92         |
-|    17    |    23    |    17_23    |  31   |     0.87      |     0.80      |       0.69        |        0.86         |
-|    23    |    17    |    23_17    |  31   |     0.80      |     0.87      |       0.69        |        0.79         |
-|    23    |    4     |    23_4     |  31   |     0.80      |     0.89      |       0.69        |        0.78         |
-|    24    |    4     |    24_4     |  31   |     0.73      |     0.89      |       0.69        |        0.78         |
-|    23    |    5     |    23_5     |   6   |     0.80      |     0.13      |       0.13        |        1.00         |
-|    5     |    17    |    5_17     |   6   |     0.13      |     0.87      |       0.13        |        0.15         |
-|    5     |    23    |    5_23     |   6   |     0.13      |     0.80      |       0.13        |        0.17         |
-|    6     |    17    |    6_17     |   6   |     0.18      |     0.87      |       0.13        |        0.15         |
-|    14    |    17    |    14_17    |   5   |     0.16      |     0.87      |       0.11        |        0.13         |
-|    14    |    7     |    14_7     |   5   |     0.16      |     0.71      |       0.11        |        0.16         |
+| element_A | element_B | combination | count | probability_A | probability_B | probability_AandB | probability_AgivenB | probability_BgivenA |
+|:---------:|:---------:|:-----------:|:-----:|:-------------:|:-------------:|:-----------------:|:-------------------:|:-------------------:|
+|     4     |    17     |    4_17     |  36   |     0.89      |     0.87      |       0.80        |        0.92         |        0.90         |
+|    17     |     4     |    17_4     |  36   |     0.87      |     0.89      |       0.80        |        0.90         |        0.92         |
+|     4     |    23     |    4_23     |  31   |     0.89      |     0.80      |       0.69        |        0.86         |        0.78         |
+|     4     |    24     |    4_24     |  31   |     0.89      |     0.73      |       0.69        |        0.94         |        0.78         |
+|    17     |    23     |    17_23    |  31   |     0.87      |     0.80      |       0.69        |        0.86         |        0.79         |
+|    23     |     4     |    23_4     |  31   |     0.80      |     0.89      |       0.69        |        0.78         |        0.86         |
+|     5     |    23     |    5_23     |   6   |     0.13      |     0.80      |       0.13        |        0.17         |        1.00         |
+|     6     |    17     |    6_17     |   6   |     0.18      |     0.87      |       0.13        |        0.15         |        0.75         |
+|    17     |     5     |    17_5     |   6   |     0.87      |     0.13      |       0.13        |        1.00         |        0.15         |
+|    23     |     5     |    23_5     |   6   |     0.80      |     0.13      |       0.13        |        1.00         |        0.17         |
+|    17     |     6     |    17_6     |   6   |     0.87      |     0.18      |       0.13        |        0.75         |        0.15         |
+|     4     |     5     |     4_5     |   5   |     0.89      |     0.13      |       0.11        |        0.83         |        0.12         |
+|     7     |    14     |    7_14     |   5   |     0.71      |     0.16      |       0.11        |        0.71         |        0.16         |
 
 Conditional probabilities for a subset of dyadic combinations
 
@@ -702,8 +536,6 @@ appear to be part of a fixed expression: their conditional probabilities
 are around 80% each way, indicating that they both occur together most
 of the time. Below, we will also show what the network visualisation of
 this function looks like.
-
-\\newpage
 
 # Networks
 
@@ -724,7 +556,7 @@ better.
 
 Let’s start with the bipartite overlap network: we can visualise which
 conditions (in our case, emotions), share Action Units. To make the
-process easier, there is a ‘netfacs_multiple’ function that runs the
+process easier, there is a `netfacs_multiple` function that runs the
 netfacs function for all levels of a condition against all others.
 
 ``` r
@@ -735,21 +567,23 @@ multi.facs <- netfacs_multiple(
   combination.size = 2,
   use_parallel = TRUE
 )
+# calculate element specificity
+multi.spec <- specificity(multi.facs)
 ```
 
 Now we can make a network where each condition is a node, and they are
 connected through the Action Units. We only consider Action Units that
 occur at least 3 times in the condition. Let’s also remove Action Unit
 25 because it can be created by different muscles and is therefore
-ambiguous. The overlap.network function creates different graphs for
+ambiguous. The `overlap_network` function creates different graphs for
 different questions: the ‘specificity’ graph shows the conditional
 probability that we are in a condition given that we observe the
 element; the ‘occurrence’ graph shows the conditional probability to
 observe an element in a given context:
 
 ``` r
-overlap.net <- overlap.network(
-  netfacs.list = multi.facs,
+overlap.net <- overlap_network(
+  multi.spec,
   min.prob = 0, # minimum probability of a connection to be included
   min.count = 3, # minimum count of co-occurrences for a connection to be included
   significance = 0.01, # significance level for combinations to be considered
@@ -775,7 +609,7 @@ conditions without being specific to any of them. Below, we have the
 occurrence data: AU6 and AU12 occur in almost all ‘happy’ faces, but
 AU16 is rare (P = 0.06). AU15 occurs in 82% of sad faces, and 22% of
 contemptuous faces. The underlying data are stored in the
-overlap.network object as well, in case the network is overwhelmingly
+`overlap_network` object as well, in case the network is overwhelmingly
 full and hard to understand. With the ‘clusters’ parameter, we could
 explore whether these results create clearly separated clusters using
 the igraph ‘fast and greedy’ clustering algorithm.
@@ -788,7 +622,7 @@ restrict connections to those that are at least 0.5 to make things
 easier to understand.
 
 ``` r
-conditional.probs <- network.conditional(
+conditional.probs <- network_conditional(
   netfacs.data = angry.face,
   min.prob = 0.5,
   min.count = 5,
@@ -817,7 +651,7 @@ To do all the following calculations, we extract the netfacs object and
 turn it into a network with specific properties. Here goes:
 
 ``` r
-angry.net <- netfacs.network(
+angry.net <- netfacs_network(
   netfacs.data = angry.face,
   link = "unweighted", # edges are linked for significant results only
   significance = 0.01,
@@ -826,7 +660,7 @@ angry.net <- netfacs.network(
 )
 ```
 
-Now we have our angry.net, which is an ‘igraph’ object. ‘igraph’ is the
+Now we have our angry.net, which is an `igraph` object. ‘igraph’ is the
 most commonly used package for network analysis in R, so now we can use
 all the functions that have been developed for plotting and analysing
 networks.
@@ -834,7 +668,7 @@ networks.
 Let’s plot our network for angry faces.
 
 ``` r
-network.plot(
+network_plot(
   netfacs.graph = angry.net,
   title = "angry network",
   clusters = FALSE,
@@ -849,13 +683,13 @@ This looks like a pretty tight cluster of some Action Units that tend to
 occur together. AU5 and AU6 are not significantly more common in this
 context than expected, but occur in combination with other AUs more than
 expected (that’s why they are smaller). This is again relatively
-different from the other networks: we can apply the netfacs.network
+different from the other networks: we can apply the `netfacs_network`
 function across our conditions to get a visual representation of how
 networks differ:
 
 ``` r
-multi.net <- multiple.netfacs.network(
-  netfacs.list = multi.facs,
+multi.net <- multiple_netfacs_network(
+  multi.facs,
   link = "weighted", # network contains edges where significantly connected
   significance = 0.01,
   min.count = 3, # again remove rare connections
@@ -864,7 +698,7 @@ multi.net <- multiple.netfacs.network(
 ```
 
 ``` r
-multiple.network.plot(netfacs.graphs = multi.net)
+multiple_network_plot(multi.net)
 ```
 
 <img src="man/figures/README-multi.plot-1.png" width="100%" style="display: block; margin: auto;" />
@@ -893,7 +727,7 @@ all.face <-
     use_parallel = TRUE
   )
 all.net <-
-  netfacs.network(netfacs.data = all.face,
+  netfacs_network(all.face,
                   min.count = 3,
                   link = "unweighted")
 ```
@@ -901,12 +735,12 @@ all.net <-
 In this network, dyadic connections between Action Units mean that they
 occur more often together than would be expected given their own
 likelihood and the number of elements per event. When plotting this
-network, we can say ‘clusters = TRUE’. In that case, ‘igraph’ has a
+network, we can say `clusters = TRUE`. In that case, `igraph` has a
 community detection algorithm (groups of AUs that form clusters).
 
 ``` r
-network.plot(
-  netfacs.graph = all.net,
+network_plot(
+  all.net,
   title = "all network with clusters",
   clusters = TRUE,
   plot.bubbles = TRUE
@@ -937,62 +771,62 @@ but not at all central in any other. There are a number of different
 centrality measures, and one can extract them all at once.
 
 ``` r
-net.sum <- network.summary(angry.net)
+net.sum <- network_summary(angry.net)
 ```
 
 | element | strength | eigenvector | betweenness | transitivity | hub_score | page_rank | modularity | comm.membership | comm.value |
 |:-------:|:--------:|:-----------:|:-----------:|:------------:|:---------:|:---------:|:----------:|:---------------:|:----------:|
-|    4    |  0.194   |    0.914    |    0.062    |    0.714     |   0.914   |   0.110   |   -0.117   |        2        |    0.02    |
-|   17    |  0.222   |    1.000    |    0.100    |    0.643     |   1.000   |   0.125   |   -0.114   |        2        |    0.02    |
-|    7    |  0.194   |    0.936    |    0.044    |    0.762     |   0.936   |   0.109   |   -0.115   |        2        |    0.02    |
-|   23    |  0.222   |    0.936    |    0.278    |    0.536     |   0.936   |   0.133   |   -0.093   |        1        |    0.02    |
-|    6    |  0.111   |    0.616    |    0.000    |    1.000     |   0.616   |   0.067   |   -0.062   |        2        |    0.02    |
-|   14    |  0.111   |    0.613    |    0.000    |    1.000     |   0.613   |   0.066   |   -0.045   |        2        |    0.02    |
-|    5    |  0.083   |    0.461    |    0.000    |    1.000     |   0.461   |   0.054   |   -0.001   |        1        |    0.02    |
-|   18    |  0.139   |    0.764    |    0.000    |    1.000     |   0.764   |   0.080   |   0.020    |        2        |    0.02    |
-|    9    |  0.028   |    0.151    |    0.000    |     NaN      |   0.151   |   0.027   |   -0.001   |        3        |    0.02    |
-|   24    |  0.194   |    0.936    |    0.044    |    0.762     |   0.936   |   0.109   |   0.000    |        2        |    0.02    |
-|   15    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |        4        |    0.02    |
-|   10    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |        5        |    0.02    |
-|   12    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |        6        |    0.02    |
-|   16    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |        7        |    0.02    |
-|    1    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |        8        |    0.02    |
-|    2    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |        9        |    0.02    |
-|   20    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |       10        |    0.02    |
-|   26    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |       11        |    0.02    |
-|   27    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |       12        |    0.02    |
+|    4    |  0.222   |    1.000    |    0.084    |    0.679     |   1.000   |   0.120   |   -0.117   |        2        |   0.022    |
+|   17    |  0.222   |    1.000    |    0.084    |    0.679     |   1.000   |   0.120   |   -0.122   |        2        |   0.022    |
+|    7    |  0.194   |    0.938    |    0.033    |    0.810     |   0.938   |   0.106   |   -0.117   |        2        |   0.022    |
+|   23    |  0.222   |    0.938    |    0.265    |    0.571     |   0.938   |   0.129   |   -0.097   |        1        |   0.022    |
+|    6    |  0.139   |    0.754    |    0.000    |    1.000     |   0.754   |   0.078   |   -0.092   |        2        |   0.022    |
+|   14    |  0.111   |    0.607    |    0.000    |    1.000     |   0.607   |   0.064   |   -0.039   |        2        |   0.022    |
+|    5    |  0.083   |    0.460    |    0.000    |    1.000     |   0.460   |   0.053   |   0.002    |        1        |   0.022    |
+|   18    |  0.139   |    0.754    |    0.000    |    1.000     |   0.754   |   0.078   |   0.022    |        2        |   0.022    |
+|    9    |  0.028   |    0.147    |    0.000    |     NaN      |   0.147   |   0.027   |   -0.001   |        3        |   0.022    |
+|   24    |  0.194   |    0.938    |    0.033    |    0.810     |   0.938   |   0.106   |   0.000    |        2        |   0.022    |
+|   15    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |        4        |   0.022    |
+|   10    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |        5        |   0.022    |
+|   12    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |        6        |   0.022    |
+|   16    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |        7        |   0.022    |
+|    1    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |        8        |   0.022    |
+|    2    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |        9        |   0.022    |
+|   20    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |       10        |   0.022    |
+|   26    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |       11        |   0.022    |
+|   27    |  0.000   |    0.000    |    0.000    |     NaN      |   0.000   |   0.013   |     NA     |       12        |   0.022    |
 
 Network centrality measures for angry faces
 
 The different network measures capture different aspects of centrality.
 
--   strength: how many connections does the AU have
--   eigenvector: high if AU is connected with a lot of AUs that also
-    have a lot of connections
--   betweenness: number of shortest connections that go through the AU;
-    does it connect otherwise unconnected elements?
--   transitivity: how many triads is the element in (triad == all three
-    elements are connected)
--   hub_score: similar to eigenvector
--   page_rank: calculates the influence an element has over all it’s
-    neighbours
--   modularity: if modularity is high, the element clearly clusters with
-    other elements
--   community membership: elements that have the same membership cluster
-    with each other
--   community.value: if this is above 0.3, then there are clearly
-    distinct clusters in this data set
+- `strength`: how many connections does the AU have
+- `eigenvector`: high if AU is connected with a lot of AUs that also
+  have a lot of connections
+- `betweenness`: number of shortest connections that go through the AU;
+  does it connect otherwise unconnected elements?
+- `transitivity`: how many triads is the element in (triad == all three
+  elements are connected)
+- `hub_score`: similar to eigenvector
+- `page_rank`: calculates the influence an element has over all it’s
+  neighbours
+- `modularity`: if modularity is high, the element clearly clusters with
+  other elements
+- `community` membership: elements that have the same membership cluster
+  with each other
+- `community.value`: if this is above 0.3, then there are clearly
+  distinct clusters in this data set
 
 While these centrality measures concern the elements within a network,
 we can also calculate information flow etc within across a network.
 
 ``` r
-net.sum.graph <- network.summary.graph(angry.net)
+net.sum.graph <- network_summary_graph(angry.net)
 ```
 
 | nr.elements | nr.edges | density | transitivity | diameter | degree_centralization | mean_distance |
 |:-----------:|:--------:|:-------:|:------------:|:--------:|:---------------------:|:-------------:|
-|     19      |    0     |  0.158  |    0.729     |    3     |         0.287         |     1.422     |
+|     19      |    0     |  0.164  |    0.755     |    3     |         0.281         |      1.4      |
 
 Network graph measures for anry faces
 
@@ -1009,7 +843,7 @@ Let’s see what happens if we do this across the different emotions.
 
 ``` r
 xx <- lapply(multi.net, function(x) {
-  network.summary.graph(x)
+  network_summary_graph(x)
 })
 xx <- do.call(rbind, xx)
 xx <- cbind(emotion = names(multi.net), xx)
@@ -1017,13 +851,13 @@ xx <- cbind(emotion = names(multi.net), xx)
 
 | emotion  | nr.elements | nr.edges | density | transitivity | diameter | degree_centralization | mean_distance |
 |:--------:|:-----------:|:--------:|:-------:|:------------:|:--------:|:---------------------:|:-------------:|
-|  anger   |     19      |    28    |  0.164  |    0.755     |  0.292   |         0.281         |     0.136     |
-| contempt |     19      |    4     |  0.023  |    0.600     |  0.468   |         0.143         |     0.271     |
-| disgust  |     19      |    14    |  0.082  |    0.780     |  0.572   |         0.251         |     0.243     |
+|  anger   |     19      |    28    |  0.164  |    0.755     |  0.291   |         0.281         |     0.136     |
+| contempt |     19      |    4     |  0.023  |    0.600     |  0.467   |         0.143         |     0.270     |
+| disgust  |     19      |    14    |  0.082  |    0.780     |  0.571   |         0.251         |     0.242     |
 |   fear   |     19      |    35    |  0.205  |    0.561     |  0.313   |         0.406         |     0.175     |
 |  happy   |     19      |    7     |  0.041  |    0.600     |  0.133   |         0.181         |     0.072     |
-| sadness  |     19      |    10    |  0.058  |    0.778     |  0.979   |         0.164         |     0.567     |
-| surprise |     19      |    17    |  0.099  |    0.814     |  0.158   |         0.234         |     0.063     |
+| sadness  |     19      |    10    |  0.058  |    0.778     |  0.981   |         0.164         |     0.567     |
+| surprise |     19      |    17    |  0.099  |    0.814     |  0.159   |         0.234         |     0.064     |
 
 Network graph measures for all faces
 
@@ -1054,10 +888,10 @@ size.plot <- event.size.plot(netfacs.data = angry.face)
 |        1         |     0.00      |     0.04      |    -0.04    |  0.00  |
 |        2         |     0.00      |     0.26      |    -0.26    |  0.00  |
 |        3         |     0.04      |     0.18      |    -0.14    |  0.00  |
-|        4         |     0.40      |     0.36      |    0.04     |  0.06  |
+|        4         |     0.40      |     0.36      |    0.04     |  0.05  |
 |        5         |     0.33      |     0.11      |    0.22     |  0.00  |
 |        6         |     0.20      |     0.04      |    0.16     |  0.00  |
-|        7         |     0.00      |     0.00      |    0.00     |  0.36  |
+|        7         |     0.00      |     0.00      |    0.00     |  0.37  |
 |        8         |     0.02      |     0.01      |    0.01     |  0.00  |
 
 Combination sizes of facial expressions in the angry condition
@@ -1075,14 +909,14 @@ If we do the same for happy faces, we see a very different pattern
 
 | combination.size | observed.prob | expected.prob | effect.size | pvalue |
 |:----------------:|:-------------:|:-------------:|:-----------:|:------:|
-|        1         |     0.03      |     0.04      |    -0.01    |  0.20  |
+|        1         |     0.03      |     0.04      |    0.00     |  0.23  |
 |        2         |     0.76      |     0.08      |    0.69     |  0.00  |
-|        3         |     0.18      |     0.16      |    0.02     |  0.16  |
+|        3         |     0.18      |     0.16      |    0.02     |  0.15  |
 |        4         |     0.03      |     0.46      |    -0.43    |  0.00  |
 |        5         |     0.00      |     0.18      |    -0.18    |  0.00  |
 |        6         |     0.00      |     0.07      |    -0.07    |  0.00  |
-|        7         |     0.00      |     0.00      |    0.00     |  0.37  |
-|        8         |     0.00      |     0.01      |    -0.01    |  0.05  |
+|        7         |     0.00      |     0.00      |    0.00     |  0.35  |
+|        8         |     0.00      |     0.01      |    -0.01    |  0.06  |
 
 Combination sizes of happy expressions in the angry condition
 
@@ -1119,7 +953,7 @@ overall entropy under random conditions.
 
 ``` r
 xx <- lapply(multi.facs, function(x) {
-  entropy.overall(x)
+  entropy_overall(x)
 })
 xx <- do.call(rbind, xx)
 xx <- cbind(emotion = names(multi.facs), xx)
@@ -1128,12 +962,12 @@ xx <- cbind(emotion = names(multi.facs), xx)
 | emotion  | observed.entropy | expected.entropy | entropy.ratio |
 |:--------:|:----------------:|:----------------:|:-------------:|
 |  anger   |       4.39       |       5.49       |     0.80      |
-| contempt |       2.46       |       4.01       |     0.61      |
+| contempt |       2.46       |       4.03       |     0.61      |
 | disgust  |       4.11       |       5.86       |     0.70      |
 |   fear   |       4.40       |       4.64       |     0.95      |
-|  happy   |       1.45       |       5.88       |     0.25      |
+|  happy   |       1.45       |       5.87       |     0.25      |
 | sadness  |       3.26       |       4.81       |     0.68      |
-| surprise |       2.04       |       6.36       |     0.32      |
+| surprise |       2.04       |       6.37       |     0.32      |
 
 Ratios between expected and observed entropies in different emotions
 
