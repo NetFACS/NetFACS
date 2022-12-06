@@ -50,6 +50,9 @@ network_summary_graph <- function(netfacs.net) {
   
   net.from.igraph
 }
+
+#' @rdname network_summary_graph
+#' @export
 network.summary.graph <- function(netfacs.net) {
   network_summary_graph(netfacs.net)
 }

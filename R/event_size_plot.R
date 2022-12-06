@@ -31,8 +31,8 @@
 #'   combination.size = 2
 #' )
 #'
-#' event.size.plot(angry.face)
-event.size.plot <- function(netfacs.data) {
+#' event_size_plot(angry.face)
+event_size_plot <- function(netfacs.data) {
   # extract event size information from netfacs object
   plot.netfacs <-
     netfacs.data$event.size.information
@@ -81,4 +81,10 @@ event.size.plot <- function(netfacs.data) {
     theme_bw()
 
   return(p)
+}
+
+#' @rdname event_size_plot
+#' @export
+event.size.plot <- function(netfacs.data) {
+  event_size_plot(netfacs.data)
 }

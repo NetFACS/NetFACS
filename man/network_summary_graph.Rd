@@ -2,9 +2,12 @@
 % Please edit documentation in R/network_summary_graph.R
 \name{network_summary_graph}
 \alias{network_summary_graph}
+\alias{network.summary.graph}
 \title{Returns all kinds of graph-level network measures for the netfacs network}
 \usage{
 network_summary_graph(netfacs.net)
+
+network.summary.graph(netfacs.net)
 }
 \arguments{
 \item{netfacs.net}{igraph network object resulting from

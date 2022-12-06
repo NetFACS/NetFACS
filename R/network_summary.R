@@ -159,3 +159,10 @@ network_summary <- function(netfacs.graph) {
   
   return(net.measure)
 }
+
+
+#' @rdname network_summary
+#' @export
+network.summary <- function(netfacs.graph) {
+  network_summary(netfacs.graph)
+}

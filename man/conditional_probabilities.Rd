@@ -25,7 +25,7 @@ angry.face <- netfacs(
   data = emotions_set[[1]],
   condition = emotions_set[[2]]$emotion,
   test.condition = "anger",
-  ran.trials = 100,
+  ran.trials = 50,
   combination.size = 2
 )
 
