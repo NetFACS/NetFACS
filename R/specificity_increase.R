@@ -29,13 +29,12 @@
 #'   data = emotions_set[[1]],
 #'   condition = emotions_set[[2]]$emotion,
 #'   test.condition = "anger",
-#'   null.condition = NULL,
 #'   ran.trials = 10,
-#'   combination.size = 4
+#'   combination.size = 2
 #' )
 #'
-#' specificity_increase(angry.face)$element
-#' 
+#' spec <- specificity(angry.face)
+#' specificity_increase(spec)
 specificity_increase <- function(x) {
   if (!is.netfacs_specificity(x)) {
     rlang::abort("x must be of class netfacs_specificity")
@@ -128,6 +127,13 @@ specificity_increase <- function(x) {
   return(esl)
 }
 
+#' (Defunct) Tests how much each element increases the specificity of all
+#' combinations it is in
+#'
+#' This function is defunct Please see \code{\link{specificity_increase}}
+#' instead
+#'
+#' @param netfacs.data object resulting from \code{\link{netfacs}} function
 #' @export
 element.specificity <- function(netfacs.data) {
     .Defunct("specificity_increase")

@@ -57,6 +57,7 @@ element occurs in the condition and that the condition is seen when the
 element is present
 }
 \examples{
+\donttest{
 data(emotions_set)
 emo.faces <- netfacs_multiple(
   data = emotions_set[[1]],
@@ -64,14 +65,16 @@ emo.faces <- netfacs_multiple(
   ran.trials = 10,
   combination.size = 2
 )
+# calculate element specificity
+spec <- specificity(emo.faces)
 
-overlap <- overlap_network(emo.faces,
-  min.prob = 0.01,
-  min.count = 3,
-  significance = 0.01,
-  specificity = 0.5,
-  ignore.element = "25",
-  clusters = TRUE,
-  plot.bubbles = TRUE
-)
+overlap <- overlap_network(spec,
+                           min.prob = 0.01,
+                           min.count = 3,
+                           significance = 0.01,
+                           specificity = 0.5,
+                           ignore.element = "25",
+                           clusters = TRUE,
+                           plot.bubbles = TRUE)
+}
 }
