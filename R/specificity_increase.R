@@ -10,7 +10,7 @@
 #' comparison between conditions.
 #'
 #'
-#' @param netfacs.data object resulting from \code{\link{netfacs}} function
+#' @param x object resulting from \code{\link{specificity}} function
 #'
 #' @return Function returns a list with two data frames that include all
 #'   elements and first-order combinations that occur at all, the number of
@@ -24,45 +24,36 @@
 #'
 #' @examples
 #' ### how do angry facial expressions differ from non-angry ones?
-#' \donttest{
 #' data(emotions_set)
 #' angry.face <- netfacs(
 #'   data = emotions_set[[1]],
 #'   condition = emotions_set[[2]]$emotion,
 #'   test.condition = "anger",
 #'   null.condition = NULL,
-#'   ran.trials = 100,
+#'   ran.trials = 10,
 #'   combination.size = 4
 #' )
 #'
-#' element.specificity(angry.face)$element
-#' }
+#' specificity_increase(angry.face)$element
 #' 
-
-element.specificity <- function(netfacs.data) {
-  # if test data was compared against random, specificity is meaningless
-  if (attr(netfacs.data, "stat_method") == "permutation") {
-    return(
-      print(
-        "Results are not part of comparison and do not reveal anything about specificity."
-      )
-    )
+specificity_increase <- function(x) {
+  if (!is.netfacs_specificity(x)) {
+    rlang::abort("x must be of class netfacs_specificity")
   }
   
-  d <- netfacs_extract(netfacs.data)
   ed <- 
-    netfacs.data %>% 
-    netfacs_extract(combination.size = 1:2, 
-                    min.count = 1)
+    x %>% 
+    dplyr::filter(.data$combination.size %in% 1:2, 
+                  .data$count >= 1)
   
   # make list of all possible
   all.combinations <-
-    lapply(d$combination, function(x) {
-      unlist(strsplit(as.character(x), split = "_", fixed = TRUE))
+    lapply(x$combination, function(z) {
+      unlist(strsplit(as.character(z), split = "_", fixed = TRUE))
     })
   ed.combinations <- 
-    lapply(ed$combination, function(x) {
-      unlist(strsplit(as.character(x), split = "_", fixed = TRUE))
+    lapply(ed$combination, function(z) {
+      unlist(strsplit(as.character(z), split = "_", fixed = TRUE))
     })
   
   # helpers
@@ -88,14 +79,14 @@ element.specificity <- function(netfacs.data) {
     lapply(ed.combinations, function(t.comb) {
       
       combinations.i <- combination_in_list(t.comb, all.combinations)
-      elements.with <- d[combinations.i, ]
+      elements.with <- x[combinations.i, ]
       combinations.with <- all.combinations[combinations.i]
       
       specificity.with <- elements.with$specificity
       
       combinations.without <-
-        lapply(combinations.with, function(x) {
-          xx <- x[!x %in% t.comb] 
+        lapply(combinations.with, function(z) {
+          xx <- z[!z %in% t.comb] 
           if (length(xx) > 1) {
             xx <- paste(xx, collapse = "_")
           }
@@ -103,7 +94,7 @@ element.specificity <- function(netfacs.data) {
         })
       
       specificity.without <-
-        d$specificity[d$combination %in% unlist(combinations.without)]
+        x$specificity[x$combination %in% unlist(combinations.without)]
       
       spec.increase <- 
         mean(specificity.with, na.rm = T) - mean(specificity.without, na.rm = T)
@@ -114,6 +105,7 @@ element.specificity <- function(netfacs.data) {
   # create new dataframe only for those elements
   es <-
     tibble::tibble(
+      condition = ed$condition,
       element = ed$combination,
       number.combinations = unlist(number.combinations),
       specificity.increase = unlist(specificity.increase)
@@ -123,8 +115,9 @@ element.specificity <- function(netfacs.data) {
   es2 <- 
     es %>% 
     dplyr::left_join(
-      d %>% dplyr::select("combination", "count", "combination.size"), 
-      by = c("element" = "combination")
+      x %>% dplyr::select("condition", "combination", "count", 
+                          "combination.size"), 
+      by = c("condition", "element" = "combination")
     )
   
   esl <- 
@@ -133,4 +126,9 @@ element.specificity <- function(netfacs.data) {
     stats::setNames(c("element", "dyad"))
   
   return(esl)
+}
+
+#' @export
+element.specificity <- function(netfacs.data) {
+    .Defunct("specificity_increase")
 }

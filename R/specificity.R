@@ -64,14 +64,14 @@ specificity.matrix <- function(x,
           test_m <- x[condition == cond, , drop = FALSE]
           probability_of_combination(test_m, maxlen = max_comb_size)
         }) %>% 
-        setNames(conditions) %>% 
-        bind_rows(.id = "condition") 
+        stats::setNames(conditions) %>% 
+        dplyr::bind_rows(.id = "condition") 
       
     } else {
       test_m <- x[condition == test.condition, , drop = FALSE]
       comb_prob <- 
         probability_of_combination(test_m, maxlen = max_comb_size) %>% 
-        mutate(condition = test.condition, .before = 1)
+        dplyr::mutate(condition = test.condition, .before = 1)
     }
     
     # upsample minority condition(s) to have same number of observations as majority condition
@@ -130,12 +130,12 @@ specificity.netfacs <- function(x,
   nf_res <- netfacs_extract(x)
   m <- get_data(x, condition = "all")
   condition <- x$used.data$condition
-  test.condition <- x$used.parameters$test.condition
-  null.condition <- x$used.parameters$null.condition
+  test.cond <- x$used.parameters$test.condition
+  null.cond <- x$used.parameters$null.condition
   
   sp <- 
     specificity.matrix(
-      m, condition, test.condition, null.condition, combination.size, upsample
+      m, condition, test.cond, null.cond, combination.size, upsample
     )
   
   sp2 <- 
@@ -146,7 +146,7 @@ specificity.netfacs <- function(x,
     nf_res %>% 
     dplyr::left_join(sp2, by = "combination") %>% 
     dplyr::mutate(dplyr::across("specificity", ~ifelse(is.na(.), 0, .))) %>% 
-    mutate(condition = test.condition, .before = 1)
+    mutate(condition = test.cond, .before = 1)
   
   class(out) <- c("netfacs_specificity", class(out))
   return(out)
@@ -174,7 +174,7 @@ specificity.netfacs_multiple <- function(x,
     )
   })
   
-  dplyr::bind_rows(out)
+  dplyr::bind_rows(out, .id = "condition")
 }
 
 

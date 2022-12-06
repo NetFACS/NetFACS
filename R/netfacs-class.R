@@ -58,6 +58,15 @@ is.netfacs_multiple <- function(x) {
   inherits(x, "netfacs_multiple")
 }
 
+#' Checks if argument is a \code{netfacs_specificity} object
+#'
+#' @param x An \R object
+#'
+#' @export
+is.netfacs_specificity <- function(x) {
+  inherits(x, "netfacs_specificity")
+}
+
 #' Extract used data from a \code{netfacs} object
 #'
 #' @param x extract data from the test condition of a \code{netfacs} object

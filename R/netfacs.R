@@ -221,6 +221,7 @@ netfacs <- function(data,
     comb.size <- Rfast::rowsums(data)
     if (any(comb.size == 0)) {
       d <- lapply(d, function(x) vctrs::vec_slice(x, comb.size > 0))
+      condition <- vctrs::vec_slice(condition, comb.size > 0)
       NN <- sum(comb.size == 0)
       rlang::inform(
         paste("Removing", NN, "rows with 0 active elements from data.")
