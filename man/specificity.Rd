@@ -6,7 +6,7 @@
 \usage{
 specificity(
   x,
-  condition,
+  condition = NULL,
   test.condition = NULL,
   null.condition = NULL,
   combination.size = NULL,
@@ -17,7 +17,8 @@ specificity(
 \item{x}{A binary matrix, with AUs as \code{colnames}, or an object of class
 \code{\link{netfacs}}}
 
-\item{condition}{A character condition vector}
+\item{condition}{A character condition vector. Only needed if \code{x} is a
+matrix.}
 
 \item{test.condition}{A string, denoting the test condition. If \code{NULL}
 (default) specificity is calculated for all conditions.}

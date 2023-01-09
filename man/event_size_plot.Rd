@@ -13,10 +13,12 @@ event.size.plot(netfacs.data)
 \item{netfacs.data}{object resulting from netfacs() function}
 }
 \value{
-Function returns a ggplot showing for each combination size the observed and expected probabilities of occurrance
+Function returns a ggplot showing for each combination size the
+  observed and expected probabilities of occurrence
 }
 \description{
-The function takes all combination size in a netfacs object, and plots the distribution of ratios between the observed value and all randomisations
+The function takes all combination size in a netfacs object, and plots the
+distribution of ratios between the observed value and all randomisations
 }
 \examples{
 ### how do angry facial expressions differ from non-angry ones?

@@ -4,7 +4,8 @@
 #'
 #' @param x A binary matrix, with AUs as \code{colnames}, or an object of class
 #'   \code{\link{netfacs}}
-#' @param condition A character condition vector
+#' @param condition A character condition vector. Only needed if \code{x} is a
+#'   matrix.
 #' @param test.condition A string, denoting the test condition. If \code{NULL}
 #'   (default) specificity is calculated for all conditions.
 #' @param null.condition A string, denoting the null condition. If \code{NULL}
@@ -15,7 +16,7 @@
 #'   maximum combination size observed in the x is used.
 #' @param upsample Logical. Should minority condition(s) be
 #'   \code{\link{upsample}}d? \code{TRUE} by default.
-#'
+#' 
 #' @details Specificity values are biased when the number of observations per
 #'   condition is highly imbalanced. When \code{upsample} = \code{TRUE}
 #'   (recommended), the condition(s) with fewer observations are randomly
@@ -35,7 +36,7 @@
 #'   test.condition = "anger"
 #' )
 specificity <- function(x,
-                        condition,
+                        condition = NULL,
                         test.condition = NULL,
                         null.condition = NULL,
                         combination.size = NULL,
@@ -52,7 +53,23 @@ specificity.matrix <- function(x,
                                upsample = TRUE) {
   stopifnot(vctrs::vec_size(x) == vctrs::vec_size(condition))
   
-  max_comb_size <- min(max(Rfast::rowsums(x)), combination.size)
+  # remove empty rows
+  comb.size <- rowSums(x, na.rm = TRUE)
+  if (any(comb.size == 0)) {
+    l <- lapply(
+      list(x = x, condition = condition), 
+      function(x) vctrs::vec_slice(x, comb.size > 0)
+    )
+    x <- l$x
+    condition <- l$condition
+    NN <- sum(comb.size == 0)
+    rlang::inform(
+      paste("Removing", NN, "rows with 0 active elements from data.")
+    )
+  }
+  
+  # max_comb_size <- min(max(Rfast::rowsums(x, na.rm = TRUE)), combination.size)
+  max_comb_size <- min(max(rowSums(x, na.rm = TRUE)), combination.size)
   
   if (upsample) {
     # probability of combination in original data
@@ -62,7 +79,7 @@ specificity.matrix <- function(x,
       comb_prob <- 
         lapply(conditions, function(cond) {
           test_m <- x[condition == cond, , drop = FALSE]
-          probability_of_combination(test_m, maxlen = max_comb_size)
+          probability_of_combination_na(test_m, maxlen = max_comb_size)
         }) %>% 
         stats::setNames(conditions) %>% 
         dplyr::bind_rows(.id = "condition") 
@@ -70,7 +87,7 @@ specificity.matrix <- function(x,
     } else {
       test_m <- x[condition == test.condition, , drop = FALSE]
       comb_prob <- 
-        probability_of_combination(test_m, maxlen = max_comb_size) %>% 
+        probability_of_combination_na(test_m, maxlen = max_comb_size) %>% 
         dplyr::mutate(condition = test.condition, .before = 1)
     }
     
@@ -133,7 +150,7 @@ specificity.netfacs <- function(x,
   test.cond <- x$used.parameters$test.condition
   null.cond <- x$used.parameters$null.condition
   
-  sp <- 
+  sp <-
     specificity.matrix(
       m, condition, test.cond, null.cond, combination.size, upsample
     )
@@ -231,8 +248,8 @@ specificity_single <- function(d,
     d3 %>%
     dplyr::mutate(
       rs = mapply(
-        FUN = probability_of_combination,
-        elements = .data$m,
+        FUN = probability_of_combination_na,
+        m = .data$m,
         maxlen = combination.size,
         SIMPLIFY = FALSE
       )
@@ -255,6 +272,7 @@ specificity_single <- function(d,
   rs <-
     rs.test %>%
     dplyr::left_join(rs.null, by = "combination") %>%
+    dplyr::filter(.data$combination != "") %>% 
     dplyr::mutate(dplyr::across("null_count", ~ifelse(is.na(.), 0, .))) %>%
     dplyr::mutate(
       specificity = .data$count / (.data$count + .data$null_count),

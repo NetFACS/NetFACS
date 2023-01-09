@@ -1,70 +1,39 @@
 #' Create probability distribution of combinations of elements in the data
 #'
-#' The \code{\link{netfacs}} function underlies most other functions in this
-#' package. \cr It takes the data set and reports the observed and expected
-#' probabilities that elements and combinations of elements occur in this data
-#' set, and whether this differs from a null condition.
+#' @description *EXPERIMENTAL*
 #'
-#' @param data A binary matrix with one column per element, and one row per
-#'   event, consisting of 1 (element was active during that event) and 0
-#'   (element was not active).
-#' @param condition A character vector the same length as 'data' that contains
-#'   information on the condition each event belongs to, so probabilities can be
-#'   compared across conditions; if NULL, all events will be tested against a
-#'   random null condition based on permutations.
-#' @param test.condition A string, indicating the level of 'condition' that is
-#'   supposed to be tested.
-#' @param null.condition A string, indicating the level of 'condition' that is
-#'   used to create the null distribution of values; if NULL, all levels that
-#'   are not the test condition will be used.
-#' @param duration A numeric vector that contains information on the duration of
-#'   each event; if NULL, all events are assumed to have equal duration.
-#' @param ran.trials Number of randomisations that will be performed to find the
-#'   null distribution.
-#' @param random.level A character vector of the level on which the
-#'   randomization should take place. If NULL, the randomization takes place on
-#'   the event level (i.e., every row can either be selected or not); if a
-#'   vector is provided, the randomization takes place on the levels of that
-#'   vector rather than individual events.
-#' @param control A list of vectors that are used as control variables. During
-#'   bootstraps, the ratio of events in each level will be adapted. So, for
-#'   example, if in the test distribution, there are three angry participants
-#'   for each happy participant, the null distribution will maintain that ratio.
-#' @param combination.size A positive integer, indicating the maximum
-#'   combination size of element combinations. Higher numbers will increase
-#'   computation time. Default is 2.
-#' @param tail Either 'upper.tail' (proportion of null probabilities that are
-#'   larger than observed probabilities), or 'lower.tail' (proportion of null
-#'   probabilities that are smaller than observed probabilities); default is
-#'   'upper.tail'.
-#' @param use_parallel Logical, indicating whether randomization or bootstrap
-#'   should be parallelized (default is \code{TRUE})
-#' @param n_cores Numeric, indicating the number cores to be used for
-#'   parallelization. Default is 2.
+#'   This is an experimental function that is capable of handling NAs in the
+#'   data. However, the resulting object may not work with other functions in
+#'   the NetFACS package. Please use \code{\link{netfacs}} instead for the most
+#'   reliable results.
 #'
-#' @return An object of class \code{netfacs}, which contains the probabilities
-#'   of observing element combinations in the data, along with other useful
-#'   information. The resulting object is the basis for most other functions in
-#'   this package.
+#'   The \code{\link{netfacs}} function underlies most other functions in this
+#'   package. \cr It takes the data set and reports the observed and expected
+#'   probabilities that elements and combinations of elements occur in this data
+#'   set, and whether this differs from a null condition.
 #'
-#' @details If the 'condition' and 'test.condition' arguments are specified, the
-#'   null distribution of probability values are based on bootstraps of the null
-#'   condition. If the 'condition' argument is not specified, the null
-#'   distribution is based on random permutations of the data.
+#' @inheritParams netfacs
+#' @details Expected values are based on bootstraps of null distribution, so the
+#'   values represent distribution of element co-occurrence under null
+#'   condition; or permutations of the observed distribution to test it against
+#'   'random'.
 #'
-#'   For a general overview on how to use the netfacs function and package see
-#'   \code{vignette("netfacs_tutorial")}.
+#'   The resulting object is the basis for most other functions in this package.
 #'
-#' @author Alex Mielke, Alan V. Rincon
-#'
-#' @references Mielke, A., Waller, B. M., Perez, C., Rincon, A. V., Duboscq, J.,
-#'   & Micheletta, J. (2021). NetFACS: Using network science to understand
-#'   facial communication systems. \emph{Behavior Research Methods}.
-#'   \code{https://doi.org/10.3758/s13428-021-01692-5}
-#'
-#' @seealso \code{\link{netfacs_multiple}}, \code{\link{netfacs_extract}},
-#'   \code{\link{conditional_probabilities}}
-#'
+#' @return Function returns a Result data frame that includes the combination
+#'   name, how many elements it consisted of, how often it was observed, the
+#'   probability it was observed under this condition, the expected probability
+#'   under null condition (based on the permutation or bootstrap), effect size
+#'   (difference between observed probability and expected probability), p-value
+#'   (how many randomisations were more extreme), and for direct comparisons of
+#'   contexts the specificity (probability that the condition is in fact the
+#'   test condition if that combination is known) and probability increase (the
+#'   factor by which the probability of the element is higher in the test than
+#'   null condition)
+#' @return 'event.size.information' contains information about the observed and
+#'   expected size of combination or elements per event based on the
+#'   randomisations
+#' 
 #' @importFrom picante randomizeMatrix
 #' @importFrom arrangements combinations
 #' @importFrom parallel parLapply
@@ -75,14 +44,16 @@
 #' @importFrom parallel stopCluster
 #' @importFrom doParallel registerDoParallel
 #' @importFrom Rfast rowsums rowmeans Table
-#' @export
 #'
+#'
+#' @author Alex Mielke, Alan V. Rincon
+#' @export
 #'
 #' @examples
 #' ### how do angry facial expressions differ from non-angry ones?
 #' \donttest{
 #' data(emotions_set)
-#' angry.face <- netfacs(
+#' angry.face <- netfacs_na(
 #'   data = emotions_set[[1]],
 #'   condition = emotions_set[[2]]$emotion,
 #'   test.condition = "anger",
@@ -101,30 +72,39 @@
 #' angry.face$event.size.information
 #' }
 #' 
-netfacs <- function(data,
-                    condition = NULL,
-                    test.condition = NULL,
-                    null.condition = NULL,
-                    duration = NULL,
-                    ran.trials = 1000,
-                    control = NULL,
-                    random.level = NULL,
-                    combination.size = 2,
-                    tail = "upper.tail",
-                    use_parallel = TRUE,
-                    n_cores = 2) {
+netfacs_na <- function(data,
+                       condition = NULL,
+                       test.condition = NULL,
+                       null.condition = NULL,
+                       duration = NULL,
+                       ran.trials = 1000,
+                       control = NULL,
+                       random.level = NULL,
+                       combination.size = 2,
+                       tail = "upper.tail",
+                       use_parallel = TRUE,
+                       n_cores = 2) {
+  
+  rlang::warn("This is an experimental function that handles NAs in the data. The resulting object may not work with other functions in the NetFACS package. Please use the function 'netfacs()' for the most reliable results.")
   
   # validate data passed by user
-  if (any(is.na(data) | any(is.na(condition)))) {
-    stop("Please remove all NAs from the data and/or condition vector.",
-         call. = FALSE
-    )
-  }
   data <- validate_data(data)
   validate_condition(data, condition, test.condition, null.condition)
   
   # format data
   data <- apply(data, 2, as.numeric)
+  # clean names of dataset to not include special characters or spaces
+  colnames(data) <- gsub(
+    colnames(data),
+    pattern = "[^[:alnum:]]",
+    replacement = ""
+  )
+  
+  # elements will later be split and combined using "_", and therefore element names must not contain "_"
+  if (any(grepl(pattern = "_", colnames(data)))) {
+    stop("Column names of data must not contain '_'.", call. = FALSE)
+  }
+  
   # clean names of dataset to not include special characters or spaces
   colnames(data) <- gsub(
     colnames(data),
@@ -218,7 +198,7 @@ netfacs <- function(data,
     }
     
     # remove empty rows
-    comb.size <- Rfast::rowsums(data)
+    comb.size <- Rfast::rowsums(data, na.rm = TRUE)
     if (any(comb.size == 0)) {
       d <- lapply(d, function(x) vctrs::vec_slice(x, comb.size > 0))
       # subset original condition vector to return at the end
@@ -256,18 +236,22 @@ netfacs <- function(data,
       warning("The following control values are present in null.condition but not test.condition: ", ignored, ". These observations will be ignored during the bootstrapping procedure.")
     }
     
-    # create probabilities for null and test datasets
-    # create a list for each event/row of the dataset, containing the names of the elements that were active
-    elements.null <- get_active_elements(d.null$data)
-    elements.test <- get_active_elements(d.test$data)
+    # # create probabilities for null and test datasets
+    # # create a list for each event/row of the dataset, containing the names of the elements that were active
+    # elements.null <- get_active_elements(d.null$data)
+    # elements.test <- get_active_elements(d.test$data)
+    # 
+    # ######## remove NAs
+    # elements.null <- lapply(elements.null, function(x) x[!is.na(x)])
+    # elements.test <- lapply(elements.test, function(x) x[!is.na(x)])
     
     # extract the probabilities for each combination of elements
-    rs.null <- probability_of_combination(
-      elements = elements.null,
+    rs.null <- probability_of_combination_na(
+      m = d.null$data,
       maxlen = combination.size
     )
-    rs.test <- probability_of_combination(
-      elements = elements.test,
+    rs.test <- probability_of_combination_na(
+      m = d.test$data,
       maxlen = combination.size
     )
     
@@ -275,17 +259,28 @@ netfacs <- function(data,
     rs.test$combination.size <- calculate_combination_size(rs.test$combination)
     
     # for single units that are not active during this specific condition, add them anyways with the information that they did not show up
-    rs.null <- add_inactive_single_units(
-      rs.null,
-      single.units = colnames(d.null$data)
+    rs.null <- add_inactive_single_units(rs.null,
+                                         single.units = colnames(d.null$data)
     )
-    rs.test <- add_inactive_single_units(
-      rs.test,
-      single.units = colnames(d.test$data)
+    rs.test <- add_inactive_single_units(rs.test,
+                                         single.units = colnames(d.test$data)
     )
     
+    # ################## If there are NAs in the data, the following function re-calculates the number of possible events that combinations could have occurred in
+    # if (any(is.na(d$data))) {
+    #   
+    #   max_possible_count_null <- 
+    #     count_complete_cases(rs.null$combination, d.null$data)
+    #   
+    #   max_possible_count_test <- 
+    #     count_complete_cases(rs.test$combination, d.test$data)
+    #   
+    #   rs.null$observed.prob <- rs.null$count/max_possible_count_null
+    #   rs.test$observed.prob <- rs.test$count/max_possible_count_test
+    # }
+    
     # create an object with the observed event sizes
-    max.event.size <- max(Rfast::rowsums(data))
+    max.event.size <- max(Rfast::rowsums(data, na.rm = TRUE), na.rm = TRUE)
     
     if (use_parallel) {
       # if on Mac or Linux, mclapply should work
@@ -293,14 +288,15 @@ netfacs <- function(data,
         boot.values <-
           mclapply(1:ran.trials,
                    function(x) {
-                     netfacs_bootstrap(
+                     netfacs_bootstrap_na(
                        subject              = rl.null.ratio$rl,
                        subject.weight       = rl.null.ratio$weight,
                        null.subjects        = d.null$random.level,
-                       null.elements        = elements.null,
+                       # null.elements        = elements.null,
                        test.combinations    = rs.test$combination,
                        max.combination.size = combination.size,
-                       max.event.size       = max.event.size
+                       max.event.size       = max.event.size,
+                       null.data            = d.null$data
                      )
                    },
                    mc.cores = n_cores
@@ -311,40 +307,47 @@ netfacs <- function(data,
         subject.weight <- rl.null.ratio$weight
         null.subjects <- d.null$random.level
         test.combinations <- rs.test$combination
+        d.null <- d.null$data
         
-        mycluster <- makeCluster(n_cores, type = "PSOCK")
-        clusterExport(
+        mycluster <- parallel::makeCluster(n_cores, type = "PSOCK")
+        parallel::clusterExport(
           cl = mycluster,
           varlist = c(
             "subject",
             "subject.weight",
             "null.subjects",
-            "elements.null",
+            # "elements.null",
             "test.combinations",
             "combination.size",
             "max.event.size",
-            "netfacs_bootstrap"
+            "netfacs_bootstrap_na",
+            "d.null",
+            "d.test",
+            "probability_of_combination",
+            "possible_combinations",
+            "probability_of_event_size"
           ),
           envir = environment()
         )
-        registerDoParallel(mycluster)
+        doParallel::registerDoParallel(mycluster)
         boot.values <-
-          parLapply(
+          parallel::parLapply(
             cl = mycluster,
             X = 1:ran.trials,
             function(x) {
-              netfacs_bootstrap(
+              netfacs_bootstrap_na(
                 subject              = subject,
                 subject.weight       = subject.weight,
                 null.subjects        = null.subjects,
-                null.elements        = elements.null,
+                # null.elements        = elements.null,
                 test.combinations    = test.combinations,
                 max.combination.size = combination.size,
-                max.event.size       = max.event.size
+                max.event.size       = max.event.size,
+                null.data            = d.null
               )
             }
           )
-        stopCluster(mycluster)
+        parallel::stopCluster(mycluster)
       }
     } else {
       # run plain loop
@@ -352,14 +355,15 @@ netfacs <- function(data,
         lapply(
           1:ran.trials,
           function(x) {
-            netfacs_bootstrap(
+            netfacs_bootstrap_na(
               subject              = rl.null.ratio$rl,
               subject.weight       = rl.null.ratio$weight,
               null.subjects        = d.null$random.level,
-              null.elements        = elements.null,
+              # null.elements        = elements.null,
               test.combinations    = rs.test$combination,
               max.combination.size = combination.size,
-              max.event.size       = max.event.size
+              max.event.size       = max.event.size,
+              null.data            = d.null$data
             )
           }
         )
@@ -390,7 +394,7 @@ netfacs <- function(data,
     }))
     
     event.observed.prob <-
-      probability_of_event_size(elements.test, max.event.size)
+      probability_of_event_size(d.test$data, max.event.size)
     
     event.size.summary <-
       summarise_event_size(
@@ -416,40 +420,80 @@ netfacs <- function(data,
   
   ###### the following calculations are done when there is no condition specified, meaning the observed probability across all cases is compared to a null model based on permutations maintaining the event size and element probability
   if (is.null(condition)) {
+    if (!is.null(test.condition)) {
+      warning("test.condition was specified without a condition vector. Ignoring test.condition.", call. = FALSE)
+    }
+    if (!is.null(null.condition)) {
+      warning("null.condition was specified without a condition vector. Ignoring null.condition.", call. = FALSE)
+    }
     
-    # account for added duration data
+    # same as above, account for added duration data
+    if (is.null(duration)) {
+      min.duration <- 1
+    }
     if (!is.null(duration)) {
       min.duration <- min(duration)
       duration <- round(duration / min.duration, 0)
       data <- data[rep(1:nrow(data), times = duration), , drop = FALSE]
     }
     
-    # d <- apply(data, 2, as.numeric)
-    d <- data
+    d <- apply(data, 2, as.numeric)
     
     # remove empty rows
-    comb.size <- Rfast::rowsums(d)
+    comb.size <- Rfast::rowsums(d, na.rm = TRUE)
     if (any(comb.size == 0)) {
       d <- d[comb.size > 0, ]
       NN <- sum(comb.size == 0)
       message(paste("Removing", NN, "rows with 0 active elements from data."))
     }
+    # remove empty columns
+    col.size <- colSums(d, na.rm = TRUE)
+    if (any(col.size == 0)) {
+      d <- d[, col.size > 0]
+      NN <- sum(col.size == 0)
+      removed.cols <- names(col.size)[col.size == 0]
+      message(
+        paste("Removing", NN, "column(s) with 0 obervations from data:", 
+              paste(removed.cols, collapse = ", ")
+        )
+      )
+    }
     
-    ### create probabilities for test dataset
-    elements.test <- get_active_elements(d)
+    # ### create probabilities for test dataset
+    # elements.test <- get_active_elements(d)
+    # ######## remove NAs
+    # elements.test <- lapply(lapply(elements.test, stats::na.omit), as.character)
+    # 
+    # rs.test <- probability_of_combination(
+    #   elements = elements.test,
+    #   maxlen = combination.size
+    # )
     
-    rs.test <- probability_of_combination(
-      elements = elements.test,
+    # extract the probabilities for each combination of elements
+    rs.test <- probability_of_combination_na(
+      m = d,
       maxlen = combination.size
     )
-    
     rs.test$combination.size <- calculate_combination_size(rs.test$combination)
     
     # add single elements that are not represented in the test data
     rs.test <- add_inactive_single_units(rs.test, single.units = colnames(d))
     
+    # ################## If there are NAs in the data, the following function re-calculates the number of possible events that combinations could have occurred in
+    # if (any(is.na(d))) {
+    #   
+    #   true_count_test <- sapply(rs.test$combination, function(k){
+    #     sum(complete.cases(d[,unlist(strsplit(
+    #       as.character(k), "_",
+    #       fixed = TRUE
+    #     ), F, F)]))
+    #   })
+    #  
+    #   rs.test$observed.prob <- rs.test$count/true_count_test
+    # }
+    
     # add event size information
-    max.event.size <- max(Rfast::rowsums(data))
+    max.event.size <- max(Rfast::rowsums(data, na.rm = TRUE), na.rm = TRUE)
     
     if (use_parallel) {
       # run parallel loop
@@ -458,7 +502,7 @@ netfacs <- function(data,
         boot.values <-
           mclapply(1:ran.trials,
                    function(x) {
-                     netfacs_randomize(
+                     netfacs_randomize_na(
                        m = d,
                        test.combinations = rs.test$combination,
                        max.combination.size = combination.size,
@@ -469,8 +513,8 @@ netfacs <- function(data,
           )
       } else {
         test.combinations <- rs.test$combination
-        mycluster <- makeCluster(spec = n_cores, type = "PSOCK")
-        clusterExport(
+        mycluster <- parallel::makeCluster(spec = n_cores, type = "PSOCK")
+        parallel::clusterExport(
           cl = mycluster,
           varlist = c(
             "d",
@@ -478,17 +522,25 @@ netfacs <- function(data,
             "combination.size",
             "max.event.size",
             "randomizeMatrix",
-            "netfacs_randomize"
+            "netfacs_randomize_na",
+            "get_active_elements",
+            "probability_of_combination",
+            "calculate_combination_size",
+            "possible_combinations",
+            "combinations",
+            "Table",
+            "probability_of_event_size",
+            "rowsums"
           ),
           envir = environment()
         )
-        registerDoParallel(mycluster)
+        doParallel::registerDoParallel(mycluster)
         boot.values <-
-          parLapply(
+          parallel::parLapply(
             cl = mycluster,
             X = 1:ran.trials,
             function(x) {
-              netfacs_randomize(
+              netfacs_randomize_na(
                 m = d,
                 test.combinations = test.combinations,
                 max.combination.size = combination.size,
@@ -504,7 +556,7 @@ netfacs <- function(data,
         lapply(
           1:ran.trials,
           function(x) {
-            netfacs_randomize(
+            netfacs_randomize_na(
               m = d,
               test.combinations = rs.test$combination,
               max.combination.size = combination.size,
@@ -535,7 +587,7 @@ netfacs <- function(data,
     }))
     
     event.observed.prob <-
-      probability_of_event_size(elements.test, max.event.size)
+      probability_of_event_size(d, max.event.size)
     
     event.size.summary <-
       summarise_event_size(
@@ -581,8 +633,7 @@ netfacs <- function(data,
     null.condition = null.condition
   )
   
-  stat_method <- 
-    ifelse(is.null(used.data$condition), "permutation", "bootstrap")
+  stat_method <- ifelse(is.null(used.data$condition), "permutation", "bootstrap")
   
   out <-
     list(

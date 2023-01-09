@@ -241,7 +241,7 @@ probability_of_event_size <- function(elements,
   if (is.list(elements)) {
     es.count <- Table(sapply(elements, FUN = length))
   } else {
-    es.count <- Table(rowsums(elements))
+    es.count <- Table(rowsums(elements, na.rm = TRUE))
   }
   
   # calculate prob before filtering event.sizes
