@@ -58,6 +58,8 @@ Imports:
     vctrs,
     methods
 RoxygenNote: 7.2.1
+URL: https://github.com/NetFACS/NetFACS
+BugReports: https://github.com/NetFACS/NetFACS/issues
 NeedsCompilation: yes
 ByteCompile: true
 VignetteBuilder: knitr
