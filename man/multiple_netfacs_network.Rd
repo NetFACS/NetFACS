@@ -56,8 +56,9 @@ Function returns a network object where the nodes are the elements,
 }
 \description{
 Takes the results of the nefacs object for combinations of 2 elements and
-turns them into a network object (class \code{\link{igraph}} and
-\code{\link{tbl_graph}}) that can be used for further plotting and analyses
+turns them into a network object (class \code{\link[igraph]{igraph}} and
+\code{\link[tidygraph]{tbl_graph}}) that can be used for further plotting and
+analyses
 }
 \examples{
 data(emotions_set)

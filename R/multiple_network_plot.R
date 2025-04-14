@@ -1,8 +1,8 @@
 #' Plots networks for multiple conditions
 #'
 #' The function takes multiple network objects and plots them next to each other
-#' while keeping the element positions etc constant. Uses \code{\link{ggraph}}
-#' function
+#' while keeping the element positions etc constant. Uses
+#' \code{\link[ggraph]{ggraph}} function
 #'
 #' @param netfacs.graphs List of network objects resulting from
 #'   \code{\link{netfacs_multiple}} function or
@@ -12,11 +12,11 @@
 #' @param sig.nodes.only Logical. Should only nodes that were significant in _at
 #'   least_ one of the networks be included in the plots? Default = FALSE.
 #'
-#' @return Function returns a \code{\link{ggraph}} plot showing connections
-#'   between nodes in the different networks. Elements that are significantly
-#'   more likely to occur than expected are large, non-significant elements are
-#'   small, and absent elements are absent.
-#'   
+#' @return Function returns a \code{\link[ggraph]{ggraph}} plot showing
+#'   connections between nodes in the different networks. Elements that are
+#'   significantly more likely to occur than expected are large, non-significant
+#'   elements are small, and absent elements are absent.
+#'
 #' @importFrom magrittr %>%
 #' @export
 #'

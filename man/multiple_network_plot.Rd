@@ -21,15 +21,15 @@ nodes are significant. Default = 0.01.}
 least_ one of the networks be included in the plots? Default = FALSE.}
 }
 \value{
-Function returns a \code{\link{ggraph}} plot showing connections
-  between nodes in the different networks. Elements that are significantly
-  more likely to occur than expected are large, non-significant elements are
-  small, and absent elements are absent.
+Function returns a \code{\link[ggraph]{ggraph}} plot showing
+  connections between nodes in the different networks. Elements that are
+  significantly more likely to occur than expected are large, non-significant
+  elements are small, and absent elements are absent.
 }
 \description{
 The function takes multiple network objects and plots them next to each other
-while keeping the element positions etc constant. Uses \code{\link{ggraph}}
-function
+while keeping the element positions etc constant. Uses
+\code{\link[ggraph]{ggraph}} function
 }
 \examples{
 data(emotions_set)

@@ -1,8 +1,9 @@
 #' Creates network objects out of the netfacs data
 #'
 #' Takes the results of the nefacs object for combinations of 2 elements and
-#' turns them into a network object (class \code{\link{igraph}} and
-#' \code{\link{tbl_graph}}) that can be used for further plotting and analyses
+#' turns them into a network object (class \code{\link[igraph]{igraph}} and
+#' \code{\link[tidygraph]{tbl_graph}}) that can be used for further plotting and
+#' analyses
 #'
 #' @param netfacs.list list of multiple objects resulting from
 #'   \code{\link{netfacs}} function or the \code{\link{netfacs_multiple}}
