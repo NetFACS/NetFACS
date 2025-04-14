@@ -1,7 +1,7 @@
 Package: NetFACS
 Title: Network Applications to Facial Communication Data
-Version: 0.5.0
-Date: 2022-12-06
+Version: 0.5.1
+Date: 2025-04-12
 Authors@R: c(
     person(given = "Alex",
            family = "Mielke",
@@ -57,7 +57,7 @@ Imports:
     tidyr,
     vctrs,
     methods
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.2
 NeedsCompilation: yes
 ByteCompile: true
 VignetteBuilder: knitr

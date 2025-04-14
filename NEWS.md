@@ -1,3 +1,8 @@
+# NetFACS 0.5.1
+
+- Removed netfacs_tutorial vignette since the information is duplicated in the README file
+- Minor fixes to comply with R CMD build check notes
+
 # NetFACS 0.5.0
 
 ## Breaking changes
